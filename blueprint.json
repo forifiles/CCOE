@@ -1,0 +1,54 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "meta": {
+    "title": "City College of Education, Mararaba — Official WordPress Website",
+    "author": "City College of Education ICT Directorate",
+    "description": "Complete WordPress environment for City College of Education, Mararaba, Nasarawa State with Education Zone theme, CCoE Core plugin (Programmes, Courses, Events CPTs & Provisional Admission Portal), and Elementor support."
+  },
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "bundled",
+        "path": "/education-zone-ccoe.zip"
+      },
+      "options": {
+        "activate": true
+      },
+      "ifAlreadyInstalled": "overwrite"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "bundled",
+        "path": "/ccoe-core.zip"
+      },
+      "options": {
+        "activate": true
+      },
+      "ifAlreadyInstalled": "overwrite"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "City College of Education, Mararaba",
+        "blogdescription": "Education for Self Employment",
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; if ( class_exists( 'CCOE_Seeder' ) ) { CCOE_Seeder::seed_all( true ); } flush_rewrite_rules();"
+    }
+  ]
+}

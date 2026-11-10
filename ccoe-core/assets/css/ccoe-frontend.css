@@ -1,0 +1,1003 @@
+/**
+ * City College of Education, Mararaba — UI/UX Pro Max Design System
+ * Style: Swiss Modernism 2.0 + Academic Editorial Grid
+ * Typography: Crimson Pro (Scholarly Serif) + Atkinson Hyperlegible / Inter (Accessible Sans)
+ * Official Palette Derived from CCoE Crest & Brochure:
+ * - Primary Navy Blue: #00337C / #001F4D
+ * - Secondary Academic Gold: #F5B800
+ * - Accent Emerald Green: #007A33
+ * - Crest Ribbon Maroon: #8B0029
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+	--ccoe-navy: #00337C;
+	--ccoe-navy-dark: #001F4D;
+	--ccoe-gold: #F5B800;
+	--ccoe-gold-hover: #D9A300;
+	--ccoe-green: #007A33;
+	--ccoe-maroon: #8B0029;
+	--ccoe-text: #0F172A;
+	--ccoe-muted: #475569;
+	--ccoe-bg-light: #F8FAFC;
+	--ccoe-surface: #FFFFFF;
+	--ccoe-border: #E2E8F0;
+	--ccoe-radius: 14px;
+	--ccoe-shadow: 0 12px 32px -8px rgba(0, 31, 77, 0.08), 0 4px 12px -2px rgba(0, 31, 77, 0.04);
+	--ccoe-shadow-hover: 0 20px 40px -12px rgba(0, 31, 77, 0.16), 0 8px 16px -4px rgba(0, 31, 77, 0.06);
+	--ccoe-ease: cubic-bezier(0.22, 1, 0.36, 1);
+	--font-serif: 'Crimson Pro', 'Merriweather', Georgia, serif;
+	--font-sans: 'Atkinson Hyperlegible', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+	--primary-color: #00337C;
+}
+
+/* Override Education Zone theme chrome with CCoE Institutional Branding */
+.site-header .header-top,
+.site-header .header-m {
+	background-color: var(--ccoe-navy-dark) !important;
+	color: #fff !important;
+}
+
+.site-header .main-navigation,
+.site-header .header-bottom {
+	background-color: var(--ccoe-navy) !important;
+	border-top: 3px solid var(--ccoe-gold) !important;
+}
+
+.site-footer {
+	background-color: var(--ccoe-navy-dark) !important;
+	color: #E2E8F0 !important;
+	border-top: 4px solid var(--ccoe-gold) !important;
+}
+
+/* Full-bleed layout on CCoE pages inside Education Zone container */
+body.page .site-content > .container {
+	max-width: 100%;
+	width: 100%;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+body.page .site-content {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+body.page #primary.content-area {
+	width: 100% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+body.page .entry-header {
+	display: none;
+}
+
+body.page .entry-content {
+	margin-top: 0 !important;
+}
+
+/* Core Typography & Containers */
+.ccoe-wrapper {
+	font-family: var(--font-sans);
+	color: var(--ccoe-text);
+	line-height: 1.65;
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+}
+
+.ccoe-wrapper h1,
+.ccoe-wrapper h2,
+.ccoe-wrapper h3,
+.ccoe-wrapper h4 {
+	font-family: var(--font-serif);
+	color: var(--ccoe-navy-dark);
+	line-height: 1.2;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+	margin-top: 0;
+}
+
+.ccoe-wrapper p {
+	max-width: 70ch;
+}
+
+/* Keyboard Focus Accessibility (UI/UX Pro Max Priority 1) */
+.ccoe-wrapper a:focus-visible,
+.ccoe-wrapper button:focus-visible,
+.ccoe-wrapper input:focus-visible,
+.ccoe-wrapper select:focus-visible,
+.ccoe-wrapper textarea:focus-visible {
+	outline: 3px solid var(--ccoe-gold);
+	outline-offset: 2px;
+}
+
+.ccoe-container {
+	max-width: 1240px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.ccoe-section {
+	padding: 80px 0;
+}
+
+.ccoe-bg-white {
+	background-color: var(--ccoe-surface);
+}
+
+.ccoe-bg-light {
+	background-color: var(--ccoe-bg-light);
+}
+
+.ccoe-bg-navy {
+	background: radial-gradient(circle at 85% 15%, rgba(245, 184, 0, 0.14), transparent 45%),
+		linear-gradient(135deg, var(--ccoe-navy-dark) 0%, var(--ccoe-navy) 100%);
+	color: #ffffff;
+}
+
+.ccoe-bg-navy h2,
+.ccoe-bg-navy h3,
+.ccoe-bg-navy p {
+	color: #ffffff;
+}
+
+.ccoe-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: var(--font-sans);
+	font-size: 0.78rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	color: var(--ccoe-green);
+	background: rgba(0, 122, 51, 0.1);
+	border: 1px solid rgba(0, 122, 51, 0.22);
+	padding: 5px 14px;
+	border-radius: 999px;
+	margin-bottom: 14px;
+}
+
+.ccoe-eyebrow-gold {
+	color: var(--ccoe-navy-dark);
+	background: var(--ccoe-gold);
+	border-color: var(--ccoe-gold);
+}
+
+.ccoe-section-title {
+	font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+	margin-bottom: 14px;
+}
+
+.ccoe-lead-text {
+	font-size: 1.125rem;
+	color: var(--ccoe-text);
+	font-weight: 500;
+	line-height: 1.7;
+}
+
+.ccoe-text-center {
+	text-align: center;
+}
+
+.ccoe-text-center p {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ccoe-flex-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 40px;
+}
+
+/* Vector Icon Boxes (UI/UX Pro Max Priority 4: Zero Emoji Icons) */
+.ccoe-icon-box {
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 51, 124, 0.08);
+	color: var(--ccoe-navy);
+	margin-bottom: 16px;
+	flex-shrink: 0;
+}
+
+.ccoe-icon-box-gold {
+	background: rgba(245, 184, 0, 0.18);
+	color: #9A6B00;
+}
+
+.ccoe-icon-box-green {
+	background: rgba(0, 122, 51, 0.12);
+	color: var(--ccoe-green);
+}
+
+.ccoe-svg-inline {
+	width: 18px;
+	height: 18px;
+	vertical-align: -3px;
+	margin-right: 6px;
+	flex-shrink: 0;
+}
+
+/* Buttons (UI/UX Pro Max Priority 2: >= 44px Touch Target) */
+.ccoe-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 44px;
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 0.95rem;
+	padding: 10px 24px;
+	border-radius: 10px;
+	text-decoration: none !important;
+	cursor: pointer;
+	transition: transform 0.2s var(--ccoe-ease), background-color 0.2s var(--ccoe-ease), box-shadow 0.2s var(--ccoe-ease);
+	border: 2px solid transparent;
+	box-sizing: border-box;
+}
+
+.ccoe-btn-sm {
+	min-height: 40px;
+	padding: 8px 16px;
+	font-size: 0.86rem;
+}
+
+.ccoe-btn-lg {
+	min-height: 52px;
+	padding: 14px 32px;
+	font-size: 1.05rem;
+}
+
+.ccoe-btn-primary {
+	background-color: var(--ccoe-navy);
+	color: #ffffff !important;
+	box-shadow: 0 4px 12px rgba(0, 51, 124, 0.22);
+}
+
+.ccoe-btn-primary:hover {
+	background-color: var(--ccoe-navy-dark);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(0, 31, 77, 0.28);
+}
+
+.ccoe-btn-gold {
+	background-color: var(--ccoe-gold);
+	color: var(--ccoe-navy-dark) !important;
+	font-weight: 700;
+	box-shadow: 0 4px 14px rgba(245, 184, 0, 0.3);
+}
+
+.ccoe-btn-gold:hover {
+	background-color: var(--ccoe-gold-hover);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 22px rgba(245, 184, 0, 0.4);
+}
+
+.ccoe-btn-outline {
+	background-color: transparent;
+	border-color: var(--ccoe-navy);
+	color: var(--ccoe-navy) !important;
+}
+
+.ccoe-btn-outline:hover {
+	background-color: var(--ccoe-navy);
+	color: #ffffff !important;
+}
+
+.ccoe-btn-outline-light {
+	background-color: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.85);
+	color: #ffffff !important;
+	backdrop-filter: blur(8px);
+}
+
+.ccoe-btn-outline-light:hover {
+	background-color: #ffffff;
+	color: var(--ccoe-navy-dark) !important;
+}
+
+/* Hero Banner */
+.ccoe-hero {
+	background-size: cover;
+	background-position: center;
+	color: #ffffff;
+	padding: 104px 0 80px;
+	position: relative;
+}
+
+.ccoe-hero-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: rgba(0, 22, 55, 0.65);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(245, 184, 0, 0.45);
+	padding: 8px 18px;
+	border-radius: 999px;
+	font-size: 0.86rem;
+	font-weight: 700;
+	color: #ffffff;
+	margin-bottom: 22px;
+}
+
+.ccoe-dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--ccoe-gold);
+	box-shadow: 0 0 0 4px rgba(245, 184, 0, 0.25);
+	display: inline-block;
+}
+
+.ccoe-hero-title {
+	color: #ffffff !important;
+	font-size: clamp(2.35rem, 4.8vw, 3.65rem);
+	max-width: 18ch;
+	margin-bottom: 20px;
+	text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+.ccoe-hero-subtitle {
+	font-size: clamp(1.06rem, 1.9vw, 1.24rem);
+	max-width: 64ch;
+	color: rgba(255, 255, 255, 0.94);
+	margin-bottom: 36px;
+}
+
+.ccoe-hero-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 52px;
+}
+
+.ccoe-hero-stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 16px;
+	padding-top: 32px;
+	border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.ccoe-stat-box {
+	background: rgba(0, 20, 50, 0.68);
+	backdrop-filter: blur(10px);
+	padding: 20px 22px;
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-left: 4px solid var(--ccoe-gold);
+}
+
+.ccoe-stat-num {
+	display: block;
+	font-family: var(--font-serif);
+	font-size: 1.85rem;
+	font-weight: 700;
+	color: var(--ccoe-gold);
+	line-height: 1.15;
+	margin-bottom: 4px;
+}
+
+.ccoe-stat-label {
+	font-size: 0.88rem;
+	color: rgba(255, 255, 255, 0.92);
+}
+
+/* Subpage Banner */
+.ccoe-page-banner {
+	background-size: cover;
+	background-position: center;
+	color: #ffffff;
+	padding: 72px 0;
+	border-bottom: 4px solid var(--ccoe-gold);
+}
+
+.ccoe-page-banner h1 {
+	color: #ffffff !important;
+	font-size: clamp(2rem, 4vw, 3rem);
+	margin-bottom: 12px;
+}
+
+.ccoe-page-banner p {
+	color: rgba(255, 255, 255, 0.92);
+	font-size: 1.08rem;
+	max-width: 72ch;
+	margin: 0;
+}
+
+/* Grids & Cards (Swiss Modernism 2.0 Editorial Grid) */
+.ccoe-split-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 48px;
+	align-items: start;
+}
+
+.ccoe-cards-grid-3 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 28px;
+}
+
+.ccoe-cards-grid-2 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+	gap: 28px;
+}
+
+.ccoe-card {
+	background: var(--ccoe-surface);
+	border: 1px solid var(--ccoe-border);
+	border-radius: var(--ccoe-radius);
+	box-shadow: var(--ccoe-shadow);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	overflow: hidden;
+	transition: transform 0.24s var(--ccoe-ease), box-shadow 0.24s var(--ccoe-ease), border-color 0.24s var(--ccoe-ease);
+}
+
+.ccoe-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--ccoe-shadow-hover);
+	border-color: #CBD5E1;
+}
+
+.ccoe-card-header {
+	padding: 24px 26px 0;
+}
+
+.ccoe-card-body {
+	padding: 26px;
+	flex: 1;
+}
+
+.ccoe-card-footer {
+	padding: 16px 26px;
+	background: var(--ccoe-bg-light);
+	border-top: 1px solid var(--ccoe-border);
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.ccoe-card-img-wrap,
+.ccoe-event-img-wrap {
+	position: relative;
+	height: 220px;
+	overflow: hidden;
+	background: var(--ccoe-navy-dark);
+}
+
+.ccoe-card-img-wrap img,
+.ccoe-event-img-wrap img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.45s var(--ccoe-ease);
+}
+
+.ccoe-card:hover .ccoe-card-img-wrap img,
+.ccoe-card:hover .ccoe-event-img-wrap img {
+	transform: scale(1.03);
+}
+
+.ccoe-card-floating-badge {
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	background: var(--ccoe-gold);
+	color: var(--ccoe-navy-dark);
+	font-weight: 700;
+	font-size: 0.78rem;
+	padding: 5px 12px;
+	border-radius: 999px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+}
+
+.ccoe-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	background: rgba(0, 51, 124, 0.09);
+	color: var(--ccoe-navy);
+	font-weight: 700;
+	font-size: 0.78rem;
+	padding: 4px 11px;
+	border-radius: 6px;
+	margin-bottom: 10px;
+}
+
+.ccoe-badge-gold {
+	background: var(--ccoe-gold);
+	color: var(--ccoe-navy-dark);
+}
+
+.ccoe-badge-green {
+	background: rgba(0, 122, 51, 0.12);
+	color: var(--ccoe-green);
+}
+
+/* Vision & Mission Cards */
+.ccoe-vm-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 24px;
+}
+
+.ccoe-vm-card {
+	background: #ffffff;
+	padding: 34px;
+	border-radius: var(--ccoe-radius);
+	box-shadow: var(--ccoe-shadow);
+	border: 1px solid var(--ccoe-border);
+	border-top: 5px solid var(--ccoe-navy);
+}
+
+.ccoe-vm-mission {
+	border-top-color: var(--ccoe-gold);
+}
+
+.ccoe-vm-philosophy {
+	border-top-color: var(--ccoe-green);
+}
+
+/* Photo Collage */
+.ccoe-photo-collage {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.ccoe-img-main {
+	grid-column: span 2;
+	width: 100%;
+	height: 290px;
+	object-fit: cover;
+	border-radius: var(--ccoe-radius);
+	box-shadow: var(--ccoe-shadow);
+}
+
+.ccoe-img-accent {
+	width: 100%;
+	height: 190px;
+	object-fit: cover;
+	border-radius: var(--ccoe-radius);
+}
+
+.ccoe-motto-card {
+	background: var(--ccoe-navy-dark);
+	color: #ffffff;
+	padding: 18px;
+	border-radius: var(--ccoe-radius);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	gap: 10px;
+	border: 2px solid var(--ccoe-gold);
+}
+
+.ccoe-motto-card img {
+	width: 68px;
+	height: auto;
+	border-radius: 6px;
+	background: #fff;
+	padding: 4px;
+}
+
+.ccoe-motto-card span {
+	color: var(--ccoe-gold);
+	font-weight: 700;
+	font-size: 0.92rem;
+}
+
+.ccoe-rounded-img {
+	width: 100%;
+	border-radius: var(--ccoe-radius);
+	box-shadow: var(--ccoe-shadow);
+}
+
+.ccoe-pill {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: var(--ccoe-bg-light);
+	border: 1px solid var(--ccoe-border);
+	border-left: 4px solid var(--ccoe-green);
+	padding: 11px 16px;
+	margin-top: 10px;
+	border-radius: 8px;
+	font-size: 0.94rem;
+}
+
+/* Provost Section */
+.ccoe-provost-highlight {
+	display: grid;
+	grid-template-columns: 320px 1fr;
+	gap: 48px;
+	align-items: center;
+}
+
+.ccoe-provost-img {
+	width: 100%;
+	height: 360px;
+	object-fit: cover;
+	border-radius: var(--ccoe-radius);
+	border: 4px solid var(--ccoe-gold);
+	box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+}
+
+.ccoe-provost-caption {
+	margin-top: 14px;
+	text-align: center;
+}
+
+.ccoe-provost-caption strong {
+	display: block;
+	color: var(--ccoe-gold);
+	font-size: 1.05rem;
+}
+
+.ccoe-provost-quote {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: 1.25rem;
+	line-height: 1.55;
+	border-left: 4px solid var(--ccoe-gold);
+	padding-left: 20px;
+	margin: 22px 0;
+	color: #FEF9C3;
+}
+
+.ccoe-provost-quote-light {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: 1.22rem;
+	line-height: 1.55;
+	border-left: 4px solid var(--ccoe-navy);
+	background: var(--ccoe-bg-light);
+	padding: 18px 22px;
+	margin: 20px 0;
+	border-radius: 0 10px 10px 0;
+}
+
+/* Lists & Tables */
+.ccoe-check-list {
+	list-style: none;
+	padding: 0;
+	margin: 12px 0;
+}
+
+.ccoe-check-list li {
+	position: relative;
+	padding-left: 26px;
+	margin-bottom: 8px;
+	font-size: 0.95rem;
+}
+
+.ccoe-check-list li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 6px;
+	width: 16px;
+	height: 16px;
+	background-color: rgba(0, 122, 51, 0.14);
+	border-radius: 50%;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007A33' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+	background-size: 11px 11px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.ccoe-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: #ffffff;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: var(--ccoe-shadow);
+	border: 1px solid var(--ccoe-border);
+	margin: 16px 0;
+}
+
+.ccoe-table th,
+.ccoe-table td {
+	padding: 13px 16px;
+	text-align: left;
+	border-bottom: 1px solid var(--ccoe-border);
+	font-size: 0.94rem;
+}
+
+.ccoe-table tbody tr:hover {
+	background-color: #F1F5F9;
+}
+
+.ccoe-table thead th {
+	background: var(--ccoe-navy);
+	color: #ffffff;
+	font-weight: 700;
+}
+
+.ccoe-table tfoot th {
+	background: var(--ccoe-bg-light);
+	color: var(--ccoe-navy-dark);
+}
+
+.ccoe-semester-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+	gap: 28px;
+}
+
+/* Interactive Filter Pills (UI/UX Pro Max) */
+.ccoe-filter-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 28px;
+}
+
+.ccoe-filter-btn {
+	min-height: 44px;
+	padding: 8px 18px;
+	border-radius: 999px;
+	border: 1px solid var(--ccoe-border);
+	background: #ffffff;
+	color: var(--ccoe-text);
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 0.88rem;
+	cursor: pointer;
+	transition: all 0.18s var(--ccoe-ease);
+}
+
+.ccoe-filter-btn:hover,
+.ccoe-filter-btn.active {
+	background: var(--ccoe-navy);
+	color: #ffffff;
+	border-color: var(--ccoe-navy);
+}
+
+/* Forms & Provisional Admission Application (UI/UX Pro Max Priority 8) */
+.ccoe-form-card {
+	background: #ffffff;
+	padding: 36px;
+	border-radius: var(--ccoe-radius);
+	box-shadow: var(--ccoe-shadow);
+	border: 1px solid var(--ccoe-border);
+}
+
+.ccoe-fieldset {
+	border: 1px solid var(--ccoe-border);
+	border-radius: 12px;
+	padding: 24px;
+	margin-bottom: 28px;
+	background: #FCFDFE;
+}
+
+.ccoe-fieldset legend {
+	font-family: var(--font-serif);
+	font-weight: 700;
+	font-size: 1.15rem;
+	color: var(--ccoe-navy);
+	padding: 0 12px;
+}
+
+.ccoe-form-row-3 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+	gap: 18px;
+}
+
+.ccoe-form-row-2 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 18px;
+}
+
+.ccoe-form-group {
+	margin-bottom: 16px;
+}
+
+.ccoe-form-group label {
+	display: block;
+	font-weight: 700;
+	font-size: 0.9rem;
+	margin-bottom: 6px;
+	color: var(--ccoe-navy-dark);
+}
+
+.ccoe-input {
+	width: 100%;
+	min-height: 44px;
+	padding: 10px 14px;
+	border: 1px solid #CBD5E1;
+	border-radius: 8px;
+	font-size: 0.96rem;
+	font-family: inherit;
+	background: #ffffff;
+	box-sizing: border-box;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ccoe-input:focus {
+	outline: none;
+	border-color: var(--ccoe-navy);
+	box-shadow: 0 0 0 3px rgba(0, 51, 124, 0.16);
+}
+
+.ccoe-help-text {
+	display: block;
+	color: var(--ccoe-muted);
+	font-size: 0.82rem;
+	margin-top: 4px;
+}
+
+.ccoe-privacy-box {
+	background: rgba(0, 51, 124, 0.05);
+	border-left: 4px solid var(--ccoe-navy);
+	padding: 14px 18px;
+	border-radius: 8px;
+	margin-bottom: 16px;
+	font-size: 0.9rem;
+}
+
+.ccoe-checkbox-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	font-size: 0.94rem;
+	cursor: pointer;
+}
+
+.ccoe-checkbox-label input[type="checkbox"] {
+	margin-top: 4px;
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+/* Alerts & Success Slip */
+.ccoe-alert {
+	padding: 16px 20px;
+	border-radius: 10px;
+	margin-bottom: 24px;
+}
+
+.ccoe-alert-success {
+	background: #ECFDF5;
+	border: 1px solid #10B981;
+	color: #065F46;
+}
+
+.ccoe-alert-error {
+	background: #FEF2F2;
+	border: 1px solid #EF4444;
+	color: #991B1B;
+}
+
+.ccoe-success-slip {
+	background: #ffffff;
+	padding: 40px;
+	border-radius: var(--ccoe-radius);
+	border: 2px solid var(--ccoe-navy);
+	box-shadow: var(--ccoe-shadow);
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.ccoe-slip-header {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	border-bottom: 2px solid var(--ccoe-gold);
+	padding-bottom: 20px;
+	margin-bottom: 24px;
+}
+
+.ccoe-slip-logo {
+	width: 90px;
+	height: auto;
+}
+
+.ccoe-ref-highlight {
+	background: var(--ccoe-navy-dark);
+	color: #ffffff;
+	padding: 22px;
+	border-radius: 12px;
+	text-align: center;
+	margin-bottom: 24px;
+}
+
+.ccoe-ref-highlight strong {
+	display: block;
+	font-family: var(--font-serif);
+	font-size: 2.1rem;
+	color: var(--ccoe-gold);
+	letter-spacing: 0.05em;
+	margin: 6px 0;
+}
+
+.ccoe-steps-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 24px;
+}
+
+.ccoe-step-card {
+	background: var(--ccoe-bg-light);
+	padding: 28px 24px;
+	border-radius: var(--ccoe-radius);
+	border: 1px solid var(--ccoe-border);
+	border-top: 4px solid var(--ccoe-gold);
+}
+
+.ccoe-step-num {
+	font-family: var(--font-serif);
+	font-size: 2.2rem;
+	font-weight: 700;
+	color: var(--ccoe-navy);
+	margin-bottom: 8px;
+}
+
+.ccoe-cta-banner {
+	background: linear-gradient(125deg, var(--ccoe-navy-dark) 0%, var(--ccoe-navy) 65%, var(--ccoe-green) 100%);
+	color: #ffffff;
+}
+
+.ccoe-cta-banner h2,
+.ccoe-cta-banner p {
+	color: #ffffff !important;
+}
+
+.ccoe-cta-banner-inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 32px;
+	flex-wrap: wrap;
+}
+
+.ccoe-cta-buttons {
+	display: flex;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+/* Reduced Motion Accessibility (UI/UX Pro Max Priority 1 & 7) */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media (max-width: 860px) {
+	.ccoe-provost-highlight {
+		grid-template-columns: 1fr;
+	}
+	.ccoe-semester-grid {
+		grid-template-columns: 1fr;
+	}
+	.ccoe-form-card {
+		padding: 20px;
+	}
+}

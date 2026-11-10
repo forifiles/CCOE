@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>City College of Education, Mararaba — Official Website</title>
+	<link rel="icon" type="image/png" sizes="128x128" href="/education-zone/images/ccoe/favicon.png" />
+	<link rel="shortcut icon" href="/education-zone/images/ccoe/favicon.png" />
+	<link rel="apple-touch-icon" href="/education-zone/images/ccoe/ccoe-logo.png" />
+	<meta name="description" content="Official website of City College of Education, Mararaba, Nasarawa State. Accredited NCE (New NCCE Minimum Standard 2026), B.Ed./B.Sc. (Ed.) Degree & PGDE in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), PDE, and Skills Acquisition." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="/ccoe-core/assets/css/ccoe-frontend.css" />
+	<style>
+		body {
+			margin: 0;
+			background: #F8FAFC;
+			font-family: 'Inter', sans-serif;
+			color: #1E293B;
+		}
+		/* Top Bar & Header Chrome matching Customized Education Zone Theme */
+		.ccoe-topbar {
+			background: #001B42;
+			color: rgba(255, 255, 255, 0.9);
+			font-size: 0.84rem;
+			padding: 8px 0;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+		.ccoe-topbar-inner {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+		.ccoe-topbar a {
+			color: #F5B800;
+			text-decoration: none;
+			font-weight: 600;
+		}
+		.ccoe-site-header {
+			background: #002355;
+			color: #ffffff;
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+		}
+		.ccoe-brand-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 14px 0;
+			gap: 20px;
+			flex-wrap: wrap;
+		}
+		.ccoe-brand {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			text-decoration: none;
+			color: #ffffff;
+		}
+		.ccoe-brand img {
+			height: 64px;
+			width: auto;
+			background: #ffffff;
+			padding: 4px;
+			border-radius: 8px;
+		}
+		.ccoe-brand-title {
+			font-family: 'Merriweather', serif;
+			font-size: 1.32rem;
+			font-weight: 700;
+			margin: 0;
+			color: #ffffff;
+			line-height: 1.2;
+		}
+		.ccoe-brand-motto {
+			font-size: 0.82rem;
+			color: #F5B800;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			margin: 3px 0 0;
+		}
+		.ccoe-nav-bar {
+			background: #00337C;
+			border-top: 3px solid #F5B800;
+		}
+		.ccoe-nav-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 2px;
+		}
+		.ccoe-nav-list li a {
+			display: block;
+			padding: 12px 13px;
+			color: #ffffff;
+			text-decoration: none;
+			font-size: 0.88rem;
+			font-weight: 600;
+			border-bottom: 3px solid transparent;
+			transition: all 0.15s ease;
+			cursor: pointer;
+		}
+		.ccoe-nav-list li a:hover,
+		.ccoe-nav-list li a.active {
+			background: rgba(255, 255, 255, 0.1);
+			border-bottom-color: #F5B800;
+			color: #F5B800;
+		}
+		.ccoe-nav-list li a.ccoe-nav-cta {
+			background: #F5B800;
+			color: #002355 !important;
+			font-weight: 700;
+			border-radius: 6px;
+			padding: 8px 14px;
+			margin-left: 6px;
+			border-bottom: none;
+		}
+		.ccoe-has-dropdown {
+			position: relative;
+		}
+		.ccoe-has-dropdown > a {
+			display: inline-flex !important;
+			align-items: center;
+			gap: 5px;
+		}
+		.ccoe-dropdown-chevron {
+			width: 14px;
+			height: 14px;
+			transition: transform 0.18s ease;
+		}
+		.ccoe-has-dropdown:hover .ccoe-dropdown-chevron,
+		.ccoe-has-dropdown:focus-within .ccoe-dropdown-chevron {
+			transform: rotate(180deg);
+		}
+		.ccoe-dropdown-menu {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			min-width: 280px;
+			background: #ffffff;
+			border: 1px solid #E2E8F0;
+			border-top: 3px solid #F5B800;
+			border-radius: 0 0 10px 10px;
+			box-shadow: 0 16px 32px rgba(0, 35, 85, 0.16);
+			list-style: none;
+			margin: 0;
+			padding: 8px 0;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(6px);
+			transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+			z-index: 1200;
+		}
+		.ccoe-has-dropdown:hover .ccoe-dropdown-menu,
+		.ccoe-has-dropdown:focus-within .ccoe-dropdown-menu {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+		.ccoe-dropdown-menu li a {
+			display: flex;
+			flex-direction: column;
+			padding: 10px 16px;
+			color: #0F172A !important;
+			font-size: 0.86rem;
+			font-weight: 600;
+			border-bottom: 1px solid #F1F5F9 !important;
+			background: transparent;
+		}
+		.ccoe-dropdown-menu li:last-child a {
+			border-bottom: none !important;
+		}
+		.ccoe-dropdown-menu li a small {
+			font-size: 0.75rem;
+			font-weight: 400;
+			color: #64748B;
+			margin-top: 2px;
+		}
+		.ccoe-dropdown-menu li a:hover {
+			background: #F8FAFC !important;
+			color: #00337C !important;
+			padding-left: 20px;
+		}
+		.ccoe-page-view {
+			display: none;
+		}
+		.ccoe-page-view.active {
+			display: block;
+		}
+		.ccoe-site-footer {
+			background: #001B42;
+			color: #CBD5E1;
+			border-top: 4px solid #F5B800;
+			padding: 56px 0 28px;
+		}
+		@media print {
+			.ccoe-topbar, .ccoe-site-header, .ccoe-site-footer, .ccoe-slip-actions {
+				display: none !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- TOP INSTITUTIONAL BAR -->
+	<div class="ccoe-topbar">
+		<div class="ccoe-container ccoe-topbar-inner">
+			<div style="display:flex;align-items:center;gap:6px;">
+				<svg class="ccoe-svg-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+				<span>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</span>
+			</div>
+			<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+				<span style="display:inline-flex;align-items:center;gap:5px;">
+					<svg class="ccoe-svg-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+					<a href="tel:08032920100">08032920100</a> | <a href="tel:08058431596">08058431596</a>
+				</span>
+				<span>&bull;</span>
+				<span style="display:inline-flex;align-items:center;gap:5px;">
+					<svg class="ccoe-svg-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+					<a href="mailto:admissions@citycollegeofeducation.edu.ng">admissions@citycollegeofeducation.edu.ng</a>
+				</span>
+				<span>&bull;</span>
+				<a href="/wp-admin" style="color:#F5B800;font-weight:700;">Staff / WP Admin Login &rarr;</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- SITE HEADER & 10-PAGE PRIMARY NAVIGATION -->
+	<header class="ccoe-site-header">
+		<div class="ccoe-container ccoe-brand-row">
+			<a href="#home" class="ccoe-brand" onclick="showPage('home'); return false;">
+				<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="City College of Education Official Crest" />
+				<div>
+					<p class="ccoe-brand-title">City College of Education, Mararaba</p>
+					<p class="ccoe-brand-motto">"Education for Self Employment" &bull; Nasarawa State</p>
+				</div>
+			</a>
+			<div>
+				<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-gold ccoe-btn-sm">
+					2026/2027 Provisional Admission Portal &rarr;
+				</a>
+			</div>
+		</div>
+		<nav class="ccoe-nav-bar" aria-label="Primary Navigation">
+			<div class="ccoe-container">
+				<ul class="ccoe-nav-list" id="ccoe-main-nav">
+					<li><a data-page="home" class="active" onclick="showPage('home')">Home</a></li>
+					<li><a data-page="about" onclick="showPage('about')">About Us</a></li>
+					<li><a data-page="provost" onclick="showPage('provost')">Provost's Message</a></li>
+					<li class="ccoe-has-dropdown">
+						<a data-page="programmes" href="#programmes" onclick="openProgrammeTrack('all', 'page-programmes'); return false;" aria-haspopup="true">
+							Academic Programmes
+							<svg class="ccoe-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+						</a>
+						<ul class="ccoe-dropdown-menu" aria-label="Academic Programmes Submenu">
+							<li>
+								<a href="#programmes" onclick="openProgrammeTrack('all', 'page-programmes'); return false;">
+									All Academic Programmes
+									<small>Complete overview of NCE, Degree, PGDE, PDE &amp; Skills</small>
+								</a>
+							</li>
+							<li>
+								<a href="#prog-block-nce" onclick="openProgrammeTrack('nce', 'prog-block-nce'); return false;">
+									NCE Programmes (NCCE 2026)
+									<small>7 Academic Schools • 28 Accredited NCE Programmes</small>
+								</a>
+							</li>
+							<li>
+								<a href="#prog-block-degree" onclick="openProgrammeTrack('degree', 'prog-block-degree'); return false;">
+									B.Ed. / B.Sc. (Ed.) Degree Programmes
+									<small>5 Departments in Affiliation with AAUA, Ondo State</small>
+								</a>
+							</li>
+							<li>
+								<a href="#courses-block-pgde" onclick="openCourseSection('courses-block-pgde'); return false;">
+									PGDE (AAUA) &amp; PDE Diplomas
+									<small>Postgraduate &amp; Professional Diplomas in Education</small>
+								</a>
+							</li>
+							<li>
+								<a href="#prog-block-skills" onclick="openProgrammeTrack('skills', 'prog-block-skills'); return false;">
+									Skills Acquisition &amp; Entrepreneurship
+									<small>5 Practical Vocational &amp; Digital Training Tracks</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="ccoe-has-dropdown">
+						<a data-page="courses" href="#courses" onclick="openCourseSection('page-courses'); return false;" aria-haspopup="true">
+							Courses
+							<svg class="ccoe-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+						</a>
+						<ul class="ccoe-dropdown-menu" aria-label="Courses Submenu">
+							<li>
+								<a href="#courses" onclick="openCourseSection('page-courses'); return false;">
+									All Courses Directory
+									<small>Searchable catalog across all schools &amp; departments</small>
+								</a>
+							</li>
+							<li>
+								<a href="#courses-block-pgde" onclick="openCourseSection('courses-block-pgde'); return false;">
+									PGDE Semester Courses (AAUA)
+									<small>First &amp; Second Semester 40-Unit Course Tables</small>
+								</a>
+							</li>
+							<li>
+								<a href="#courses-block-nce" onclick="openCourseSection('courses-block-nce'); return false;">
+									NCE Courses by School (NCCE 2026)
+									<small>Schools of Computing, Science, Arts, Business &amp; more</small>
+								</a>
+							</li>
+							<li>
+								<a href="#courses-block-degree" onclick="openCourseSection('courses-block-degree'); return false;">
+									AAUA Affiliated Degree Courses
+									<small>10 B.Ed. / B.Sc. (Ed.) Undergraduate Courses</small>
+								</a>
+							</li>
+							<li>
+								<a href="#courses-block-skills" onclick="openCourseSection('courses-block-skills'); return false;">
+									Vocational &amp; Digital Skills Courses
+									<small>Tailoring, Hair Dressing, Shoe Making, Computing &amp; Painting</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li><a data-page="events" onclick="showPage('events')">News &amp; Events</a></li>
+					<li><a data-page="apply" class="ccoe-nav-cta" onclick="showPage('apply')">Admissions &amp; Apply</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<main class="ccoe-wrapper">
+
+		<!-- ===================================================================
+		     PAGE 1: HOME
+		     =================================================================== -->
+		<div id="page-home" class="ccoe-page-view active">
+			<section class="ccoe-hero" style="background-image: linear-gradient(125deg, rgba(0, 35, 85, 0.90) 0%, rgba(0, 51, 124, 0.80) 55%, rgba(0, 122, 51, 0.72) 100%), url('/education-zone/images/ccoe/campus-main-gate.jpg');">
+				<div class="ccoe-container ccoe-hero-inner">
+					<div class="ccoe-hero-badge">
+						<span class="ccoe-dot"></span>
+						2026/2027 Admissions Now Open &bull; New NCCE Minimum Standard (2026) &amp; AAUA Affiliated
+					</div>
+					<h1 class="ccoe-hero-title">Welcome to City College of Education, Mararaba</h1>
+					<p class="ccoe-hero-subtitle">
+						To establish and maintain a most suitable academic environment synergizing world class human capital and best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigerian society.
+					</p>
+					<div class="ccoe-hero-actions">
+						<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-gold">Apply Now &rarr;</a>
+						<a href="#programmes" onclick="showPage('programmes'); return false;" class="ccoe-btn ccoe-btn-outline-light">Explore Programmes</a>
+					</div>
+					<div class="ccoe-hero-stats">
+						<div class="ccoe-stat-box">
+							<span class="ccoe-stat-num">7 Schools</span>
+							<span class="ccoe-stat-label">28 NCE Programmes (NCCE 2026 Standard)</span>
+						</div>
+						<div class="ccoe-stat-box">
+							<span class="ccoe-stat-num">10 Degrees</span>
+							<span class="ccoe-stat-label">B.Ed. / B.Sc. (Ed.) Affiliated with AAUA</span>
+						</div>
+						<div class="ccoe-stat-box">
+							<span class="ccoe-stat-num">PGDE &amp; PDE</span>
+							<span class="ccoe-stat-label">Postgraduate &amp; Professional Diplomas</span>
+						</div>
+						<div class="ccoe-stat-box">
+							<span class="ccoe-stat-num">5 Skill Tracks</span>
+							<span class="ccoe-stat-label">Centre for Skills Acquisition &amp; Entrepreneurship</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- About the College Highlight -->
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container ccoe-split-grid">
+					<div>
+						<span class="ccoe-eyebrow">About the College</span>
+						<h2 class="ccoe-section-title">A Distinctive Quality-Based Tertiary Educational Institution</h2>
+						<p class="ccoe-lead-text">
+							City College of Education, Mararaba (CCoE) is strategically located at No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State.
+						</p>
+						<p>
+							Operating in full alignment with the New NCCE Minimum Standard (2026) and in affiliation with <strong>Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State</strong> for its Degree and PGDE programmes, CCoE combines pedagogical mastery with modern computing, AI &amp; Robotics education, and hands-on entrepreneurship.
+						</p>
+						<div class="ccoe-pill"><strong>&#10003; Nigeria Certificate in Education (NCE):</strong> 7 Specialized Academic Schools</div>
+						<div class="ccoe-pill"><strong>&#10003; Degree &amp; PGDE (AAUA Affiliation):</strong> Accredited University Teacher Education</div>
+						<div class="ccoe-pill"><strong>&#10003; Education for Self Employment:</strong> Dedicated Vocational &amp; Digital Skills Centre</div>
+						<div style="margin-top:24px;">
+							<a href="#about" onclick="showPage('about'); return false;" class="ccoe-btn ccoe-btn-primary">Read Full Institutional Profile</a>
+						</div>
+					</div>
+					<div class="ccoe-photo-collage">
+						<img src="/education-zone/images/ccoe/academic-block.jpg" alt="City College of Education Academic Block" class="ccoe-img-main" />
+						<img src="/education-zone/images/ccoe/lecture-walkway.jpg" alt="City College of Education Lecture Walkway" class="ccoe-img-accent" />
+						<div class="ccoe-motto-card">
+							<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Crest" />
+							<div>
+								<strong>Official Motto</strong>
+								<span>"Education for Self Employment"</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Vision, Mission & Philosophy (Full Integrated Section on Home Page) -->
+			<section class="ccoe-section ccoe-bg-light" id="home-vision-mission">
+				<div class="ccoe-container">
+					<div class="ccoe-section-header ccoe-text-center">
+						<span class="ccoe-eyebrow">Institutional Charter &amp; Mandate</span>
+						<h2 class="ccoe-section-title">Our Vision, Mission &amp; Philosophy</h2>
+					</div>
+					<div class="ccoe-vm-grid">
+						<div class="ccoe-vm-card ccoe-vm-vision">
+							<div class="ccoe-vm-icon"><span class="ccoe-icon-box"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span></div>
+							<h3>Our Vision</h3>
+							<p>To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
+						</div>
+						<div class="ccoe-vm-card ccoe-vm-mission">
+							<div class="ccoe-vm-icon"><span class="ccoe-icon-box ccoe-icon-box-gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span></div>
+							<h3>Our Mission</h3>
+							<p>To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
+						</div>
+						<div class="ccoe-vm-card ccoe-vm-philosophy">
+							<div class="ccoe-vm-icon"><span class="ccoe-icon-box ccoe-icon-box-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span></div>
+							<h3>Our Philosophy</h3>
+							<p>Guided by our motto — "Education for Self Employment" — we train educators who are intellectually grounded, technologically fluent, and entrepreneurially self-reliant.</p>
+						</div>
+					</div>
+					<div class="ccoe-split-grid" style="margin-top:32px;">
+						<div class="ccoe-card">
+							<div class="ccoe-card-body">
+								<span class="ccoe-eyebrow">Core Institutional Values</span>
+								<h3>What Guides City College of Education, Mararaba</h3>
+								<ul class="ccoe-check-list">
+									<li><strong>Academic Excellence:</strong> Upholding the New NCCE Minimum Standard (2026) and AAUA University Senate benchmarks.</li>
+									<li><strong>Entrepreneurial Self-Reliance:</strong> Equipping every graduate with practical vocational and digital skills ("Education for Self Employment").</li>
+									<li><strong>Technological Innovation:</strong> Integrating AI &amp; Robotics, Data Science, Cybersecurity, and Educational Technology.</li>
+									<li><strong>Integrity &amp; Character:</strong> Moulding ethical, disciplined educators who lead by example across Nigeria.</li>
+								</ul>
+							</div>
+						</div>
+						<div>
+							<img src="/education-zone/images/ccoe/admin-block.jpg" alt="Administrative Block Vision and Mission Plaques" class="ccoe-rounded-img" style="width:100%;height:auto;display:block;" />
+							<p class="ccoe-caption-text">The engraved Vision and Mission marble plaques at the entrance of the Administrative Block, City College of Education, Mararaba.</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Academic Programmes Showcase -->
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container">
+					<div class="ccoe-flex-between">
+						<div>
+							<span class="ccoe-eyebrow">Programmes Offered</span>
+							<h2 class="ccoe-section-title">Academic Programmes Showcase</h2>
+						</div>
+						<a href="#programmes" onclick="showPage('programmes'); return false;" class="ccoe-btn ccoe-btn-outline">View All Schools &amp; Courses &rarr;</a>
+					</div>
+					<div class="ccoe-cards-grid-3">
+						<article class="ccoe-card">
+							<div class="ccoe-card-img-wrap">
+								<img src="/education-zone/images/ccoe/academic-block.jpg" alt="NCE Programmes" />
+								<span class="ccoe-card-floating-badge">NCCE 2026 Minimum Standard</span>
+							</div>
+							<div class="ccoe-card-body">
+								<h3>1. Nigeria Certificate in Education (NCE)</h3>
+								<p>Full-time 3-year NCE programmes across 7 Schools including Computing (AI &amp; Robotics, Data Science, Cybersecurity), Sciences, Arts, Business Management, Social Sciences, and ECCDE.</p>
+								<div><strong>Duration:</strong> 3 Years (6 Semesters)</div>
+							</div>
+							<div class="ccoe-card-footer">
+								<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-primary ccoe-btn-sm">Apply Now</a>
+								<a href="#programmes" onclick="showPage('programmes'); return false;" class="ccoe-btn ccoe-btn-outline ccoe-btn-sm">Explore 7 Schools</a>
+							</div>
+						</article>
+
+						<article class="ccoe-card">
+							<div class="ccoe-card-img-wrap">
+								<img src="/education-zone/images/ccoe/lecture-walkway.jpg" alt="AAUA Degree Programmes" />
+								<span class="ccoe-card-floating-badge">Affiliated with AAUA</span>
+							</div>
+							<div class="ccoe-card-body">
+								<h3>2. B.Ed. / B.Sc. (Ed.) Degree Programmes</h3>
+								<p>10 undergraduate degree programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State across Arts, Science, Social Science, Guidance &amp; Counseling, and Educational Management.</p>
+								<div><strong>Duration:</strong> 4 Years (UTME) / 3 Years (DE)</div>
+							</div>
+							<div class="ccoe-card-footer">
+								<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-primary ccoe-btn-sm">Apply Now</a>
+								<a href="#courses" onclick="showPage('courses'); return false;" class="ccoe-btn ccoe-btn-outline ccoe-btn-sm">View Degree Courses</a>
+							</div>
+						</article>
+
+						<article class="ccoe-card">
+							<div class="ccoe-card-img-wrap">
+								<img src="/education-zone/images/ccoe/campus-courtyard-statue.jpg" alt="PGDE and PDE Programmes" />
+								<span class="ccoe-card-floating-badge">Postgraduate &amp; Professional</span>
+							</div>
+							<div class="ccoe-card-body">
+								<h3>3. PGDE (AAUA) &amp; PDE Programmes</h3>
+								<p>Postgraduate Diploma in Education (PGDE) in affiliation with AAUA (40 Credit Units across 2 Semesters) and Professional Diploma in Education (PDE) for HND and Degree graduates.</p>
+								<div><strong>Duration:</strong> 1 Academic Session (2 Semesters)</div>
+							</div>
+							<div class="ccoe-card-footer">
+								<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-primary ccoe-btn-sm">Apply Now</a>
+								<a href="#courses" onclick="showPage('courses'); return false;" class="ccoe-btn ccoe-btn-outline ccoe-btn-sm">PGDE Course Table</a>
+							</div>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- Message from the Provost -->
+			<section class="ccoe-section ccoe-bg-navy">
+				<div class="ccoe-container ccoe-provost-highlight">
+					<div>
+						<img src="/education-zone/images/ccoe/campus-courtyard-statue.jpg" alt="Provost Portrait Placeholder" class="ccoe-provost-img" />
+						<div class="ccoe-provost-caption">
+							<strong>[Provost Name &amp; Titles — Placeholder]</strong>
+							<span>Provost, City College of Education, Mararaba</span>
+						</div>
+					</div>
+					<div>
+						<span class="ccoe-eyebrow ccoe-eyebrow-gold">Leadership Address</span>
+						<h2>Message from the Provost</h2>
+						<blockquote class="ccoe-provost-quote">
+							"Welcome to City College of Education, Mararaba, Nasarawa State — where world-class human capital and modern technology converge to produce superior entrepreneurial teachers for Nigeria."
+						</blockquote>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. In alignment with the New NCCE Minimum Standard (2026) and our university affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), our curriculum equips graduates with both academic distinction and self-employment competencies.
+						</p>
+						<a href="#provost" onclick="showPage('provost'); return false;" class="ccoe-btn ccoe-btn-gold">Read Full Message from the Provost &rarr;</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- Upcoming Events & Latest News -->
+			<section class="ccoe-section ccoe-bg-light">
+				<div class="ccoe-container">
+					<div class="ccoe-flex-between">
+						<div>
+							<span class="ccoe-eyebrow">Campus Calendar</span>
+							<h2 class="ccoe-section-title">Upcoming Events &amp; Latest News</h2>
+						</div>
+						<a href="#events" onclick="showPage('events'); return false;" class="ccoe-btn ccoe-btn-outline">View Complete Events Archive &rarr;</a>
+					</div>
+					<div class="ccoe-cards-grid-2" id="home-events-grid">
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap">
+								<img src="/education-zone/images/ccoe/campus-main-gate.jpg" alt="Admission Screening" />
+							</div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge ccoe-badge-gold">Admissions</span>
+								<div class="ccoe-event-meta">
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Nov 25, 2026</span>
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 09:00 AM</span>
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Administrative Block, Mararaba</span>
+								</div>
+								<h3>2026/2027 Provisional Admission Screening &amp; Documentation Exercise</h3>
+								<p>Physical verification of credentials for candidates applying into NCE, AAUA Affiliated Degree, PGDE, and PDE programmes.</p>
+							</div>
+						</article>
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap">
+								<img src="/education-zone/images/ccoe/skills-department-flyer.jpg" alt="Skills Exhibition" />
+							</div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge ccoe-badge-green">Entrepreneurship</span>
+								<div class="ccoe-event-meta">
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Dec 14, 2026</span>
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 11:00 AM</span>
+									<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Centre for Skills Acquisition</span>
+								</div>
+								<h3>Skills Acquisition &amp; Entrepreneurship Exhibition ("Learn Today, Earn Tomorrow")</h3>
+								<p>Practical showcase of student projects in Tailoring, Hair Dressing, Shoe Making, Computer Training, and Screeding &amp; Painting.</p>
+							</div>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- Contact & Admissions CTA Banner at the End of the Home Page -->
+			<section class="ccoe-section ccoe-cta-banner">
+				<div class="ccoe-container ccoe-cta-banner-inner">
+					<div>
+						<span class="ccoe-eyebrow ccoe-eyebrow-gold">Have Questions or Ready to Enrol?</span>
+						<h2>Get in Touch with City College of Education, Mararaba</h2>
+						<p>
+							<strong>Campus Address:</strong> No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State<br>
+							<strong>Telephone:</strong> 08032920100 | 08058431596 &bull; <strong>Email:</strong> admissions@citycollegeofeducation.edu.ng
+						</p>
+					</div>
+					<div class="ccoe-cta-buttons">
+						<a href="#contact" onclick="showPage('contact'); return false;" class="ccoe-btn ccoe-btn-gold">
+							<svg class="ccoe-svg-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+							Contact Us &amp; Campus Map
+						</a>
+						<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-outline-light">
+							Admissions &amp; Apply Now &rarr;
+						</a>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 2: ABOUT US
+		     =================================================================== -->
+		<div id="page-about" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.82)), url('/education-zone/images/ccoe/campus-boulevard.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Who We Are</span>
+					<h1>About City College of Education, Mararaba</h1>
+					<p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container ccoe-split-grid">
+					<div>
+						<span class="ccoe-eyebrow">Institutional Background</span>
+						<h2>Excellence in Teacher Education &amp; Self-Reliance</h2>
+						<p class="ccoe-lead-text">
+							City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State, serving the Federal Capital Territory corridor and the entire federation.
+						</p>
+						<h3>History</h3>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Established to address the growing demand for qualified, entrepreneurial, and technologically adept teachers in Nigeria, the College offers National Commission for Colleges of Education (NCCE) accredited NCE programmes as well as Undergraduate Degree and Postgraduate Diploma programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State.
+						</p>
+						<h3>Institutional Philosophy</h3>
+						<p>
+							Anchored on our motto — <strong>"Education for Self Employment"</strong> — our philosophy emphasizes that teacher education must integrate deep academic mastery with practical vocational and digital entrepreneurship. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</p>
+					</div>
+					<div>
+						<img src="/education-zone/images/ccoe/campus-main-gate.jpg" alt="CCoE Main Gate" class="ccoe-rounded-img" style="margin-bottom:20px;" />
+						<img src="/education-zone/images/ccoe/admin-block-exterior.jpg" alt="CCoE Administrative Block" class="ccoe-rounded-img" />
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 3: OUR VISION AND MISSION
+		     =================================================================== -->
+		<div id="page-vision" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 122, 51, 0.80)), url('/education-zone/images/ccoe/campus-courtyard-statue.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Institutional Charter</span>
+					<h1>Our Vision and Mission</h1>
+					<p>"Education for Self Employment"</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container ccoe-split-grid">
+					<div>
+						<div class="ccoe-vm-card ccoe-vm-vision" style="margin-bottom:24px;">
+							<span class="ccoe-eyebrow">Official Vision Statement</span>
+							<h2>Our Vision</h2>
+							<p class="ccoe-lead-text">
+								To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.
+							</p>
+						</div>
+						<div class="ccoe-vm-card ccoe-vm-mission">
+							<span class="ccoe-eyebrow">Official Mission Statement</span>
+							<h2>Our Mission</h2>
+							<p class="ccoe-lead-text">
+								To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.
+							</p>
+						</div>
+					</div>
+					<div>
+						<img src="/education-zone/images/ccoe/admin-block-entrance.jpg" alt="Administrative Block Vision and Mission Plaques" class="ccoe-rounded-img" />
+						<p style="font-size:0.88rem;color:#475569;margin-top:10px;">
+							Pictured above: The Vision and Mission marble plaques at the entrance of the Administrative Block, City College of Education, Mararaba.
+						</p>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 4: MESSAGE FROM THE PROVOST
+		     =================================================================== -->
+		<div id="page-provost" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/academic-block.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Office of the Provost</span>
+					<h1>Message from the Provost</h1>
+					<p>City College of Education, Mararaba, Nasarawa State</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container ccoe-split-grid">
+					<div class="ccoe-card">
+						<div class="ccoe-card-body" style="text-align:center;">
+							<img src="/education-zone/images/ccoe/campus-courtyard-statue.jpg" alt="Provost Photograph Placeholder" class="ccoe-rounded-img" style="max-height:340px;object-fit:cover;margin-bottom:16px;" />
+							<h3>[Provost Full Name &amp; Titles — Placeholder]</h3>
+							<p style="color:#00337C;font-weight:700;">Provost, City College of Education, Mararaba</p>
+							<small style="color:#64748B;">(Updateable via WP Admin &rarr; College Settings &rarr; Office of the Provost)</small>
+						</div>
+					</div>
+					<div>
+						<span class="ccoe-eyebrow">Welcome Message</span>
+						<h2>Nurturing Visionary &amp; Entrepreneurial Educators</h2>
+						<blockquote class="ccoe-provost-quote-light">
+							"It is my distinct pleasure to welcome prospective students, parents, scholars, and partners to City College of Education, Mararaba, Nasarawa State."
+						</blockquote>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. At City College of Education, we recognize that the 21st-century classroom demands educators who possess not only pedagogical excellence, but also technological fluency and entrepreneurial creativity.
+						</p>
+						<p>
+							Through our implementation of the New NCCE Minimum Standard (2026) across seven (7) NCE Schools and our proud affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State for our B.Ed./B.Sc. (Ed.) Degree and PGDE programmes, we offer an unmatched academic environment. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+						</p>
+						<div style="margin-top:24px;">
+							<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-gold">Apply for Provisional Admission &rarr;</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 5: ACADEMIC PROGRAMMES
+		     =================================================================== -->
+		<div id="page-programmes" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/lecture-walkway.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Academic Structure</span>
+					<h1>Academic Programmes</h1>
+					<p>1. NCE (New NCCE Minimum Standard 2026) &bull; 2. PGDE (AAUA) &bull; 3. PDE &bull; 4. Degree in Affiliation with AAUA &bull; 5. Skills Acquisition</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-light">
+				<div class="ccoe-container">
+					<!-- UI/UX Pro Max Interactive Category Filter Pills -->
+					<div class="ccoe-filter-pills" role="tablist" aria-label="Filter Academic Programmes">
+						<button type="button" class="ccoe-filter-pill active" onclick="filterProgSection('all', this)">All Programme Tracks</button>
+						<button type="button" class="ccoe-filter-pill" onclick="filterProgSection('nce', this)">NCE Schools (7 Schools • 28 Programmes)</button>
+						<button type="button" class="ccoe-filter-pill" onclick="filterProgSection('degree', this)">AAUA Affiliated Degrees (5 Depts • 10 Programmes)</button>
+						<button type="button" class="ccoe-filter-pill" onclick="filterProgSection('skills', this)">Skills Acquisition &amp; Entrepreneurship (5 Tracks)</button>
+					</div>
+
+					<div id="prog-block-nce">
+						<h2>A. Nigeria Certificate in Education (NCE) — New NCCE Minimum Standard (2026)</h2>
+						<p>Structured across seven (7) specialized Schools (Duration: 3 Years / 6 Semesters):</p>
+						<div class="ccoe-cards-grid-3" id="preview-nce-grid"></div>
+					</div>
+
+					<div id="prog-block-degree" style="margin-top:52px;">
+						<h2>B. Degree Programmes in Affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State</h2>
+						<p>Structured across five (5) Academic Departments (Duration: 4 Years UTME / 3 Years Direct Entry):</p>
+						<div class="ccoe-cards-grid-3" id="preview-degree-grid"></div>
+					</div>
+
+					<div id="prog-block-skills" style="margin-top:52px;">
+						<div class="ccoe-split-grid">
+							<div>
+								<span class="ccoe-eyebrow">Learn Today, Earn Tomorrow!</span>
+								<h2>C. Centre for Skills Acquisition &amp; Entrepreneurship Development</h2>
+								<p>Hands-on vocational and digital training empowering students and community learners with self-employment skills at affordable fees:</p>
+								<table class="ccoe-table">
+									<thead>
+										<tr><th>S/N</th><th>Training Area / Skill</th><th>Duration</th><th>Status</th></tr>
+									</thead>
+									<tbody>
+										<tr><td>1</td><td><strong>Tailoring &amp; Fashion Design</strong></td><td>1 Year</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+										<tr><td>2</td><td><strong>Hair Dressing &amp; Cosmetology</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+										<tr><td>3</td><td><strong>Shoe Making &amp; Leathercraft</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+										<tr><td>4</td><td><strong>Computer Training &amp; Digital Literacy</strong></td><td>3 &amp; 6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+										<tr><td>5</td><td><strong>Screeding and Painting</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+									</tbody>
+								</table>
+							</div>
+							<div>
+								<img src="/education-zone/images/ccoe/skills-department-flyer.jpg" alt="Skills Department Official Flyer" class="ccoe-rounded-img" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 6: COURSES
+		     =================================================================== -->
+		<div id="page-courses" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/academic-block.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Course Directory</span>
+					<h1>Courses Offered</h1>
+					<p>PGDE First &amp; Second Semester Course Tables, AAUA Affiliated Degree Courses, NCE Courses &amp; Vocational Skills</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container">
+					<div class="ccoe-course-filter-bar">
+						<label for="preview-course-search" style="display:block;font-weight:700;color:#002355;margin-bottom:8px;">Filter Courses by Code, Title, or Department</label>
+						<input type="search" id="preview-course-search" class="ccoe-input" placeholder="Type e.g. PDE 601, Artificial Intelligence, Accounting, Guidance..." oninput="filterPreviewCourses(this.value)" />
+					</div>
+
+					<div id="courses-block-pgde">
+						<span class="ccoe-eyebrow">Postgraduate Diploma in Education (PGDE)</span>
+						<h2>1. PGDE Courses in Affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA)</h2>
+						<div class="ccoe-semester-grid">
+							<div>
+								<h3>First Semester Courses (20 Credit Units)</h3>
+								<table class="ccoe-table preview-searchable-table">
+									<thead>
+										<tr><th>S/N</th><th>Code</th><th>Course Title</th><th>Units</th><th>Status</th></tr>
+									</thead>
+									<tbody id="preview-pgde-sem1"></tbody>
+								</table>
+							</div>
+							<div>
+								<h3>Second Semester Courses (20 Credit Units)</h3>
+								<table class="ccoe-table preview-searchable-table">
+									<thead>
+										<tr><th>S/N</th><th>Code</th><th>Course Title</th><th>Units</th><th>Status</th></tr>
+									</thead>
+									<tbody id="preview-pgde-sem2"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div id="courses-block-nce" style="margin-top:48px;">
+						<span class="ccoe-eyebrow">New NCCE Minimum Standard (2026)</span>
+						<h2>2. Nigeria Certificate in Education (NCE) Courses by School</h2>
+						<table class="ccoe-table preview-searchable-table">
+							<thead>
+								<tr><th>School</th><th>Courses / Programmes Offered</th><th>Duration</th></tr>
+							</thead>
+							<tbody id="preview-nce-courses-table"></tbody>
+						</table>
+					</div>
+
+					<div id="courses-block-degree" style="margin-top:48px;">
+						<span class="ccoe-eyebrow">Undergraduate Degree Courses</span>
+						<h2>3. B.Ed. / B.Sc. (Ed.) Degree Courses in Affiliation with AAUA, Ondo State</h2>
+						<table class="ccoe-table preview-searchable-table">
+							<thead>
+								<tr><th>Department</th><th>Degree Courses Offered</th><th>Duration</th></tr>
+							</thead>
+							<tbody id="preview-degree-courses-table"></tbody>
+						</table>
+					</div>
+
+					<div id="courses-block-skills" style="margin-top:48px;">
+						<span class="ccoe-eyebrow">Centre for Skills Acquisition</span>
+						<h2>4. Vocational &amp; Digital Skills Courses</h2>
+						<table class="ccoe-table preview-searchable-table">
+							<thead>
+								<tr><th>S/N</th><th>Skill / Course Title</th><th>Duration</th><th>Tuition Status</th></tr>
+							</thead>
+							<tbody>
+								<tr><td>1</td><td><strong>Tailoring &amp; Fashion Design</strong></td><td>1 Year</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+								<tr><td>2</td><td><strong>Hair Dressing &amp; Cosmetology</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+								<tr><td>3</td><td><strong>Shoe Making &amp; Leathercraft</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+								<tr><td>4</td><td><strong>Computer Training &amp; Digital Literacy</strong></td><td>3 &amp; 6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+								<tr><td>5</td><td><strong>Screeding and Painting</strong></td><td>6 Months</td><td><span class="ccoe-badge ccoe-badge-green">Affordable</span></td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 7: ADMISSIONS
+		     =================================================================== -->
+		<div id="page-admissions" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 122, 51, 0.82)), url('/education-zone/images/ccoe/campus-main-gate.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">2026/2027 Academic Session</span>
+					<h1>Admissions Overview &amp; Entry Requirements</h1>
+					<p>Guidelines for Provisional Admission into NCE, Degree (AAUA), PGDE, PDE, and Skills Acquisition Programmes</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container">
+					<div class="ccoe-steps-grid">
+						<div class="ccoe-step-card"><div class="ccoe-step-num">01</div><h3>Select Programme</h3><p>Choose from NCE, AAUA Degree, PGDE, PDE, or Skills Acquisition.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">02</div><h3>Complete Bio-Data</h3><p>Enter your personal, contact, academic, and Next of Kin details accurately.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">03</div><h3>Upload Credentials</h3><p>Attach your passport photograph (JPG/PNG) and academic certificates.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">04</div><h3>Reference Slip</h3><p>Get your unique Application Reference Number and print your acknowledgement slip.</p></div>
+					</div>
+					<div class="ccoe-text-center" style="margin-top:36px;">
+						<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-gold ccoe-btn-lg">Start Provisional Admission Application &rarr;</a>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 8: NEWS AND EVENTS
+		     =================================================================== -->
+		<div id="page-events" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/campus-tree-walkway.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Campus Bulletin</span>
+					<h1>News and Events Archive</h1>
+					<p>Official academic events, workshops, matriculation ceremonies, and institutional news</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container">
+					<div class="ccoe-cards-grid-2" id="archive-events-grid">
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap"><img src="/education-zone/images/ccoe/campus-main-gate.jpg" alt="Admission Screening" /></div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge ccoe-badge-gold">Admissions</span>
+								<div class="ccoe-event-meta"><span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Nov 25, 2026 &bull; 09:00 AM – 03:00 PM &bull; Administrative Block Auditorium</span></div>
+								<h3>2026/2027 Provisional Admission Screening &amp; Documentation Exercise</h3>
+								<p>Screening and verification of original academic credentials for candidates applying for NCE, AAUA Affiliated Degree, PGDE, and PDE programmes.</p>
+							</div>
+						</article>
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap"><img src="/education-zone/images/ccoe/lecture-walkway.jpg" alt="NCCE 2026 Workshop" /></div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge">Academic Workshop</span>
+								<div class="ccoe-event-meta"><span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Dec 04, 2026 &bull; 10:00 AM – 02:00 PM &bull; School of Computing Lecture Theatre</span></div>
+								<h3>Orientation Workshop on New NCCE Minimum Standard (2026) Curriculum</h3>
+								<p>Featuring sessions on Artificial Intelligence &amp; Robotics Education, Data Science, Cybersecurity, and Entrepreneurial Pedagogy.</p>
+							</div>
+						</article>
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap"><img src="/education-zone/images/ccoe/skills-department-flyer.jpg" alt="Skills Exhibition" /></div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge ccoe-badge-green">Entrepreneurship</span>
+								<div class="ccoe-event-meta"><span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Dec 14, 2026 &bull; 11:00 AM – 04:00 PM &bull; Centre for Skills Acquisition</span></div>
+								<h3>Skills Acquisition &amp; Entrepreneurship Exhibition Day ("Learn Today, Earn Tomorrow")</h3>
+								<p>Showcasing vocational works in Tailoring, Hair Dressing, Shoe Making, Computer Training, and Screeding &amp; Painting.</p>
+							</div>
+						</article>
+						<article class="ccoe-card">
+							<div class="ccoe-event-img-wrap"><img src="/education-zone/images/ccoe/campus-courtyard-statue.jpg" alt="Matriculation" /></div>
+							<div class="ccoe-card-body">
+								<span class="ccoe-badge ccoe-badge-gold">Matriculation</span>
+								<div class="ccoe-event-meta"><span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Jan 18, 2027 &bull; 09:30 AM Prompt &bull; College Convocation Square</span></div>
+								<h3>First Semester NCE, PGDE &amp; AAUA Affiliated Degree Matriculation Ceremony</h3>
+								<p>Formal matriculation ceremony for newly admitted NCE, B.Ed./B.Sc. (Ed.) Degree, and PGDE students.</p>
+							</div>
+						</article>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     PAGE 9: CONTACT US
+		     =================================================================== -->
+		<div id="page-contact" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/campus-boulevard.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Get in Touch</span>
+					<h1>Contact Us</h1>
+					<p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+				</div>
+			</div>
+			<section class="ccoe-section ccoe-bg-white">
+				<div class="ccoe-container">
+					<div class="ccoe-cards-grid-3" style="margin-bottom:36px;">
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Campus Address</h3><p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State<br><small>Postal: Sani Abacha Road, Mararaba Gurku, P.M.B 3094 Garki, Abuja</small></p></div></div>
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><h3>Telephone Numbers</h3><p><strong>08032920100</strong><br><strong>08058431596</strong><br><small>Mon – Fri: 8:00 AM – 4:00 PM</small></p></div></div>
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Official Emails</h3><p>info@citycollegeofeducation.edu.ng<br>admissions@citycollegeofeducation.edu.ng</p></div></div>
+					</div>
+					<div class="ccoe-split-grid">
+						<div class="ccoe-form-card">
+							<h2>Send an Inquiry</h2>
+							<form onsubmit="alert('Thank you! Your message has been recorded.'); return false;">
+								<div class="ccoe-form-group"><label>Full Name *</label><input type="text" required class="ccoe-input" /></div>
+								<div class="ccoe-form-group"><label>Email Address *</label><input type="email" required class="ccoe-input" /></div>
+								<div class="ccoe-form-group"><label>Subject *</label><input type="text" required class="ccoe-input" /></div>
+								<div class="ccoe-form-group"><label>Message *</label><textarea rows="4" required class="ccoe-input"></textarea></div>
+								<button type="submit" class="ccoe-btn ccoe-btn-primary">Send Message</button>
+							</form>
+						</div>
+						<div>
+							<h2>Google Map — Mararaba-Karu, Nasarawa State</h2>
+							<iframe title="CCoE Map" src="https://www.google.com/maps?q=Mararaba+Karu+Nasarawa+State+Nigeria&output=embed" width="100%" height="380" style="border:0;border-radius:12px;" loading="lazy"></iframe>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ===================================================================
+		     UNIFIED ADMISSIONS & PROVISIONAL APPLICATION PAGE
+		     =================================================================== -->
+		<div id="page-apply" class="ccoe-page-view">
+			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.94), rgba(0, 122, 51, 0.84)), url('/education-zone/images/ccoe/campus-main-gate.jpg');">
+				<div class="ccoe-container">
+					<span class="ccoe-eyebrow ccoe-eyebrow-gold">2026/2027 Admissions &amp; Application Portal</span>
+					<h1>Admissions &amp; Provisional Application</h1>
+					<p>Review our 4-step admission guidelines and complete your Provisional Admission Application Form below</p>
+				</div>
+			</div>
+
+			<!-- 4-Step Admission Process & Entry Requirements Overview -->
+			<section class="ccoe-section ccoe-bg-white" style="padding-bottom:36px;">
+				<div class="ccoe-container">
+					<div class="ccoe-section-header ccoe-text-center">
+						<span class="ccoe-eyebrow">How to Apply</span>
+						<h2 class="ccoe-section-title">4 Simple Steps to Provisional Admission</h2>
+					</div>
+					<div class="ccoe-steps-grid">
+						<div class="ccoe-step-card"><div class="ccoe-step-num">01</div><h3>Select Programme</h3><p>Choose from NCE (NCCE 2026), AAUA Degree, PGDE, PDE, or Skills Acquisition.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">02</div><h3>Complete Bio-Data</h3><p>Enter your personal, contact, academic, and Next of Kin details in the form below.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">03</div><h3>Upload Credentials</h3><p>Attach your passport photograph (JPG/PNG) and academic certificates.</p></div>
+						<div class="ccoe-step-card"><div class="ccoe-step-num">04</div><h3>Reference Slip</h3><p>Get your unique Application Reference Number and print your acknowledgement slip immediately.</p></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="ccoe-section ccoe-bg-light">
+				<div class="ccoe-container">
+					<div id="preview-admission-success" style="display:none;"></div>
+					<div class="ccoe-form-card" id="preview-admission-form-wrap">
+						<h2>Provisional Admission Application Form</h2>
+						<p>Complete all mandatory fields (*). Upon submission, a unique Application Reference Number and printable Acknowledgement Slip will be generated immediately.</p>
+						<form id="preview-admission-form" onsubmit="return handlePreviewApplication(event)">
+							<fieldset class="ccoe-fieldset">
+								<legend>Section A: Personal Details</legend>
+								<div class="ccoe-form-row-3">
+									<div class="ccoe-form-group"><label>First Name *</label><input type="text" name="first_name" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Middle Name</label><input type="text" name="middle_name" class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Surname *</label><input type="text" name="surname" required class="ccoe-input" /></div>
+								</div>
+								<div class="ccoe-form-row-3">
+									<div class="ccoe-form-group"><label>Date of Birth *</label><input type="date" name="dob" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Gender *</label><select name="gender" required class="ccoe-input"><option value="">— Select —</option><option>Male</option><option>Female</option></select></div>
+									<div class="ccoe-form-group"><label>Nationality *</label><input type="text" name="nationality" value="Nigerian" required class="ccoe-input" /></div>
+								</div>
+								<div class="ccoe-form-row-2">
+									<div class="ccoe-form-group"><label>State of Origin *</label><input type="text" name="state_of_origin" required class="ccoe-input" placeholder="e.g. Nasarawa" /></div>
+									<div class="ccoe-form-group"><label>Local Government Area *</label><input type="text" name="lga" required class="ccoe-input" placeholder="e.g. Karu" /></div>
+								</div>
+								<div class="ccoe-form-group"><label>Residential Address *</label><textarea name="residential_address" rows="2" required class="ccoe-input"></textarea></div>
+							</fieldset>
+
+							<fieldset class="ccoe-fieldset">
+								<legend>Section B: Contact Details</legend>
+								<div class="ccoe-form-row-2">
+									<div class="ccoe-form-group"><label>Phone Number *</label><input type="tel" name="phone" required class="ccoe-input" placeholder="0803 000 0000" /></div>
+									<div class="ccoe-form-group"><label>Email Address *</label><input type="email" name="email" required class="ccoe-input" placeholder="applicant@example.com" /></div>
+								</div>
+							</fieldset>
+
+							<fieldset class="ccoe-fieldset">
+								<legend>Section C: Academic Details</legend>
+								<div class="ccoe-form-row-2">
+									<div class="ccoe-form-group">
+										<label>Programme of Interest *</label>
+										<select name="programme_interest" id="prev_prog" required class="ccoe-input" onchange="updatePreviewCourses()">
+											<option value="">— Select Programme —</option>
+											<option value="NCE">Nigeria Certificate in Education (NCE)</option>
+											<option value="Degree (AAUA)">Degree in Affiliation with AAUA (B.Ed. / B.Sc. Ed.)</option>
+											<option value="PGDE (AAUA)">Postgraduate Diploma in Education (PGDE — AAUA)</option>
+											<option value="PDE">Professional Diploma in Education (PDE)</option>
+											<option value="Skills Acquisition">Centre for Skills Acquisition &amp; Entrepreneurship</option>
+										</select>
+									</div>
+									<div class="ccoe-form-group">
+										<label>Preferred Course of Study *</label>
+										<select name="preferred_course" id="prev_course" required class="ccoe-input">
+											<option value="">— Select Programme First —</option>
+										</select>
+									</div>
+								</div>
+								<div class="ccoe-form-row-3">
+									<div class="ccoe-form-group">
+										<label>Highest Educational Qualification *</label>
+										<select name="highest_qualification" required class="ccoe-input">
+											<option value="">— Select —</option>
+											<option>SSCE / O'Level</option>
+											<option>NCE / OND</option>
+											<option>HND</option>
+											<option>Bachelor's Degree</option>
+											<option>Master's / Ph.D.</option>
+										</select>
+									</div>
+									<div class="ccoe-form-group">
+										<label>Examination Type *</label>
+										<select name="exam_type" required class="ccoe-input">
+											<option value="">— Select —</option>
+											<option>WAEC (WASSCE)</option>
+											<option>NECO (SSCE)</option>
+											<option>NABTEB</option>
+											<option>GCE</option>
+											<option>Degree / HND / NCE Certificate</option>
+										</select>
+									</div>
+									<div class="ccoe-form-group">
+										<label>Exam Year &amp; Exam Number *</label>
+										<input type="text" name="exam_year_num" required class="ccoe-input" placeholder="e.g. 2024 / 42501928AB" />
+									</div>
+								</div>
+							</fieldset>
+
+							<fieldset class="ccoe-fieldset">
+								<legend>Section D: Next of Kin</legend>
+								<div class="ccoe-form-row-3">
+									<div class="ccoe-form-group"><label>Next of Kin Full Name *</label><input type="text" name="nok_name" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Next of Kin Phone Number *</label><input type="tel" name="nok_phone" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Relationship *</label><input type="text" name="nok_relationship" required class="ccoe-input" placeholder="Parent / Guardian / Spouse" /></div>
+								</div>
+							</fieldset>
+
+							<fieldset class="ccoe-fieldset">
+								<legend>Section E: Document Uploads &amp; Declaration</legend>
+								<div class="ccoe-form-row-2">
+									<div class="ccoe-form-group"><label>Passport Photograph * (JPG/PNG, max 2MB)</label><input type="file" accept=".jpg,.jpeg,.png" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Academic Credentials (PDF/JPG/PNG, max 5MB)</label><input type="file" accept=".pdf,.jpg,.jpeg,.png" class="ccoe-input" /></div>
+								</div>
+								<div class="ccoe-privacy-box">
+									<strong>Data Protection &amp; Privacy Notice:</strong> Applicant personal data and uploaded credentials are encrypted, stored in a protected non-public directory, and processed strictly by the CCoE Admissions Office.
+								</div>
+								<label class="ccoe-checkbox-label">
+									<input type="checkbox" required />
+									<span>I confirm that all information provided in this application is true and accurate, and I agree to abide by the matriculation regulations of City College of Education, Mararaba. *</span>
+								</label>
+							</fieldset>
+
+							<button type="submit" class="ccoe-btn ccoe-btn-gold ccoe-btn-lg">Submit Provisional Admission Application &rarr;</button>
+						</form>
+					</div>
+				</div>
+			</section>
+		</div>
+
+	</main>
+
+	<!-- INSTITUTIONAL FOOTER -->
+	<footer class="ccoe-site-footer">
+		<div class="ccoe-container">
+			<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,0.15);">
+				<div>
+					<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+						<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Logo" style="width:58px;background:#fff;padding:4px;border-radius:6px;" />
+						<div>
+							<strong style="color:#fff;display:block;">City College of Education</strong>
+							<span style="color:#F5B800;font-size:0.82rem;">Mararaba, Nasarawa State</span>
+						</div>
+					</div>
+					<p style="font-size:0.9rem;">"Education for Self Employment" — Accredited NCE (New NCCE Minimum Standard 2026), AAUA Affiliated Degree &amp; PGDE, and PDE Programmes.</p>
+				</div>
+				<div>
+					<h4 style="color:#F5B800;margin-bottom:12px;">Institutional Pages</h4>
+					<ul style="list-style:none;padding:0;margin:0;line-height:2;font-size:0.9rem;">
+						<li><a href="#about" onclick="showPage('about');return false;" style="color:#E2E8F0;text-decoration:none;">About Us</a></li>
+						<li><a href="#home-vision-mission" onclick="showPage('vision');return false;" style="color:#E2E8F0;text-decoration:none;">Vision &amp; Mission</a></li>
+						<li><a href="#provost" onclick="showPage('provost');return false;" style="color:#E2E8F0;text-decoration:none;">Provost's Message</a></li>
+						<li><a href="#programmes" onclick="showPage('programmes');return false;" style="color:#E2E8F0;text-decoration:none;">Academic Programmes</a></li>
+						<li><a href="#courses" onclick="showPage('courses');return false;" style="color:#E2E8F0;text-decoration:none;">Courses</a></li>
+						<li><a href="#apply" onclick="showPage('apply');return false;" style="color:#F5B800;font-weight:700;text-decoration:none;">Admissions &amp; Apply &rarr;</a></li>
+					</ul>
+				</div>
+				<div>
+					<h4 style="color:#F5B800;margin-bottom:12px;">Campus Contact</h4>
+					<p style="font-size:0.9rem;margin:0 0 8px;">No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+					<p style="font-size:0.9rem;margin:0 0 12px;">Tel: 08032920100 | 08058431596</p>
+					<a href="#contact" onclick="showPage('contact');return false;" class="ccoe-btn ccoe-btn-gold ccoe-btn-sm">Contact Us &amp; Campus Map</a>
+				</div>
+			</div>
+			<p style="text-align:center;font-size:0.86rem;margin:20px 0 0;color:#94A3B8;">
+				Copyright &copy; 2026 City College of Education, Mararaba, Nasarawa State. All Rights Reserved.
+			</p>
+		</div>
+	</footer>
+
+	<script>
+		const nceSchools = [
+			{ code: "School A", name: "School of Arts and Languages Education", progs: ["1. English", "2. Theatre Arts"] },
+			{ code: "School B", name: "School of Science Education", progs: ["1. Mathematics Education", "2. Biology Education", "3. Chemistry Education", "4. Physics Education"] },
+			{ code: "School C", name: "School of Computing Education", progs: ["1. Artificial Intelligence and Robotics Education", "2. Computer Science Education", "3. Data Science and Analytics Education", "4. Networking and Cybersecurity Education", "5. Software and Web Development Education"] },
+			{ code: "School D", name: "School of Business Management Education", progs: ["1. Accounting Education", "2. Business Administration Education", "3. Entrepreneurship Education", "4. Office Technology and Management Education", "5. Marketing Education"] },
+			{ code: "School E", name: "School of Social Sciences Education", progs: ["1. Economics and Public Finance Education", "2. CRS Education", "3. Political Science Education", "4. Social Studies and Civic Education"] },
+			{ code: "School F", name: "School of Foundation and Lifelong Education", progs: ["1. Early Childhood Care, Development and Education (ECCDE)", "2. Primary Education Studies"] },
+			{ code: "School G", name: "School of Education and General Studies Education", progs: ["1. Curriculum and Instruction", "2. Educational Foundations", "3. Educational Psychology and Counselling", "4. Educational Technology", "5. Centre of Educational Technology (CET)", "6. Teaching Practice Unit"] }
+		];
+
+		const degreeDepts = [
+			{ code: "Dept A", name: "Arts Education", progs: ["1. B.A. (Ed.) English"] },
+			{ code: "Dept B", name: "Social Science Education", progs: ["2. B.Sc. (Ed.) Economics Education", "3. B.Sc. (Ed.) Political Science Education", "4. B.Ed. Social Studies and Civic Education"] },
+			{ code: "Dept C", name: "Science Education", progs: ["5. B.Sc. (Ed.) Biology Education", "6. B.Sc. (Ed.) Chemistry Education", "7. B.Sc. (Ed.) Computer Science Education"] },
+			{ code: "Dept D", name: "Guidance and Counseling", progs: ["8. B.Ed. Early Childhood Education", "9. B.Ed. Guidance and Counseling"] },
+			{ code: "Dept E", name: "Educational Management", progs: ["10. B.Ed. Educational Management"] }
+		];
+
+		const pgdeSem1 = [
+			[1, "PDE 601", "History of Education", 2, "C"],
+			[2, "PDE 603", "Introduction to Curriculum Studies", 2, "C"],
+			[3, "PDE 605", "Introduction to Education Management", 2, "C"],
+			[4, "PDE 607", "Research Method in Education", 2, "C"],
+			[5, "PDE 609", "Statistic Method in Education", 2, "C"],
+			[6, "PDE 611", "Sociology of Education", 2, "C"],
+			[7, "PDE 613", "Educational Technology", 2, "C"],
+			[8, "PDE 615", "Introduction to Special Education", 2, "C"],
+			[9, "PDE 617", "Curriculum and Instructions", 2, "C"],
+			[10, "PDE 619", "Leadership in Education", 2, "C"]
+		];
+
+		const pgdeSem2 = [
+			[1, "PDE 600", "Introduction to Teaching Profession", 2, "C"],
+			[2, "PDE 602", "Psychological Foundation of Education", 2, "C"],
+			[3, "PDE 604", "Teaching Method", 2, "C"],
+			[4, "PDE 606", "Principles of Guidance and Counseling", 2, "C"],
+			[5, "PDE 608", "Tests and Measurement", 2, "C"],
+			[6, "PDE 612", "Philosophical Foundation of Education", 2, "C"],
+			[7, "PDE 620", "Curriculum Development Implementation and Change", 2, "C"],
+			[8, "PDE 622", "Development Psychology", 2, "C"],
+			[9, "PDE 623", "Development of Education in Nigeria", 2, "C"],
+			[10, "PDE 616", "Introduction to Adult Education", 2, "C"]
+		];
+
+		// Render NCE, Degree & PGDE tables
+		document.getElementById('preview-nce-grid').innerHTML = nceSchools.map(s => `
+			<div class="ccoe-card"><div class="ccoe-card-body">
+				<span class="ccoe-badge">${s.code} • NCE</span>
+				<h3>${s.name}</h3>
+				<ul class="ccoe-check-list">${s.progs.map(p => `<li>${p}</li>`).join('')}</ul>
+			</div></div>
+		`).join('');
+
+		document.getElementById('preview-degree-grid').innerHTML = degreeDepts.map(d => `
+			<div class="ccoe-card"><div class="ccoe-card-body">
+				<span class="ccoe-badge ccoe-badge-gold">${d.code} • AAUA Degree</span>
+				<h3>${d.name}</h3>
+				<ul class="ccoe-check-list">${d.progs.map(p => `<li>${p}</li>`).join('')}</ul>
+			</div></div>
+		`).join('');
+
+		document.getElementById('preview-pgde-sem1').innerHTML = pgdeSem1.map(r => `<tr><td>${r[0]}</td><td><code>${r[1]}</code></td><td><strong>${r[2]}</strong></td><td>${r[3]}</td><td><span class="ccoe-badge">${r[4]}</span></td></tr>`).join('');
+		document.getElementById('preview-pgde-sem2').innerHTML = pgdeSem2.map(r => `<tr><td>${r[0]}</td><td><code>${r[1]}</code></td><td><strong>${r[2]}</strong></td><td>${r[3]}</td><td><span class="ccoe-badge">${r[4]}</span></td></tr>`).join('');
+		document.getElementById('preview-nce-courses-table').innerHTML = nceSchools.map(s => `<tr><td><strong>${s.code}: ${s.name}</strong></td><td><ul class="ccoe-inline-list">${s.progs.map(p => `<li>${p}</li>`).join('')}</ul></td><td>3 Years (6 Semesters)</td></tr>`).join('');
+		document.getElementById('preview-degree-courses-table').innerHTML = degreeDepts.map(d => `<tr><td><strong>${d.code}: Department of ${d.name}</strong></td><td><ul class="ccoe-inline-list">${d.progs.map(p => `<li>${p}</li>`).join('')}</ul></td><td>4 Years (UTME) / 3 Years (DE)</td></tr>`).join('');
+
+		function openProgrammeTrack(category, targetId) {
+			showPage('programmes');
+			const pills = document.querySelectorAll('.ccoe-filter-pill');
+			const idxMap = { all: 0, nce: 1, degree: 2, skills: 3 };
+			filterProgSection(category, pills[idxMap[category] ?? 0]);
+			if (targetId && targetId !== 'page-programmes') {
+				setTimeout(() => {
+					const el = document.getElementById(targetId);
+					if (el) el.scrollIntoView({ behavior: 'smooth' });
+				}, 50);
+			}
+		}
+
+		function openCourseSection(targetId) {
+			showPage('courses');
+			if (targetId && targetId !== 'page-courses') {
+				setTimeout(() => {
+					const el = document.getElementById(targetId);
+					if (el) el.scrollIntoView({ behavior: 'smooth' });
+				}, 50);
+			}
+		}
+
+		function showPage(pageId) {
+			if (pageId === 'admissions') pageId = 'apply';
+			const scrollToVision = (pageId === 'vision');
+			if (scrollToVision) pageId = 'home';
+
+			document.querySelectorAll('.ccoe-page-view').forEach(el => el.classList.remove('active'));
+			const target = document.getElementById('page-' + pageId);
+			if (target) target.classList.add('active');
+			document.querySelectorAll('#ccoe-main-nav a').forEach(a => {
+				a.classList.toggle('active', a.getAttribute('data-page') === pageId);
+			});
+			if (scrollToVision) {
+				const vm = document.getElementById('home-vision-mission');
+				if (vm) {
+					vm.scrollIntoView({ behavior: 'smooth' });
+					return;
+				}
+			}
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
+		function updatePreviewCourses() {
+			const prog = document.getElementById('prev_prog').value;
+			const courseSel = document.getElementById('prev_course');
+			let options = [];
+			if (prog === 'NCE') {
+				nceSchools.forEach(s => s.progs.forEach(p => options.push(p.replace(/^\d+\.\s*/, '') + ' (' + s.name + ')')));
+			} else if (prog === 'Degree (AAUA)') {
+				degreeDepts.forEach(d => d.progs.forEach(p => options.push(p.replace(/^\d+\.\s*/, '') + ' (AAUA)')));
+			} else if (prog === 'PGDE (AAUA)') {
+				options = ['Postgraduate Diploma in Education (PGDE — AAUA Affiliation)'];
+			} else if (prog === 'PDE') {
+				options = ['Professional Diploma in Education (PDE)'];
+			} else if (prog === 'Skills Acquisition') {
+				options = ['Tailoring (1 Year)', 'Hair Dressing (6 Months)', 'Shoe Making (6 Months)', 'Computer Training (3 & 6 Months)', 'Screeding and Painting (6 Months)'];
+			}
+			courseSel.innerHTML = options.map(o => `<option value="${o}">${o}</option>`).join('');
+		}
+
+		function handlePreviewApplication(e) {
+			e.preventDefault();
+			const fd = new FormData(e.target);
+			const ref = 'CCOE/2026/ADM/' + Math.floor(10000 + Math.random() * 90000);
+			const fullName = [fd.get('first_name'), fd.get('middle_name'), fd.get('surname')].filter(Boolean).join(' ');
+			try {
+				const existing = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
+				existing.push({
+					ref: ref,
+					name: fullName,
+					phone: fd.get('phone'),
+					email: fd.get('email'),
+					prog: fd.get('programme_interest'),
+					course: fd.get('preferred_course'),
+					qual: fd.get('highest_qualification') + ' (' + fd.get('exam_type') + ')',
+					status: 'PENDING'
+				});
+				localStorage.setItem('ccoe_submitted_applications', JSON.stringify(existing));
+			} catch (err) {}
+			document.getElementById('preview-admission-form-wrap').style.display = 'none';
+			const box = document.getElementById('preview-admission-success');
+			box.style.display = 'block';
+			box.innerHTML = `
+				<div class="ccoe-success-slip">
+					<div class="ccoe-slip-header">
+						<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Logo" class="ccoe-slip-logo" />
+						<div>
+							<h2>CITY COLLEGE OF EDUCATION, MARARABA</h2>
+							<p>No. 1 City College Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+							<span class="ccoe-badge ccoe-badge-green">PROVISIONAL ADMISSION APPLICATION ACKNOWLEDGEMENT SLIP</span>
+						</div>
+					</div>
+					<div class="ccoe-ref-highlight">
+						<span>UNIQUE APPLICATION REFERENCE NUMBER</span>
+						<strong>${ref}</strong>
+						<small>An acknowledgement email has been dispatched to ${fd.get('email')}</small>
+					</div>
+					<table class="ccoe-table">
+						<tbody>
+							<tr><th>Applicant Full Name</th><td><strong>${fullName}</strong></td><th>Gender / DOB</th><td>${fd.get('gender')} / ${fd.get('dob')}</td></tr>
+							<tr><th>State / LGA</th><td>${fd.get('state_of_origin')} / ${fd.get('lga')}</td><th>Phone / Email</th><td>${fd.get('phone')} / ${fd.get('email')}</td></tr>
+							<tr><th>Programme of Interest</th><td><strong>${fd.get('programme_interest')}</strong></td><th>Preferred Course</th><td><strong>${fd.get('preferred_course')}</strong></td></tr>
+							<tr><th>Qualification</th><td>${fd.get('highest_qualification')} (${fd.get('exam_type')})</td><th>Next of Kin</th><td>${fd.get('nok_name')} (${fd.get('nok_relationship')})</td></tr>
+						</tbody>
+					</table>
+					<div class="ccoe-slip-actions" style="margin-top:20px;display:flex;gap:12px;">
+						<button type="button" onclick="window.print()" class="ccoe-btn ccoe-btn-primary"><svg class="ccoe-svg-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Print Acknowledgement Slip</button>
+						<button type="button" onclick="document.getElementById('preview-admission-success').style.display='none';document.getElementById('preview-admission-form-wrap').style.display='block';" class="ccoe-btn ccoe-btn-outline">Submit Another Application</button>
+					</div>
+				</div>
+			`;
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			return false;
+		}
+
+		function filterProgSection(category, btn) {
+			document.querySelectorAll('.ccoe-filter-pill').forEach(el => el.classList.remove('active'));
+			if (btn) btn.classList.add('active');
+			document.getElementById('prog-block-nce').style.display = (category === 'all' || category === 'nce') ? 'block' : 'none';
+			document.getElementById('prog-block-degree').style.display = (category === 'all' || category === 'degree') ? 'block' : 'none';
+			document.getElementById('prog-block-skills').style.display = (category === 'all' || category === 'skills') ? 'block' : 'none';
+		}
+
+		function filterPreviewCourses(query) {
+			const q = (query || '').toLowerCase().trim();
+			document.querySelectorAll('.preview-searchable-table tbody tr').forEach(tr => {
+				tr.style.display = (!q || tr.textContent.toLowerCase().includes(q)) ? '' : 'none';
+			});
+		}
+
+		// Sync Events from WP Admin (localStorage 'ccoe_events_store')
+		const DEFAULT_FRONTEND_EVENTS = [
+			{
+				id: 'ev-1',
+				title: '2026/2027 Provisional Admission Screening & Documentation Exercise',
+				category: 'Admissions',
+				badgeClass: 'ccoe-badge-gold',
+				date: 'Nov 25, 2026',
+				time: '09:00 AM – 03:00 PM',
+				venue: 'Administrative Block Auditorium, Mararaba',
+				image: '/education-zone/images/ccoe/campus-main-gate.jpg',
+				description: 'Screening and verification of original academic credentials for candidates applying into NCE, AAUA Affiliated Degree, PGDE, and PDE programmes.'
+			},
+			{
+				id: 'ev-2',
+				title: 'Orientation Workshop on New NCCE Minimum Standard (2026) Curriculum',
+				category: 'Academic Workshop',
+				badgeClass: '',
+				date: 'Dec 04, 2026',
+				time: '10:00 AM – 02:00 PM',
+				venue: 'School of Computing Lecture Theatre',
+				image: '/education-zone/images/ccoe/lecture-walkway.jpg',
+				description: 'Featuring sessions on Artificial Intelligence & Robotics Education, Data Science, Cybersecurity, and Entrepreneurial Pedagogy.'
+			},
+			{
+				id: 'ev-3',
+				title: 'Skills Acquisition & Entrepreneurship Exhibition ("Learn Today, Earn Tomorrow")',
+				category: 'Entrepreneurship',
+				badgeClass: 'ccoe-badge-green',
+				date: 'Dec 14, 2026',
+				time: '11:00 AM – 04:00 PM',
+				venue: 'Centre for Skills Acquisition',
+				image: '/education-zone/images/ccoe/skills-department-flyer.jpg',
+				description: 'Practical showcase of student projects in Tailoring, Hair Dressing, Shoe Making, Computer Training, and Screeding & Painting.'
+			},
+			{
+				id: 'ev-4',
+				title: 'First Semester NCE, PGDE & AAUA Affiliated Degree Matriculation Ceremony',
+				category: 'Matriculation',
+				badgeClass: 'ccoe-badge-gold',
+				date: 'Jan 18, 2027',
+				time: '09:30 AM Prompt',
+				venue: 'College Convocation Square',
+				image: '/education-zone/images/ccoe/campus-courtyard-statue.jpg',
+				description: 'Formal matriculation ceremony for newly admitted NCE, B.Ed./B.Sc. (Ed.) Degree, and PGDE students.'
+			}
+		];
+
+		function renderEventCardHtml(ev) {
+			return `
+				<article class="ccoe-card">
+					<div class="ccoe-event-img-wrap">
+						<img src="${ev.image}" alt="${ev.title}" />
+					</div>
+					<div class="ccoe-card-body">
+						<span class="ccoe-badge ${ev.badgeClass || ''}">${ev.category}</span>
+						<div class="ccoe-event-meta">
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ${ev.date}</span>
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${ev.time}</span>
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${ev.venue}</span>
+						</div>
+						<h3>${ev.title}</h3>
+						<p>${ev.description}</p>
+					</div>
+				</article>
+			`;
+		}
+
+		function renderFrontendEvents() {
+			let events = DEFAULT_FRONTEND_EVENTS;
+			try {
+				const raw = localStorage.getItem('ccoe_events_store');
+				if (raw) {
+					events = JSON.parse(raw);
+				} else {
+					localStorage.setItem('ccoe_events_store', JSON.stringify(DEFAULT_FRONTEND_EVENTS));
+				}
+			} catch (e) {}
+
+			const homeGrid = document.getElementById('home-events-grid');
+			const archiveGrid = document.getElementById('archive-events-grid');
+
+			if (homeGrid) {
+				homeGrid.innerHTML = events.length
+					? events.slice(0, 2).map(renderEventCardHtml).join('')
+					: '<p style="color:#64748B;">No upcoming events currently scheduled.</p>';
+			}
+			if (archiveGrid) {
+				archiveGrid.innerHTML = events.length
+					? events.map(renderEventCardHtml).join('')
+					: '<p style="color:#64748B;">No events currently published.</p>';
+			}
+		}
+
+		renderFrontendEvents();
+		window.addEventListener('storage', (e) => {
+			if (e.key === 'ccoe_events_store') {
+				renderFrontendEvents();
+			}
+		});
+	</script>
+</body>
+</html>

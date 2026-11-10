@@ -1,0 +1,59 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ccoe_db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - db
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ccoe_wp_data:/var/www/html
+      - ./education-zone:/var/www/html/wp-content/themes/education-zone
+      - ./ccoe-core:/var/www/html/wp-content/plugins/ccoe-core
+
+  wpcli:
+    image: wordpress:cli
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ccoe_wp_data:/var/www/html
+      - ./education-zone:/var/www/html/wp-content/themes/education-zone
+      - ./ccoe-core:/var/www/html/wp-content/plugins/ccoe-core
+    entrypoint: >
+      /bin/sh -c "
+      sleep 12;
+      if ! wp core is-installed --path=/var/www/html; then
+        wp core install --path=/var/www/html --url='http://localhost:8000' --title='City College of Education, Mararaba' --admin_user='admin' --admin_password='password' --admin_email='admin@citycollegeofeducation.edu.ng' --skip-email;
+      fi;
+      wp theme activate education-zone --path=/var/www/html;
+      wp plugin activate ccoe-core --path=/var/www/html;
+      wp rewrite structure '/%postname%/' --path=/var/www/html --hard;
+      echo 'City College of Education WordPress site is ready at http://localhost:8000';
+      "
+
+volumes:
+  ccoe_db_data:
+  ccoe_wp_data:

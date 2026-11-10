@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>WordPress Admin Dashboard ‹ City College of Education, Mararaba</title>
+	<link rel="icon" type="image/png" sizes="128x128" href="/education-zone/images/ccoe/favicon.png" />
+	<link rel="shortcut icon" href="/education-zone/images/ccoe/favicon.png" />
+	<link rel="apple-touch-icon" href="/education-zone/images/ccoe/ccoe-logo.png" />
+	<style>
+		body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F0F0F1; color: #1D2327; display: flex; min-height: 100vh; }
+		.wp-sidebar { width: 230px; background: #1D2327; color: #F0F0F1; flex-shrink: 0; }
+		.wp-sidebar-brand { padding: 16px; background: #002355; border-bottom: 3px solid #F5B800; display: flex; align-items: center; gap: 10px; }
+		.wp-sidebar-brand img { width: 38px; background: #fff; padding: 2px; border-radius: 4px; }
+		.wp-sidebar-brand strong { font-size: 0.88rem; color: #fff; }
+		.wp-menu { list-style: none; padding: 0; margin: 0; }
+		.wp-menu li a { display: block; padding: 11px 16px; color: #C3C4C7; text-decoration: none; font-size: 0.9rem; border-left: 4px solid transparent; cursor: pointer; }
+		.wp-menu li a:hover, .wp-menu li a.active { background: #2C3338; color: #fff; border-left-color: #F5B800; }
+		.wp-main { flex: 1; display: flex; flex-direction: column; }
+		.wp-adminbar { background: #1D2327; color: #fff; padding: 8px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+		.wp-adminbar a { color: #F5B800; text-decoration: none; font-weight: 600; }
+		.wp-content { padding: 24px 32px; max-width: 1200px; }
+		.wp-card { background: #fff; border: 1px solid #C3C4C7; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 1px 1px rgba(0,0,0,0.04); }
+		.wp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+		.wp-stat { background: #fff; padding: 16px 20px; border-left: 4px solid #00337C; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+		.wp-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #C3C4C7; }
+		.wp-table th, .wp-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 0.88rem; }
+		.wp-table th { background: #F6F7F7; font-weight: 600; }
+		.wp-btn { display: inline-block; background: #2271B1; color: #fff; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; border: none; cursor: pointer; }
+		.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #E0F2FE; color: #0369A1; }
+		.tab-panel { display: none; }
+		.tab-panel.active { display: block; }
+		/* WordPress Login Modal Overlay */
+		.wp-login-overlay {
+			position: fixed;
+			inset: 0;
+			background: linear-gradient(135deg, #001B42 0%, #00337C 65%, #007A33 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+			padding: 20px;
+		}
+		.wp-login-overlay.hidden {
+			display: none;
+		}
+		.wp-login-box {
+			background: #ffffff;
+			width: 100%;
+			max-width: 390px;
+			border-radius: 12px;
+			padding: 32px 28px;
+			box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+			border-top: 5px solid #F5B800;
+			text-align: center;
+		}
+		.wp-login-box img {
+			width: 78px;
+			height: auto;
+			margin-bottom: 10px;
+		}
+		.wp-login-box h2 {
+			margin: 0 0 4px;
+			color: #002355;
+			font-size: 1.25rem;
+		}
+		.wp-login-box p {
+			margin: 0 0 20px;
+			color: #64748B;
+			font-size: 0.85rem;
+		}
+		.wp-login-field {
+			text-align: left;
+			margin-bottom: 14px;
+		}
+		.wp-login-field label {
+			display: block;
+			font-size: 0.82rem;
+			font-weight: 600;
+			color: #1E293B;
+			margin-bottom: 5px;
+		}
+		.wp-login-field input {
+			width: 100%;
+			box-sizing: border-box;
+			padding: 10px 12px;
+			border: 1px solid #CBD5E1;
+			border-radius: 6px;
+			font-size: 0.92rem;
+		}
+		.wp-login-submit {
+			width: 100%;
+			padding: 11px 16px;
+			background: #00337C;
+			color: #ffffff;
+			font-weight: 700;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 0.95rem;
+			margin-top: 6px;
+		}
+		.wp-login-submit:hover {
+			background: #002355;
+		}
+		.wp-hint {
+			margin-top: 14px;
+			padding: 10px;
+			background: #F8FAFC;
+			border: 1px dashed #CBD5E1;
+			border-radius: 6px;
+			font-size: 0.78rem;
+			color: #475569;
+		}
+	</style>
+</head>
+<body>
+	<!-- WORDPRESS LOGIN SCREEN -->
+	<div id="wp-login-screen" class="wp-login-overlay">
+		<div class="wp-login-box">
+			<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Crest" />
+			<h2>City College of Education</h2>
+			<p>WordPress Administration Portal (Mararaba)</p>
+			<form onsubmit="return handleWpLogin(event)">
+				<div class="wp-login-field">
+					<label for="wp_user">Username or Email Address</label>
+					<input type="text" id="wp_user" value="admin" required />
+				</div>
+				<div class="wp-login-field">
+					<label for="wp_pass">Password</label>
+					<input type="password" id="wp_pass" value="CCoE@Admin2026" required />
+				</div>
+				<button type="submit" class="wp-login-submit">Log In to WP Admin &rarr;</button>
+			</form>
+			<div class="wp-hint">
+				<strong>Default Local Credentials:</strong><br>
+				Username: <code>admin</code> &bull; Password: <code>CCoE@Admin2026</code>
+			</div>
+			<div style="margin-top:14px;">
+				<a href="/" style="color:#00337C;font-size:0.84rem;text-decoration:none;font-weight:600;">&larr; Back to City College of Education Website</a>
+			</div>
+		</div>
+	</div>
+	<aside class="wp-sidebar">
+		<div class="wp-sidebar-brand">
+			<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE" />
+			<strong>CCoE WP Admin</strong>
+		</div>
+		<ul class="wp-menu">
+			<li><a class="active" onclick="showTab('admissions', this)">&#128196; Admissions Applications</a></li>
+			<li><a onclick="showTab('programmes', this)">&#127891; Programmes (CPT)</a></li>
+			<li><a onclick="showTab('courses', this)">&#128218; Courses (CPT)</a></li>
+			<li><a onclick="showTab('events', this)">&#128197; Events (CPT)</a></li>
+			<li><a onclick="showTab('settings', this)">&#9881; College Settings</a></li>
+			<li><a href="/">&larr; Visit Frontend Website</a></li>
+		</ul>
+	</aside>
+	<div class="wp-main">
+		<div class="wp-adminbar">
+			<span>City College of Education, Mararaba — WordPress Administration Portal</span>
+			<div style="display:flex;gap:16px;align-items:center;">
+				<a href="/">View Live Website &rarr;</a>
+				<a href="#logout" onclick="logoutWpAdmin(); return false;" style="color:#FCA5A5;">Log Out</a>
+			</div>
+		</div>
+		<div class="wp-content">
+			<div id="tab-admissions" class="tab-panel active">
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+					<h1>Provisional Admission Applications — City College of Education</h1>
+					<button type="button" class="wp-btn" onclick="exportApplicationsCsv()">Export Applications (CSV)</button>
+				</div>
+				<div class="wp-stats">
+					<div class="wp-stat"><strong>Total Applications:</strong> <span id="adm-count">3</span></div>
+					<div class="wp-stat" style="border-left-color:#F5B800;"><strong>Pending Review:</strong> <span id="adm-pending">2</span></div>
+					<div class="wp-stat" style="border-left-color:#007A33;"><strong>Offered Provisional Admission:</strong> <span id="adm-admitted">1</span></div>
+				</div>
+				<table class="wp-table">
+					<thead>
+						<tr><th>Reference No.</th><th>Applicant Name</th><th>Phone &amp; Email</th><th>Programme &amp; Course</th><th>Qualification</th><th>Status</th></tr>
+					</thead>
+					<tbody id="wp-admissions-tbody">
+						<tr><td><strong>CCOE/2026/ADM/48219</strong></td><td>Amina Ibrahim Musa</td><td>08031234567<br><small>amina.musa@example.com</small></td><td><strong>NCE</strong><br><small>Computer Science Education</small></td><td>SSCE (WAEC 2025)</td><td><span class="badge">ADMITTED</span></td></tr>
+						<tr><td><strong>CCOE/2026/ADM/59104</strong></td><td>Emmanuel Okafor</td><td>08059876543<br><small>e.okafor@example.com</small></td><td><strong>Degree (AAUA)</strong><br><small>B.Sc. (Ed.) Economics Education</small></td><td>NCE Merit (2024)</td><td><span class="badge">PENDING</span></td></tr>
+						<tr><td><strong>CCOE/2026/ADM/63012</strong></td><td>Grace Danjuma</td><td>08035558899<br><small>grace.d@example.com</small></td><td><strong>PGDE (AAUA)</strong><br><small>Postgraduate Diploma in Education</small></td><td>B.Sc. Accounting (2022)</td><td><span class="badge">UNDER REVIEW</span></td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div id="tab-programmes" class="tab-panel">
+				<h1>Academic Programmes (Custom Post Type: <code>ccoe_programme</code>)</h1>
+				<div class="wp-card">
+					<p>Administrators can add, edit, and remove NCE Schools, AAUA Affiliated Degree Departments, PGDE, PDE, and Skills Acquisition programmes without editing code.</p>
+					<table class="wp-table">
+						<thead><tr><th>Programme / School Title</th><th>Level</th><th>Affiliation</th><th>Duration</th></tr></thead>
+						<tbody>
+							<tr><td><strong>School of Arts and Languages Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>School of Science Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>School of Computing Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>School of Business Management Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>School of Social Sciences Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>School of Foundation and Lifelong Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
+							<tr><td><strong>Degree Programmes in Affiliation with AAUA</strong></td><td>Degree (B.Ed. / B.Sc. Ed.)</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>4 Years / 3 Years DE</td></tr>
+							<tr><td><strong>Postgraduate Diploma in Education (PGDE)</strong></td><td>PGDE</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>2 Semesters (40 Units)</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div id="tab-courses" class="tab-panel">
+				<h1>Courses Catalog (Custom Post Type: <code>ccoe_course</code>)</h1>
+				<div class="wp-card">
+					<p>All 20 PGDE First &amp; Second Semester compulsory courses (<code>PDE 601</code>–<code>PDE 619</code> and <code>PDE 600</code>–<code>PDE 623</code>), NCE courses, and AAUA Degree courses are managed here.</p>
+				</div>
+			</div>
+
+			<div id="tab-events" class="tab-panel">
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+					<h1 style="margin:0;">College Events Manager (Custom Post Type: <code>ccoe_event</code>)</h1>
+					<button type="button" class="wp-btn" style="background:#475569;" onclick="resetDefaultEvents()">Restore Default Events</button>
+				</div>
+
+				<!-- CREATE NEW EVENT FORM -->
+				<div class="wp-card" style="border-top:4px solid #00337C;">
+					<h2 style="margin-top:0;color:#002355;font-size:1.15rem;">+ Publish New Campus Event</h2>
+					<form id="wp-create-event-form" onsubmit="return handleCreateEvent(event)">
+						<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:14px;">
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Title *</label>
+								<input type="text" id="ev_title" required placeholder="e.g. 2026/2027 First Semester Orientation &amp; Matriculation Lecture" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Category *</label>
+								<select id="ev_category" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+									<option value="Admissions">Admissions</option>
+									<option value="Academic Workshop">Academic Workshop</option>
+									<option value="Entrepreneurship">Entrepreneurship</option>
+									<option value="Matriculation">Matriculation</option>
+									<option value="Examination">Examination</option>
+									<option value="Campus Bulletin">Campus Bulletin</option>
+								</select>
+							</div>
+						</div>
+
+						<div style="display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:16px;margin-bottom:14px;">
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Date *</label>
+								<input type="date" id="ev_date" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Time *</label>
+								<input type="text" id="ev_time" required value="10:00 AM – 02:00 PM" placeholder="e.g. 10:00 AM – 02:00 PM" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Venue *</label>
+								<input type="text" id="ev_venue" required placeholder="e.g. Main Auditorium, Mararaba Campus" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+						</div>
+
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Campus Featured Image Preset</label>
+								<select id="ev_image_preset" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+									<option value="/education-zone/images/ccoe/campus-main-gate.jpg">Campus Main Gate (Mararaba)</option>
+									<option value="/education-zone/images/ccoe/academic-block.jpg">Academic Block</option>
+									<option value="/education-zone/images/ccoe/lecture-walkway.jpg">Lecture Walkway</option>
+									<option value="/education-zone/images/ccoe/admin-block.jpg">Administrative Block</option>
+									<option value="/education-zone/images/ccoe/campus-courtyard-statue.jpg">Campus Courtyard Statue</option>
+									<option value="/education-zone/images/ccoe/skills-department-flyer.jpg">Skills Acquisition Centre</option>
+									<option value="/education-zone/images/ccoe/campus-tree-walkway.jpg">Campus Tree Walkway</option>
+								</select>
+							</div>
+							<div>
+								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Or Upload Custom Event Image (Optional)</label>
+								<input type="file" id="ev_image_upload" accept="image/*" style="width:100%;box-sizing:border-box;padding:6px;border:1px solid #CBD5E1;border-radius:6px;background:#F8FAFC;" />
+							</div>
+						</div>
+
+						<div style="margin-bottom:14px;">
+							<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Description / Summary *</label>
+							<textarea id="ev_description" rows="3" required placeholder="Enter full details of the event..." style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea>
+						</div>
+
+						<div style="display:flex;align-items:center;gap:14px;">
+							<button type="submit" class="wp-btn" style="background:#007A33;padding:10px 20px;font-weight:700;font-size:0.92rem;">Publish Event to Website &rarr;</button>
+							<span id="ev-feedback" style="color:#007A33;font-weight:600;font-size:0.88rem;display:none;">&#10003; Event published to live website!</span>
+						</div>
+					</form>
+				</div>
+
+				<!-- PUBLISHED EVENTS TABLE WITH DELETE ACTION -->
+				<div class="wp-card">
+					<h2 style="margin-top:0;color:#002355;font-size:1.1rem;">Published Events (<span id="wp-events-count">0</span>)</h2>
+					<table class="wp-table">
+						<thead>
+							<tr>
+								<th style="width:70px;">Image</th>
+								<th>Event Title &amp; Description</th>
+								<th>Category</th>
+								<th>Date &amp; Time</th>
+								<th>Venue</th>
+								<th style="width:110px;">Action</th>
+							</tr>
+						</thead>
+						<tbody id="wp-events-tbody"></tbody>
+					</table>
+				</div>
+			</div>
+
+			<div id="tab-settings" class="tab-panel">
+				<h1>Institutional Administration Settings (<code>CCOE_Settings</code>)</h1>
+				<div class="wp-card">
+					<p><strong>Institution Name:</strong> City College of Education, Mararaba, Nasarawa State</p>
+					<p><strong>Motto:</strong> Education for Self Employment</p>
+					<p><strong>Address:</strong> No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+					<p><strong>Vision:</strong> To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
+					<p><strong>Mission:</strong> To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		function showTab(id, el) {
+			document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+			document.getElementById('tab-' + id).classList.add('active');
+			document.querySelectorAll('.wp-menu a').forEach(a => a.classList.remove('active'));
+			el.classList.add('active');
+		}
+
+		function handleWpLogin(e) {
+			e.preventDefault();
+			sessionStorage.setItem('ccoe_wp_admin_logged_in', '1');
+			document.getElementById('wp-login-screen').classList.add('hidden');
+			return false;
+		}
+
+		function logoutWpAdmin() {
+			sessionStorage.removeItem('ccoe_wp_admin_logged_in');
+			document.getElementById('wp-login-screen').classList.remove('hidden');
+		}
+
+		if (sessionStorage.getItem('ccoe_wp_admin_logged_in') === '1') {
+			document.getElementById('wp-login-screen').classList.add('hidden');
+		}
+
+		// Load any applications submitted from the frontend preview
+		function loadStoredApplications() {
+			try {
+				const extra = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
+				const tbody = document.getElementById('wp-admissions-tbody');
+				extra.forEach(app => {
+					const tr = document.createElement('tr');
+					tr.innerHTML = `<td><strong>${app.ref}</strong></td><td>${app.name}</td><td>${app.phone}<br><small>${app.email}</small></td><td><strong>${app.prog}</strong><br><small>${app.course}</small></td><td>${app.qual}</td><td><span class="badge">${app.status || 'NEW SUBMISSION'}</span></td>`;
+					tbody.insertBefore(tr, tbody.firstChild);
+				});
+				document.getElementById('adm-count').textContent = 3 + extra.length;
+				document.getElementById('adm-pending').textContent = 2 + extra.length;
+			} catch (err) {}
+		}
+		loadStoredApplications();
+
+		function exportApplicationsCsv() {
+			const rows = [['Reference Number', 'Applicant Name', 'Contact', 'Programme', 'Qualification', 'Status']];
+			document.querySelectorAll('#wp-admissions-tbody tr').forEach(tr => {
+				const cols = Array.from(tr.querySelectorAll('td')).map(td => '"' + td.innerText.replace(/\s+/g, ' ').trim() + '"');
+				rows.push(cols);
+			});
+			const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+			const a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = 'CCoE-Admission-Applications.csv';
+			a.click();
+		}
+
+		// =========================================================================
+		// EVENTS CRUD MANAGER (Synced via localStorage 'ccoe_events_store')
+		// =========================================================================
+		const DEFAULT_CCOE_EVENTS = [
+			{
+				id: 'ev-1',
+				title: '2026/2027 Provisional Admission Screening & Documentation Exercise',
+				category: 'Admissions',
+				badgeClass: 'ccoe-badge-gold',
+				date: 'Nov 25, 2026',
+				time: '09:00 AM – 03:00 PM',
+				venue: 'Administrative Block Auditorium, Mararaba',
+				image: '/education-zone/images/ccoe/campus-main-gate.jpg',
+				description: 'Screening and verification of original academic credentials for candidates applying into NCE, AAUA Affiliated Degree, PGDE, and PDE programmes.'
+			},
+			{
+				id: 'ev-2',
+				title: 'Orientation Workshop on New NCCE Minimum Standard (2026) Curriculum',
+				category: 'Academic Workshop',
+				badgeClass: '',
+				date: 'Dec 04, 2026',
+				time: '10:00 AM – 02:00 PM',
+				venue: 'School of Computing Lecture Theatre',
+				image: '/education-zone/images/ccoe/lecture-walkway.jpg',
+				description: 'Featuring sessions on Artificial Intelligence & Robotics Education, Data Science, Cybersecurity, and Entrepreneurial Pedagogy.'
+			},
+			{
+				id: 'ev-3',
+				title: 'Skills Acquisition & Entrepreneurship Exhibition ("Learn Today, Earn Tomorrow")',
+				category: 'Entrepreneurship',
+				badgeClass: 'ccoe-badge-green',
+				date: 'Dec 14, 2026',
+				time: '11:00 AM – 04:00 PM',
+				venue: 'Centre for Skills Acquisition',
+				image: '/education-zone/images/ccoe/skills-department-flyer.jpg',
+				description: 'Practical showcase of student projects in Tailoring, Hair Dressing, Shoe Making, Computer Training, and Screeding & Painting.'
+			},
+			{
+				id: 'ev-4',
+				title: 'First Semester NCE, PGDE & AAUA Affiliated Degree Matriculation Ceremony',
+				category: 'Matriculation',
+				badgeClass: 'ccoe-badge-gold',
+				date: 'Jan 18, 2027',
+				time: '09:30 AM Prompt',
+				venue: 'College Convocation Square',
+				image: '/education-zone/images/ccoe/campus-courtyard-statue.jpg',
+				description: 'Formal matriculation ceremony for newly admitted NCE, B.Ed./B.Sc. (Ed.) Degree, and PGDE students.'
+			}
+		];
+
+		function getStoredEvents() {
+			try {
+				const raw = localStorage.getItem('ccoe_events_store');
+				if (raw) {
+					return JSON.parse(raw);
+				}
+			} catch (e) {}
+			localStorage.setItem('ccoe_events_store', JSON.stringify(DEFAULT_CCOE_EVENTS));
+			return [...DEFAULT_CCOE_EVENTS];
+		}
+
+		function saveStoredEvents(events) {
+			localStorage.setItem('ccoe_events_store', JSON.stringify(events));
+			renderAdminEventsTable();
+		}
+
+		function formatPrettyDate(dateStr) {
+			if (!dateStr) return '';
+			const d = new Date(dateStr + 'T00:00:00');
+			if (isNaN(d.getTime())) return dateStr;
+			return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+		}
+
+		function getBadgeClassForCategory(cat) {
+			if (cat === 'Admissions' || cat === 'Matriculation') return 'ccoe-badge-gold';
+			if (cat === 'Entrepreneurship') return 'ccoe-badge-green';
+			return '';
+		}
+
+		function renderAdminEventsTable() {
+			const events = getStoredEvents();
+			document.getElementById('wp-events-count').textContent = events.length;
+			const tbody = document.getElementById('wp-events-tbody');
+			if (!events.length) {
+				tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#64748B;padding:24px;">No events published. Use the form above to publish an event or click "Restore Default Events".</td></tr>';
+				return;
+			}
+			tbody.innerHTML = events.map(ev => `
+				<tr>
+					<td><img src="${ev.image}" alt="" style="width:60px;height:44px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1;" /></td>
+					<td>
+						<strong style="color:#002355;display:block;margin-bottom:3px;">${ev.title}</strong>
+						<small style="color:#475569;">${ev.description}</small>
+					</td>
+					<td><span class="badge">${ev.category}</span></td>
+					<td><strong>${ev.date}</strong><br><small>${ev.time}</small></td>
+					<td>${ev.venue}</td>
+					<td>
+						<button type="button" onclick="deleteEventById('${ev.id}')" style="background:#DC2626;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+							Delete Event
+						</button>
+					</td>
+				</tr>
+			`).join('');
+		}
+
+		function handleCreateEvent(e) {
+			e.preventDefault();
+			const title = document.getElementById('ev_title').value.trim();
+			const category = document.getElementById('ev_category').value;
+			const dateInput = document.getElementById('ev_date').value;
+			const time = document.getElementById('ev_time').value.trim();
+			const venue = document.getElementById('ev_venue').value.trim();
+			const presetImg = document.getElementById('ev_image_preset').value;
+			const fileInput = document.getElementById('ev_image_upload');
+			const description = document.getElementById('ev_description').value.trim();
+
+			const finalizeSave = (imgSrc) => {
+				const events = getStoredEvents();
+				events.unshift({
+					id: 'ev-' + Date.now(),
+					title: title,
+					category: category,
+					badgeClass: getBadgeClassForCategory(category),
+					date: formatPrettyDate(dateInput),
+					time: time,
+					venue: venue,
+					image: imgSrc,
+					description: description
+				});
+				saveStoredEvents(events);
+				document.getElementById('wp-create-event-form').reset();
+				document.getElementById('ev_time').value = '10:00 AM – 02:00 PM';
+				const fb = document.getElementById('ev-feedback');
+				fb.style.display = 'inline';
+				setTimeout(() => { fb.style.display = 'none'; }, 3500);
+			};
+
+			if (fileInput.files && fileInput.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function(evt) {
+					finalizeSave(evt.target.result);
+				};
+				reader.readAsDataURL(fileInput.files[0]);
+			} else {
+				finalizeSave(presetImg);
+			}
+			return false;
+		}
+
+		function deleteEventById(id) {
+			const events = getStoredEvents().filter(ev => ev.id !== id);
+			saveStoredEvents(events);
+		}
+
+		function resetDefaultEvents() {
+			saveStoredEvents([...DEFAULT_CCOE_EVENTS]);
+		}
+
+		renderAdminEventsTable();
+	</script>
+</body>
+</html>
