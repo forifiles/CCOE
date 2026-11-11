@@ -26,10 +26,101 @@
 		.wp-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #C3C4C7; }
 		.wp-table th, .wp-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 0.88rem; }
 		.wp-table th { background: #F6F7F7; font-weight: 600; }
-		.wp-btn { display: inline-block; background: #2271B1; color: #fff; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; border: none; cursor: pointer; }
-		.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #E0F2FE; color: #0369A1; }
+		.wp-table tbody tr.clickable-row { cursor: pointer; transition: background 0.12s ease; }
+		.wp-table tbody tr.clickable-row:hover { background: #F0F6FC; }
+		.wp-btn { display: inline-block; background: #2271B1; color: #fff; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; border: none; cursor: pointer; font-weight: 600; }
+		.wp-btn:hover { background: #135E96; }
+		.wp-btn-danger { background: #DC2626; }
+		.wp-btn-danger:hover { background: #B91C1C; }
+		.wp-btn-success { background: #007A33; }
+		.wp-btn-success:hover { background: #005A25; }
+		.wp-btn-outline { background: #fff; color: #1D2327; border: 1px solid #C3C4C7; }
+		.wp-btn-outline:hover { background: #F6F7F7; }
+		.badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 0.74rem; font-weight: 700; background: #E0F2FE; color: #0369A1; text-transform: uppercase; letter-spacing: 0.03em; }
+		.badge-pending { background: #FEF3C7; color: #B45309; }
+		.badge-under_review { background: #E0F2FE; color: #0369A1; }
+		.badge-admitted { background: #DCFCE7; color: #15803D; }
+		.badge-declined { background: #FEE2E2; color: #B91C1C; }
 		.tab-panel { display: none; }
 		.tab-panel.active { display: block; }
+		/* Application Detail Modal / Drawer */
+		.wp-detail-modal {
+			position: fixed;
+			inset: 0;
+			background: rgba(15, 23, 42, 0.65);
+			z-index: 8888;
+			display: none;
+			align-items: flex-start;
+			justify-content: center;
+			overflow-y: auto;
+			padding: 32px 20px;
+		}
+		.wp-detail-modal.open {
+			display: flex;
+		}
+		.wp-detail-dialog {
+			background: #ffffff;
+			width: 100%;
+			max-width: 980px;
+			border-radius: 10px;
+			box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+			border-top: 5px solid #00337C;
+			overflow: hidden;
+		}
+		.wp-detail-header {
+			background: #002355;
+			color: #ffffff;
+			padding: 18px 24px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 16px;
+		}
+		.wp-detail-header h2 {
+			margin: 0;
+			font-size: 1.15rem;
+			color: #ffffff;
+		}
+		.wp-detail-body {
+			padding: 24px;
+			display: grid;
+			grid-template-columns: 1.75fr 1fr;
+			gap: 24px;
+		}
+		@media (max-width: 820px) {
+			.wp-detail-body {
+				grid-template-columns: 1fr;
+			}
+		}
+		.wp-detail-section {
+			margin-bottom: 20px;
+		}
+		.wp-detail-section h3 {
+			margin: 0 0 10px;
+			font-size: 0.95rem;
+			color: #002355;
+			border-bottom: 2px solid #F5B800;
+			padding-bottom: 6px;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+		}
+		.wp-detail-grid {
+			width: 100%;
+			border-collapse: collapse;
+			border: 1px solid #E2E8F0;
+		}
+		.wp-detail-grid th, .wp-detail-grid td {
+			padding: 8px 12px;
+			border-bottom: 1px solid #E2E8F0;
+			font-size: 0.86rem;
+			text-align: left;
+		}
+		.wp-detail-grid th {
+			width: 38%;
+			background: #F8FAFC;
+			color: #475569;
+			font-weight: 600;
+		}
 		/* WordPress Login Modal Overlay */
 		.wp-login-overlay {
 			position: fixed;
@@ -166,24 +257,67 @@
 		<div class="wp-content">
 			<div id="tab-admissions" class="tab-panel active">
 				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-					<h1>Provisional Admission Applications — City College of Education</h1>
-					<button type="button" class="wp-btn" onclick="exportApplicationsCsv()">Export Applications (CSV)</button>
+					<div>
+						<h1 style="margin-bottom:4px;">Provisional Admission Applications — City College of Education</h1>
+						<p style="margin:0 0 14px;color:#475569;font-size:0.88rem;">Click any application row or <strong>View / Manage</strong> to inspect all filed bio-data, academic records, Next of Kin, uploaded documents, change admission status, or delete the application.</p>
+					</div>
+					<div style="display:flex;gap:8px;flex-wrap:wrap;">
+						<button type="button" class="wp-btn wp-btn-outline" onclick="resetDefaultApplications()">Restore Demo Applications</button>
+						<button type="button" class="wp-btn" onclick="exportApplicationsCsv()">Export Applications (CSV)</button>
+					</div>
 				</div>
 				<div class="wp-stats">
-					<div class="wp-stat"><strong>Total Applications:</strong> <span id="adm-count">3</span></div>
-					<div class="wp-stat" style="border-left-color:#F5B800;"><strong>Pending Review:</strong> <span id="adm-pending">2</span></div>
-					<div class="wp-stat" style="border-left-color:#007A33;"><strong>Offered Provisional Admission:</strong> <span id="adm-admitted">1</span></div>
+					<div class="wp-stat"><strong>Total Applications:</strong> <span id="adm-count">0</span></div>
+					<div class="wp-stat" style="border-left-color:#F5B800;"><strong>Pending / Under Review:</strong> <span id="adm-pending">0</span></div>
+					<div class="wp-stat" style="border-left-color:#007A33;"><strong>Offered Provisional Admission:</strong> <span id="adm-admitted">0</span></div>
+					<div class="wp-stat" style="border-left-color:#DC2626;"><strong>Declined:</strong> <span id="adm-declined">0</span></div>
 				</div>
+
+				<!-- Filter & Search Bar -->
+				<div class="wp-card" style="padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+					<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+						<label style="font-size:0.85rem;font-weight:600;">Filter Status:</label>
+						<select id="adm-filter-status" onchange="renderApplicationsTable()" style="padding:7px 10px;border:1px solid #CBD5E1;border-radius:4px;font-size:0.86rem;">
+							<option value="ALL">All Statuses</option>
+							<option value="PENDING">Pending Review</option>
+							<option value="UNDER REVIEW">Under Review</option>
+							<option value="ADMITTED">Offered Provisional Admission (Admitted)</option>
+							<option value="DECLINED">Declined</option>
+						</select>
+						<input type="search" id="adm-search-input" oninput="renderApplicationsTable()" placeholder="Search Ref No, Applicant Name, Course, Phone..." style="padding:7px 12px;border:1px solid #CBD5E1;border-radius:4px;width:280px;font-size:0.86rem;" />
+					</div>
+					<span id="adm-status-toast" style="display:none;color:#007A33;font-weight:700;font-size:0.86rem;">&#10003; Changes saved!</span>
+				</div>
+
 				<table class="wp-table">
 					<thead>
-						<tr><th>Reference No.</th><th>Applicant Name</th><th>Phone &amp; Email</th><th>Programme &amp; Course</th><th>Qualification</th><th>Status</th></tr>
+						<tr>
+							<th>Reference No.</th>
+							<th>Applicant Name</th>
+							<th>Phone &amp; Email</th>
+							<th>Programme &amp; Course</th>
+							<th>Qualification</th>
+							<th>Submitted</th>
+							<th>Status</th>
+							<th style="width:210px;">Actions</th>
+						</tr>
 					</thead>
-					<tbody id="wp-admissions-tbody">
-						<tr><td><strong>CCOE/2026/ADM/48219</strong></td><td>Amina Ibrahim Musa</td><td>08031234567<br><small>amina.musa@example.com</small></td><td><strong>NCE</strong><br><small>Computer Science Education</small></td><td>SSCE (WAEC 2025)</td><td><span class="badge">ADMITTED</span></td></tr>
-						<tr><td><strong>CCOE/2026/ADM/59104</strong></td><td>Emmanuel Okafor</td><td>08059876543<br><small>e.okafor@example.com</small></td><td><strong>Degree (AAUA)</strong><br><small>B.Sc. (Ed.) Economics Education</small></td><td>NCE Merit (2024)</td><td><span class="badge">PENDING</span></td></tr>
-						<tr><td><strong>CCOE/2026/ADM/63012</strong></td><td>Grace Danjuma</td><td>08035558899<br><small>grace.d@example.com</small></td><td><strong>PGDE (AAUA)</strong><br><small>Postgraduate Diploma in Education</small></td><td>B.Sc. Accounting (2022)</td><td><span class="badge">UNDER REVIEW</span></td></tr>
-					</tbody>
+					<tbody id="wp-admissions-tbody"></tbody>
 				</table>
+			</div>
+
+			<!-- APPLICATION FULL DETAIL & STATUS MANAGEMENT MODAL -->
+			<div id="wp-app-detail-modal" class="wp-detail-modal" onclick="if(event.target===this)closeApplicationDetail()">
+				<div class="wp-detail-dialog">
+					<div class="wp-detail-header">
+						<div>
+							<span id="detail-ref-badge" style="color:#F5B800;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;display:block;">APPLICATION FILE</span>
+							<h2 id="detail-applicant-title">Applicant Full Record</h2>
+						</div>
+						<button type="button" onclick="closeApplicationDetail()" class="wp-btn wp-btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);">&times; Close Window</button>
+					</div>
+					<div class="wp-detail-body" id="wp-app-detail-content"></div>
+				</div>
 			</div>
 
 			<div id="tab-programmes" class="tab-panel">
@@ -342,27 +476,395 @@
 			document.getElementById('wp-login-screen').classList.add('hidden');
 		}
 
-		// Load any applications submitted from the frontend preview
-		function loadStoredApplications() {
+		// =========================================================================
+		// ADMISSIONS APPLICATIONS FULL CRUD & DETAIL INSPECTION
+		// =========================================================================
+		const DEFAULT_APPLICATIONS = [
+			{
+				id: 'default-app-1',
+				ref: 'CCOE/2026/ADM/48219',
+				name: 'Amina Ibrahim Musa',
+				first_name: 'Amina',
+				middle_name: 'Ibrahim',
+				surname: 'Musa',
+				dob: '2004-05-14',
+				gender: 'Female',
+				nationality: 'Nigerian',
+				state_of_origin: 'Nasarawa',
+				lga: 'Karu',
+				residential_address: 'No. 14 Sani Abacha Road Estate, Mararaba, Nasarawa State',
+				phone: '08031234567',
+				email: 'amina.musa@example.com',
+				prog: 'NCE',
+				course: 'Computer Science Education (School of Computing Education)',
+				highest_qualification: "SSCE / O'Level",
+				exam_type: 'WAEC (WASSCE)',
+				exam_year_num: '2025 / 42519082AB',
+				qual: "SSCE / O'Level (WAEC 2025)",
+				nok_name: 'Alhaji Ibrahim Musa',
+				nok_phone: '08039988776',
+				nok_relationship: 'Father / Parent',
+				passport_name: 'amina-musa-passport.jpg',
+				passport_data: '/education-zone/images/ccoe/ccoe-logo.png',
+				credentials_name: 'amina-waec-statement-of-result-2025.pdf',
+				credentials_data: '',
+				submitted_at: 'Nov 09, 2026, 10:15 AM',
+				status: 'ADMITTED',
+				admin_notes: 'Verified 5 O-Level credits including English Language and Mathematics. Recommended for Provisional Admission.'
+			},
+			{
+				id: 'default-app-2',
+				ref: 'CCOE/2026/ADM/59104',
+				name: 'Emmanuel Chinedu Okafor',
+				first_name: 'Emmanuel',
+				middle_name: 'Chinedu',
+				surname: 'Okafor',
+				dob: '2001-11-22',
+				gender: 'Male',
+				nationality: 'Nigerian',
+				state_of_origin: 'Anambra',
+				lga: 'Awka South',
+				residential_address: 'Behind Crispy Chicken, Calvary Road, Mararaba, Nasarawa State',
+				phone: '08059876543',
+				email: 'e.okafor@example.com',
+				prog: 'Degree (AAUA)',
+				course: 'B.Sc. (Ed.) Economics Education (AAUA)',
+				highest_qualification: 'NCE / OND',
+				exam_type: 'Degree / HND / NCE Certificate',
+				exam_year_num: '2024 / NCE-MERIT-9081',
+				qual: 'NCE Merit (2024)',
+				nok_name: 'Mrs. Ngozi Okafor',
+				nok_phone: '08062233445',
+				nok_relationship: 'Mother / Parent',
+				passport_name: 'emmanuel-okafor-passport.jpg',
+				passport_data: '/education-zone/images/ccoe/ccoe-logo.png',
+				credentials_name: 'emmanuel-nce-certificate-2024.pdf',
+				credentials_data: '',
+				submitted_at: 'Nov 10, 2026, 02:40 PM',
+				status: 'PENDING',
+				admin_notes: 'Awaiting physical sighting of original NCE statement of result for Direct Entry (AAUA).'
+			},
+			{
+				id: 'default-app-3',
+				ref: 'CCOE/2026/ADM/63012',
+				name: 'Grace Talatu Danjuma',
+				first_name: 'Grace',
+				middle_name: 'Talatu',
+				surname: 'Danjuma',
+				dob: '1997-08-03',
+				gender: 'Female',
+				nationality: 'Nigerian',
+				state_of_origin: 'Kaduna',
+				lga: 'Zangon Kataf',
+				residential_address: 'Phase 2, New Nyanya, Karu LGA, Nasarawa State',
+				phone: '08035558899',
+				email: 'grace.d@example.com',
+				prog: 'PGDE (AAUA)',
+				course: 'Postgraduate Diploma in Education (PGDE — AAUA Affiliation)',
+				highest_qualification: "Bachelor's Degree",
+				exam_type: 'Degree / HND / NCE Certificate',
+				exam_year_num: '2022 / BSC-ACCT-3319',
+				qual: 'B.Sc. Accounting (2022)',
+				nok_name: 'Mr.Bitrus Danjuma',
+				nok_phone: '08023344556',
+				nok_relationship: 'Spouse',
+				passport_name: 'grace-danjuma-passport.png',
+				passport_data: '/education-zone/images/ccoe/ccoe-logo.png',
+				credentials_name: 'grace-bsc-accounting-certificate.pdf',
+				credentials_data: '',
+				submitted_at: 'Nov 11, 2026, 09:12 AM',
+				status: 'UNDER REVIEW',
+				admin_notes: 'Credentials currently with PGDE Coordinator for transcript verification.'
+			}
+		];
+
+		function getAllApplications() {
 			try {
-				const extra = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
-				const tbody = document.getElementById('wp-admissions-tbody');
-				extra.forEach(app => {
-					const tr = document.createElement('tr');
-					tr.innerHTML = `<td><strong>${app.ref}</strong></td><td>${app.name}</td><td>${app.phone}<br><small>${app.email}</small></td><td><strong>${app.prog}</strong><br><small>${app.course}</small></td><td>${app.qual}</td><td><span class="badge">${app.status || 'NEW SUBMISSION'}</span></td>`;
-					tbody.insertBefore(tr, tbody.firstChild);
-				});
-				document.getElementById('adm-count').textContent = 3 + extra.length;
-				document.getElementById('adm-pending').textContent = 2 + extra.length;
-			} catch (err) {}
+				const initialized = localStorage.getItem('ccoe_applications_initialized');
+				const raw = localStorage.getItem('ccoe_submitted_applications');
+				let list = raw ? JSON.parse(raw) : [];
+				if (!initialized) {
+					const existingRefs = new Set(list.map(a => a.ref));
+					DEFAULT_APPLICATIONS.forEach(def => {
+						if (!existingRefs.has(def.ref)) {
+							list.push(def);
+						}
+					});
+					localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
+					localStorage.setItem('ccoe_applications_initialized', '1');
+				}
+				return list.map((app, idx) => ({
+					id: app.id || ('app-idx-' + idx),
+					ref: app.ref || 'CCOE/2026/ADM/00000',
+					name: app.name || [app.first_name, app.middle_name, app.surname].filter(Boolean).join(' ') || 'Applicant',
+					first_name: app.first_name || (app.name ? app.name.split(' ')[0] : ''),
+					middle_name: app.middle_name || '',
+					surname: app.surname || (app.name ? app.name.split(' ').slice(1).join(' ') : ''),
+					dob: app.dob || 'Not specified',
+					gender: app.gender || 'Not specified',
+					nationality: app.nationality || 'Nigerian',
+					state_of_origin: app.state_of_origin || 'Not specified',
+					lga: app.lga || 'Not specified',
+					residential_address: app.residential_address || 'Provided on application form',
+					phone: app.phone || '',
+					email: app.email || '',
+					prog: app.prog || '',
+					course: app.course || '',
+					highest_qualification: app.highest_qualification || app.qual || '',
+					exam_type: app.exam_type || '',
+					exam_year_num: app.exam_year_num || '',
+					qual: app.qual || app.highest_qualification || '',
+					nok_name: app.nok_name || 'Provided on application form',
+					nok_phone: app.nok_phone || 'Provided on application form',
+					nok_relationship: app.nok_relationship || 'Relative',
+					passport_name: app.passport_name || 'passport-photograph.jpg',
+					passport_data: app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png',
+					credentials_name: app.credentials_name || '',
+					credentials_data: app.credentials_data || '',
+					submitted_at: app.submitted_at || '2026/2027 Session',
+					status: (app.status || 'PENDING').toUpperCase(),
+					admin_notes: app.admin_notes || ''
+				}));
+			} catch (err) {
+				return [...DEFAULT_APPLICATIONS];
+			}
 		}
-		loadStoredApplications();
+
+		function saveAllApplications(list) {
+			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
+			localStorage.setItem('ccoe_applications_initialized', '1');
+			renderApplicationsTable();
+		}
+
+		function getStatusBadgeHtml(status) {
+			const st = (status || 'PENDING').toUpperCase();
+			let cls = 'badge-pending';
+			if (st === 'ADMITTED') cls = 'badge-admitted';
+			else if (st === 'UNDER REVIEW') cls = 'badge-under_review';
+			else if (st === 'DECLINED') cls = 'badge-declined';
+			return `<span class="badge ${cls}">${st}</span>`;
+		}
+
+		function showAdminToast(msg) {
+			const toast = document.getElementById('adm-status-toast');
+			if (!toast) return;
+			toast.textContent = '✓ ' + msg;
+			toast.style.display = 'inline';
+			setTimeout(() => { toast.style.display = 'none'; }, 3200);
+		}
+
+		function renderApplicationsTable() {
+			const all = getAllApplications();
+			const statusFilter = (document.getElementById('adm-filter-status')?.value || 'ALL').toUpperCase();
+			const query = (document.getElementById('adm-search-input')?.value || '').toLowerCase().trim();
+
+			document.getElementById('adm-count').textContent = all.length;
+			document.getElementById('adm-pending').textContent = all.filter(a => a.status === 'PENDING' || a.status === 'UNDER REVIEW').length;
+			document.getElementById('adm-admitted').textContent = all.filter(a => a.status === 'ADMITTED').length;
+			document.getElementById('adm-declined').textContent = all.filter(a => a.status === 'DECLINED').length;
+
+			const filtered = all.filter(app => {
+				if (statusFilter !== 'ALL' && app.status !== statusFilter) return false;
+				if (query) {
+					const haystack = [app.ref, app.name, app.phone, app.email, app.prog, app.course, app.qual, app.state_of_origin].join(' ').toLowerCase();
+					if (!haystack.includes(query)) return false;
+				}
+				return true;
+			});
+
+			const tbody = document.getElementById('wp-admissions-tbody');
+			if (!filtered.length) {
+				tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:28px;color:#64748B;">No admission applications match your filter criteria.</td></tr>';
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(app => `
+				<tr class="clickable-row" onclick="openApplicationDetail('${app.ref}')">
+					<td><strong style="color:#00337C;text-decoration:underline;">${app.ref}</strong></td>
+					<td><strong>${app.name}</strong><br><small style="color:#64748B;">${app.gender} &bull; ${app.state_of_origin}</small></td>
+					<td>${app.phone}<br><small>${app.email}</small></td>
+					<td><strong>${app.prog}</strong><br><small>${app.course}</small></td>
+					<td>${app.qual}</td>
+					<td><small>${app.submitted_at}</small></td>
+					<td onclick="event.stopPropagation();">
+						<select onchange="quickUpdateStatus('${app.ref}', this.value)" style="padding:5px 8px;border-radius:4px;border:1px solid #CBD5E1;font-weight:700;font-size:0.76rem;cursor:pointer;">
+							<option value="PENDING" ${app.status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+							<option value="UNDER REVIEW" ${app.status === 'UNDER REVIEW' ? 'selected' : ''}>UNDER REVIEW</option>
+							<option value="ADMITTED" ${app.status === 'ADMITTED' ? 'selected' : ''}>ADMITTED</option>
+							<option value="DECLINED" ${app.status === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
+						</select>
+						<div style="margin-top:4px;">${getStatusBadgeHtml(app.status)}</div>
+					</td>
+					<td onclick="event.stopPropagation();">
+						<div style="display:flex;gap:6px;flex-wrap:wrap;">
+							<button type="button" class="wp-btn" style="padding:5px 10px;font-size:0.78rem;" onclick="openApplicationDetail('${app.ref}')">View / Manage</button>
+							<button type="button" class="wp-btn wp-btn-danger" style="padding:5px 10px;font-size:0.78rem;" onclick="deleteApplicationByRef('${app.ref}')">Delete</button>
+						</div>
+					</td>
+				</tr>
+			`).join('');
+		}
+
+		function quickUpdateStatus(ref, newStatus) {
+			const list = getAllApplications().map(app => {
+				if (app.ref === ref) {
+					return { ...app, status: newStatus.toUpperCase() };
+				}
+				return app;
+			});
+			saveAllApplications(list);
+			showAdminToast(`Status for ${ref} updated to ${newStatus}`);
+		}
+
+		function openApplicationDetail(ref) {
+			const app = getAllApplications().find(a => a.ref === ref);
+			if (!app) return;
+
+			document.getElementById('detail-ref-badge').textContent = 'APPLICATION REFERENCE: ' + app.ref + ' • SUBMITTED: ' + app.submitted_at;
+			document.getElementById('detail-applicant-title').textContent = app.name + ' (' + app.prog + ')';
+
+			const content = document.getElementById('wp-app-detail-content');
+			content.innerHTML = `
+				<div>
+					<div class="wp-detail-section">
+						<h3>1. Personal &amp; Bio-Data Details</h3>
+						<table class="wp-detail-grid">
+							<tbody>
+								<tr><th>Application Reference No.</th><td><strong>${app.ref}</strong></td></tr>
+								<tr><th>First Name</th><td>${app.first_name || '—'}</td></tr>
+								<tr><th>Middle Name</th><td>${app.middle_name || '—'}</td></tr>
+								<tr><th>Surname</th><td><strong>${app.surname || '—'}</strong></td></tr>
+								<tr><th>Date of Birth / Gender</th><td>${app.dob} &bull; ${app.gender}</td></tr>
+								<tr><th>Nationality</th><td>${app.nationality}</td></tr>
+								<tr><th>State of Origin &amp; LGA</th><td>${app.state_of_origin} — ${app.lga}</td></tr>
+								<tr><th>Residential Address</th><td>${app.residential_address}</td></tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="wp-detail-section">
+						<h3>2. Contact &amp; Next of Kin Information</h3>
+						<table class="wp-detail-grid">
+							<tbody>
+								<tr><th>Applicant Phone Number</th><td><a href="tel:${app.phone}" style="color:#00337C;font-weight:600;">${app.phone}</a></td></tr>
+								<tr><th>Applicant Email Address</th><td><a href="mailto:${app.email}" style="color:#00337C;">${app.email}</a></td></tr>
+								<tr><th>Next of Kin Full Name</th><td><strong>${app.nok_name}</strong></td></tr>
+								<tr><th>Next of Kin Phone Number</th><td>${app.nok_phone}</td></tr>
+								<tr><th>Next of Kin Relationship</th><td>${app.nok_relationship}</td></tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="wp-detail-section" style="margin-bottom:0;">
+						<h3>3. Academic Programme &amp; Examination Qualifications</h3>
+						<table class="wp-detail-grid">
+							<tbody>
+								<tr><th>Programme of Interest</th><td><strong style="color:#002355;">${app.prog}</strong></td></tr>
+								<tr><th>Preferred Course of Study</th><td><strong>${app.course}</strong></td></tr>
+								<tr><th>Highest Educational Qualification</th><td>${app.highest_qualification}</td></tr>
+								<tr><th>Examination Type</th><td>${app.exam_type || '—'}</td></tr>
+								<tr><th>Exam Year &amp; Exam Number</th><td><code>${app.exam_year_num || app.qual}</code></td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div>
+					<div class="wp-card" style="margin-bottom:16px;background:#F8FAFC;">
+						<h3 style="margin-top:0;font-size:0.95rem;color:#002355;">Uploaded Applicant Credentials</h3>
+						<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+							<img src="${app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png'}" alt="Passport" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #00337C;background:#fff;" />
+							<div>
+								<strong style="font-size:0.84rem;display:block;">Passport Photograph</strong>
+								<small style="color:#64748B;display:block;margin-bottom:6px;">${app.passport_name || 'passport.jpg'}</small>
+								${app.passport_data ? `<a href="${app.passport_data}" download="${app.passport_name || 'passport.jpg'}" class="wp-btn wp-btn-outline" style="padding:4px 10px;font-size:0.76rem;">Download Passport</a>` : ''}
+							</div>
+						</div>
+						<div style="padding-top:10px;border-top:1px solid #E2E8F0;">
+							<strong style="font-size:0.84rem;display:block;">Academic Result / Certificate</strong>
+							<small style="color:#64748B;display:block;margin-bottom:6px;">${app.credentials_name || 'Submitted for physical verification'}</small>
+							${app.credentials_data ? `<a href="${app.credentials_data}" download="${app.credentials_name || 'credentials'}" class="wp-btn wp-btn-outline" style="padding:4px 10px;font-size:0.76rem;">Download Credentials</a>` : ''}
+						</div>
+					</div>
+
+					<div class="wp-card" style="border-top:4px solid #F5B800;margin-bottom:16px;">
+						<h3 style="margin-top:0;font-size:0.95rem;color:#002355;">Admission Decision &amp; Status</h3>
+						<div style="margin-bottom:12px;">
+							<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:6px;">Current Status: ${getStatusBadgeHtml(app.status)}</label>
+							<select id="detail-status-select" style="width:100%;padding:9px 10px;border:1px solid #CBD5E1;border-radius:6px;font-weight:700;font-size:0.9rem;">
+								<option value="PENDING" ${app.status === 'PENDING' ? 'selected' : ''}>PENDING REVIEW</option>
+								<option value="UNDER REVIEW" ${app.status === 'UNDER REVIEW' ? 'selected' : ''}>UNDER REVIEW</option>
+								<option value="ADMITTED" ${app.status === 'ADMITTED' ? 'selected' : ''}>OFFERED PROVISIONAL ADMISSION (ADMITTED)</option>
+								<option value="DECLINED" ${app.status === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
+							</select>
+						</div>
+						<div style="margin-bottom:14px;">
+							<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:6px;">Admissions Officer Review Notes:</label>
+							<textarea id="detail-admin-notes" rows="4" placeholder="Add verification remarks, O-Level credit check notes, or screening comments..." style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;font-size:0.86rem;">${app.admin_notes || ''}</textarea>
+						</div>
+						<button type="button" class="wp-btn wp-btn-success" style="width:100%;padding:10px;font-size:0.9rem;" onclick="saveApplicationDetailChanges('${app.ref}')">
+							&#10003; Save Status &amp; Review Notes
+						</button>
+					</div>
+
+					<div class="wp-card" style="border-left:4px solid #DC2626;background:#FEF2F2;margin-bottom:0;">
+						<h4 style="margin:0 0 6px;color:#991B1B;font-size:0.88rem;">Danger Zone</h4>
+						<p style="margin:0 0 10px;font-size:0.8rem;color:#7F1D1D;">Permanently delete this applicant's file from the admissions database.</p>
+						<button type="button" class="wp-btn wp-btn-danger" style="width:100%;" onclick="deleteApplicationByRef('${app.ref}', true)">
+							Delete Application Permanently
+						</button>
+					</div>
+				</div>
+			`;
+
+			document.getElementById('wp-app-detail-modal').classList.add('open');
+		}
+
+		function closeApplicationDetail() {
+			document.getElementById('wp-app-detail-modal').classList.remove('open');
+		}
+
+		function saveApplicationDetailChanges(ref) {
+			const newStatus = document.getElementById('detail-status-select').value;
+			const newNotes = document.getElementById('detail-admin-notes').value;
+			const list = getAllApplications().map(app => {
+				if (app.ref === ref) {
+					return { ...app, status: newStatus.toUpperCase(), admin_notes: newNotes };
+				}
+				return app;
+			});
+			saveAllApplications(list);
+			closeApplicationDetail();
+			showAdminToast(`Saved status (${newStatus}) and review notes for ${ref}`);
+		}
+
+		function deleteApplicationByRef(ref, fromModal = false) {
+			if (!confirm(`Are you sure you want to permanently delete application ${ref}?`)) {
+				return;
+			}
+			const list = getAllApplications().filter(app => app.ref !== ref);
+			saveAllApplications(list);
+			if (fromModal) {
+				closeApplicationDetail();
+			}
+			showAdminToast(`Deleted application ${ref}`);
+		}
+
+		function resetDefaultApplications() {
+			localStorage.removeItem('ccoe_applications_initialized');
+			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(DEFAULT_APPLICATIONS));
+			localStorage.setItem('ccoe_applications_initialized', '1');
+			renderApplicationsTable();
+			showAdminToast('Default demo applications restored');
+		}
+
+		renderApplicationsTable();
 
 		function exportApplicationsCsv() {
-			const rows = [['Reference Number', 'Applicant Name', 'Contact', 'Programme', 'Qualification', 'Status']];
-			document.querySelectorAll('#wp-admissions-tbody tr').forEach(tr => {
-				const cols = Array.from(tr.querySelectorAll('td')).map(td => '"' + td.innerText.replace(/\s+/g, ' ').trim() + '"');
-				rows.push(cols);
+			const all = getAllApplications();
+			const rows = [['Reference Number', 'Full Name', 'Gender', 'DOB', 'State', 'LGA', 'Phone', 'Email', 'Programme', 'Course', 'Qualification', 'Next of Kin', 'Status', 'Submitted At', 'Admin Notes']];
+			all.forEach(a => {
+				rows.push([a.ref, a.name, a.gender, a.dob, a.state_of_origin, a.lga, a.phone, a.email, a.prog, a.course, a.qual, `${a.nok_name} (${a.nok_phone})`, a.status, a.submitted_at, a.admin_notes].map(v => '"' + String(v || '').replace(/"/g, '""') + '"'));
 			});
 			const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
 			const a = document.createElement('a');

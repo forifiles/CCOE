@@ -569,6 +569,32 @@ class CCOE_Admissions {
 			}
 		}
 
+		// 1b. Delete Application Record and Associated Protected Files
+		if ( isset( $_GET['ccoe_delete_app'], $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'ccoe_delete_app' ) ) {
+			global $wpdb;
+			$del_id = absint( $_GET['ccoe_delete_app'] );
+			if ( $del_id > 0 ) {
+				$table = $wpdb->prefix . 'ccoe_applications';
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$app_row = $wpdb->get_row( $wpdb->prepare( "SELECT passport_file, credentials_file FROM $table WHERE id = %d", $del_id ) );
+				if ( $app_row ) {
+					$dir = self::ensure_protected_upload_dir();
+					foreach ( array( $app_row->passport_file, $app_row->credentials_file ) as $f ) {
+						if ( ! empty( $f ) ) {
+							$p = trailingslashit( $dir ) . basename( $f );
+							if ( file_exists( $p ) && is_file( $p ) ) {
+								@unlink( $p );
+							}
+						}
+					}
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$wpdb->delete( $table, array( 'id' => $del_id ), array( '%d' ) );
+				}
+				wp_safe_redirect( admin_url( 'admin.php?page=ccoe-admissions&deleted=1' ) );
+				exit;
+			}
+		}
+
 		// 2. Secure Protected Document Download for Admins
 		if ( isset( $_GET['ccoe_download_doc'], $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'ccoe_download_doc' ) ) {
 			$file      = basename( sanitize_text_field( wp_unslash( $_GET['ccoe_download_doc'] ) ) );
@@ -717,8 +743,15 @@ class CCOE_Admissions {
 								<td><code><?php echo esc_html( strtoupper( $app->application_status ) ); ?></code></td>
 								<td><?php echo esc_html( $app->submitted_at ); ?></td>
 								<td>
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=ccoe-admissions&view_id=' . absint( $app->id ) ) ); ?>" class="button button-small button-primary">
+									<?php
+									$view_url   = admin_url( 'admin.php?page=ccoe-admissions&view_id=' . absint( $app->id ) );
+									$delete_url = wp_nonce_url( admin_url( 'admin.php?page=ccoe-admissions&ccoe_delete_app=' . absint( $app->id ) ), 'ccoe_delete_app' );
+									?>
+									<a href="<?php echo esc_url( $view_url ); ?>" class="button button-small button-primary">
 										<?php esc_html_e( 'View / Manage', 'ccoe-core' ); ?>
+									</a>
+									<a href="<?php echo esc_url( $delete_url ); ?>" class="button button-small" style="color:#b91c1c;border-color:#fca5a5;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure you want to permanently delete this application?', 'ccoe-core' ) ); ?>');">
+										<?php esc_html_e( 'Delete', 'ccoe-core' ); ?>
 									</a>
 								</td>
 							</tr>
@@ -822,6 +855,11 @@ class CCOE_Admissions {
 						</p>
 						<button type="submit" name="ccoe_update_app_status" value="1" class="button button-primary"><?php esc_html_e( 'Save Decision', 'ccoe-core' ); ?></button>
 					</form>
+					<hr style="margin:24px 0;">
+					<?php $delete_url = wp_nonce_url( admin_url( 'admin.php?page=ccoe-admissions&ccoe_delete_app=' . absint( $app->id ) ), 'ccoe_delete_app' ); ?>
+					<a href="<?php echo esc_url( $delete_url ); ?>" class="button" style="color:#b91c1c;border-color:#fca5a5;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure you want to permanently delete this application?', 'ccoe-core' ) ); ?>');">
+						<?php esc_html_e( 'Delete Application Permanently', 'ccoe-core' ); ?>
+					</a>
 				</div>
 			</div>
 		</div>

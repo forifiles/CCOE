@@ -1239,8 +1239,8 @@
 							<fieldset class="ccoe-fieldset">
 								<legend>Section E: Document Uploads &amp; Declaration</legend>
 								<div class="ccoe-form-row-2">
-									<div class="ccoe-form-group"><label>Passport Photograph * (JPG/PNG, max 2MB)</label><input type="file" accept=".jpg,.jpeg,.png" required class="ccoe-input" /></div>
-									<div class="ccoe-form-group"><label>Academic Credentials (PDF/JPG/PNG, max 5MB)</label><input type="file" accept=".pdf,.jpg,.jpeg,.png" class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Passport Photograph * (JPG/PNG, max 2MB)</label><input type="file" name="passport_photo" id="prev_passport_file" accept=".jpg,.jpeg,.png" required class="ccoe-input" /></div>
+									<div class="ccoe-form-group"><label>Academic Credentials (PDF/JPG/PNG, max 5MB)</label><input type="file" name="academic_credentials" id="prev_credentials_file" accept=".pdf,.jpg,.jpeg,.png" class="ccoe-input" /></div>
 								</div>
 								<div class="ccoe-privacy-box">
 									<strong>Data Protection &amp; Privacy Notice:</strong> Applicant personal data and uploaded credentials are encrypted, stored in a protected non-public directory, and processed strictly by the CCoE Admissions Office.
@@ -1464,25 +1464,63 @@
 			courseSel.innerHTML = options.map(o => `<option value="${o}">${o}</option>`).join('');
 		}
 
+		function readFileAsDataUrl(file) {
+			return new Promise((resolve) => {
+				if (!file) return resolve('');
+				const reader = new FileReader();
+				reader.onload = (ev) => resolve(ev.target.result || '');
+				reader.onerror = () => resolve('');
+				reader.readAsDataURL(file);
+			});
+		}
+
 		function handlePreviewApplication(e) {
 			e.preventDefault();
-			const fd = new FormData(e.target);
+			const formEl = e.target;
+			const fd = new FormData(formEl);
 			const ref = 'CCOE/2026/ADM/' + Math.floor(10000 + Math.random() * 90000);
 			const fullName = [fd.get('first_name'), fd.get('middle_name'), fd.get('surname')].filter(Boolean).join(' ');
-			try {
-				const existing = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
-				existing.push({
-					ref: ref,
-					name: fullName,
-					phone: fd.get('phone'),
-					email: fd.get('email'),
-					prog: fd.get('programme_interest'),
-					course: fd.get('preferred_course'),
-					qual: fd.get('highest_qualification') + ' (' + fd.get('exam_type') + ')',
-					status: 'PENDING'
-				});
-				localStorage.setItem('ccoe_submitted_applications', JSON.stringify(existing));
-			} catch (err) {}
+			const passportFile = document.getElementById('prev_passport_file')?.files?.[0] || null;
+			const credFile = document.getElementById('prev_credentials_file')?.files?.[0] || null;
+
+			Promise.all([readFileAsDataUrl(passportFile), readFileAsDataUrl(credFile)]).then(([passportDataUrl, credDataUrl]) => {
+				try {
+					const existing = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
+					existing.unshift({
+						id: 'app-' + Date.now(),
+						ref: ref,
+						name: fullName,
+						first_name: fd.get('first_name') || '',
+						middle_name: fd.get('middle_name') || '',
+						surname: fd.get('surname') || '',
+						dob: fd.get('dob') || '',
+						gender: fd.get('gender') || '',
+						nationality: fd.get('nationality') || 'Nigerian',
+						state_of_origin: fd.get('state_of_origin') || '',
+						lga: fd.get('lga') || '',
+						residential_address: fd.get('residential_address') || '',
+						phone: fd.get('phone') || '',
+						email: fd.get('email') || '',
+						prog: fd.get('programme_interest') || '',
+						course: fd.get('preferred_course') || '',
+						highest_qualification: fd.get('highest_qualification') || '',
+						exam_type: fd.get('exam_type') || '',
+						exam_year_num: fd.get('exam_year_num') || '',
+						qual: (fd.get('highest_qualification') || '') + ' (' + (fd.get('exam_type') || '') + ')',
+						nok_name: fd.get('nok_name') || '',
+						nok_phone: fd.get('nok_phone') || '',
+						nok_relationship: fd.get('nok_relationship') || '',
+						passport_name: passportFile ? passportFile.name : 'passport-photo.jpg',
+						passport_data: passportDataUrl || '',
+						credentials_name: credFile ? credFile.name : '',
+						credentials_data: credDataUrl || '',
+						submitted_at: new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+						status: 'PENDING',
+						admin_notes: ''
+					});
+					localStorage.setItem('ccoe_submitted_applications', JSON.stringify(existing));
+				} catch (err) {}
+			});
 			document.getElementById('preview-admission-form-wrap').style.display = 'none';
 			const stepsSec = document.getElementById('apply-steps-section');
 			if (stepsSec) stepsSec.style.display = 'none';
