@@ -202,8 +202,90 @@
 			border-top: 4px solid #F5B800;
 			padding: 56px 0 28px;
 		}
+		/* Contact Us Modal Dialog */
+		.ccoe-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background: rgba(0, 27, 66, 0.72);
+			backdrop-filter: blur(5px);
+			-webkit-backdrop-filter: blur(5px);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			z-index: 3000;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.22s ease, visibility 0.22s ease;
+		}
+		.ccoe-modal-overlay.open {
+			opacity: 1;
+			visibility: visible;
+		}
+		.ccoe-modal-dialog {
+			background: #ffffff;
+			width: 100%;
+			max-width: 1040px;
+			max-height: 90vh;
+			border-radius: 14px;
+			box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			transform: translateY(14px) scale(0.98);
+			transition: transform 0.22s ease;
+			border-top: 5px solid #F5B800;
+		}
+		.ccoe-modal-overlay.open .ccoe-modal-dialog {
+			transform: translateY(0) scale(1);
+		}
+		.ccoe-modal-header {
+			background: linear-gradient(120deg, #002355 0%, #00337C 100%);
+			color: #ffffff;
+			padding: 20px 28px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+		}
+		.ccoe-modal-header h2 {
+			margin: 0;
+			color: #ffffff;
+			font-size: 1.4rem;
+		}
+		.ccoe-modal-header p {
+			margin: 4px 0 0;
+			color: #E2E8F0;
+			font-size: 0.86rem;
+		}
+		.ccoe-modal-close {
+			background: rgba(255, 255, 255, 0.12);
+			color: #ffffff;
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			width: 44px;
+			height: 44px;
+			border-radius: 8px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			font-size: 1.35rem;
+			line-height: 1;
+			flex-shrink: 0;
+			transition: background 0.15s ease, color 0.15s ease;
+		}
+		.ccoe-modal-close:hover {
+			background: #F5B800;
+			color: #002355;
+			border-color: #F5B800;
+		}
+		.ccoe-modal-body {
+			padding: 28px;
+			overflow-y: auto;
+		}
 		@media print {
-			.ccoe-topbar, .ccoe-site-header, .ccoe-site-footer, .ccoe-slip-actions {
+			.ccoe-topbar, .ccoe-site-header, .ccoe-site-footer, .ccoe-slip-actions, .ccoe-modal-overlay {
 				display: none !important;
 			}
 		}
@@ -254,7 +336,6 @@
 			<div class="ccoe-container">
 				<ul class="ccoe-nav-list" id="ccoe-main-nav">
 					<li><a data-page="home" class="active" onclick="showPage('home')">Home</a></li>
-					<li><a data-page="about" onclick="showPage('about')">About Us</a></li>
 					<li><a data-page="provost" onclick="showPage('provost')">Provost's Message</a></li>
 					<li class="ccoe-has-dropdown">
 						<a data-page="programmes" href="#programmes" onclick="openProgrammeTrack('all', 'page-programmes'); return false;" aria-haspopup="true">
@@ -333,6 +414,7 @@
 						</ul>
 					</li>
 					<li><a data-page="events" onclick="showPage('events')">News &amp; Events</a></li>
+					<li><a data-page="about" onclick="showPage('about')">About Us</a></li>
 					<li><a data-page="apply" class="ccoe-nav-cta" onclick="showPage('apply')">Admissions &amp; Apply</a></li>
 				</ul>
 			</div>
@@ -601,10 +683,10 @@
 						</p>
 					</div>
 					<div class="ccoe-cta-buttons">
-						<a href="#contact" onclick="showPage('contact'); return false;" class="ccoe-btn ccoe-btn-gold">
+						<button type="button" onclick="openContactModal()" class="ccoe-btn ccoe-btn-gold">
 							<svg class="ccoe-svg-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
 							Contact Us &amp; Campus Map
-						</a>
+						</button>
 						<a href="#apply" onclick="showPage('apply'); return false;" class="ccoe-btn ccoe-btn-outline-light">
 							Admissions &amp; Apply Now &rarr;
 						</a>
@@ -957,41 +1039,53 @@
 		</div>
 
 		<!-- ===================================================================
-		     PAGE 9: CONTACT US
+		     CONTACT US & CAMPUS LOCATION MODAL
 		     =================================================================== -->
-		<div id="page-contact" class="ccoe-page-view">
-			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.84)), url('/education-zone/images/ccoe/campus-boulevard.jpg');">
-				<div class="ccoe-container">
-					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Get in Touch</span>
-					<h1>Contact Us</h1>
-					<p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+		<div id="ccoe-contact-modal" class="ccoe-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ccoe-contact-modal-title" onclick="if(event.target===this) closeContactModal()">
+			<div class="ccoe-modal-dialog">
+				<div class="ccoe-modal-header">
+					<div style="display:flex;align-items:center;gap:14px;">
+						<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Crest" style="width:48px;height:auto;background:#fff;padding:4px;border-radius:8px;" />
+						<div>
+							<h2 id="ccoe-contact-modal-title">Contact City College of Education, Mararaba</h2>
+							<p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+						</div>
+					</div>
+					<button type="button" class="ccoe-modal-close" onclick="closeContactModal()" aria-label="Close Contact Modal">&times;</button>
 				</div>
-			</div>
-			<section class="ccoe-section ccoe-bg-white">
-				<div class="ccoe-container">
-					<div class="ccoe-cards-grid-3" style="margin-bottom:36px;">
-						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Campus Address</h3><p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State<br><small>Postal: Sani Abacha Road, Mararaba Gurku, P.M.B 3094 Garki, Abuja</small></p></div></div>
-						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><h3>Telephone Numbers</h3><p><strong>08032920100</strong><br><strong>08058431596</strong><br><small>Mon – Fri: 8:00 AM – 4:00 PM</small></p></div></div>
-						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Official Emails</h3><p>info@citycollegeofeducation.edu.ng<br>admissions@citycollegeofeducation.edu.ng</p></div></div>
+				<div class="ccoe-modal-body">
+					<div class="ccoe-cards-grid-3" style="margin-bottom:28px;">
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:10px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Campus Address</h3><p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State<br><small>Postal: Sani Abacha Road, Mararaba Gurku, P.M.B 3094 Garki, Abuja</small></p></div></div>
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:10px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><h3>Telephone Numbers</h3><p><strong><a href="tel:08032920100" style="color:#00337C;text-decoration:none;">08032920100</a></strong><br><strong><a href="tel:08058431596" style="color:#00337C;text-decoration:none;">08058431596</a></strong><br><small>Mon – Fri: 8:00 AM – 4:00 PM</small></p></div></div>
+						<div class="ccoe-card"><div class="ccoe-card-body"><div class="ccoe-icon-box" style="margin-bottom:10px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Official Emails</h3><p><a href="mailto:info@citycollegeofeducation.edu.ng" style="color:#00337C;text-decoration:none;">info@citycollegeofeducation.edu.ng</a><br><a href="mailto:admissions@citycollegeofeducation.edu.ng" style="color:#00337C;text-decoration:none;">admissions@citycollegeofeducation.edu.ng</a></p></div></div>
 					</div>
 					<div class="ccoe-split-grid">
 						<div class="ccoe-form-card">
-							<h2>Send an Inquiry</h2>
-							<form onsubmit="alert('Thank you! Your message has been recorded.'); return false;">
-								<div class="ccoe-form-group"><label>Full Name *</label><input type="text" required class="ccoe-input" /></div>
-								<div class="ccoe-form-group"><label>Email Address *</label><input type="email" required class="ccoe-input" /></div>
-								<div class="ccoe-form-group"><label>Subject *</label><input type="text" required class="ccoe-input" /></div>
-								<div class="ccoe-form-group"><label>Message *</label><textarea rows="4" required class="ccoe-input"></textarea></div>
-								<button type="submit" class="ccoe-btn ccoe-btn-primary">Send Message</button>
+							<h3 style="margin-top:0;">Send an Inquiry</h3>
+							<div id="contact-modal-success" class="ccoe-alert ccoe-alert-success" style="display:none;margin-bottom:14px;">
+								<strong>Thank you!</strong> Your inquiry has been received by the Admissions &amp; Registry Office.
+							</div>
+							<form id="contact-modal-form" onsubmit="return handleContactModalSubmit(event)">
+								<div class="ccoe-form-group"><label>Full Name *</label><input type="text" required class="ccoe-input" placeholder="Enter your full name" /></div>
+								<div class="ccoe-form-group"><label>Email Address *</label><input type="email" required class="ccoe-input" placeholder="you@example.com" /></div>
+								<div class="ccoe-form-group"><label>Subject *</label><input type="text" required class="ccoe-input" placeholder="e.g. Admission Inquiry" /></div>
+								<div class="ccoe-form-group"><label>Message *</label><textarea rows="3" required class="ccoe-input" placeholder="How can we help you?"></textarea></div>
+								<button type="submit" class="ccoe-btn ccoe-btn-primary">Send Message &rarr;</button>
 							</form>
 						</div>
 						<div>
-							<h2>Google Map — Mararaba-Karu, Nasarawa State</h2>
-							<iframe title="CCoE Map" src="https://www.google.com/maps?q=Mararaba+Karu+Nasarawa+State+Nigeria&output=embed" width="100%" height="380" style="border:0;border-radius:12px;" loading="lazy"></iframe>
+							<h3 style="margin-top:0;">Google Map — City College of Education, Mararaba-Karu</h3>
+							<iframe title="CCoE Map" src="https://www.google.com/maps?q=9.0064714,7.5822794&amp;z=18&amp;output=embed" width="100%" height="340" style="border:0;border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+							<div style="margin-top:12px;">
+								<a href="https://maps.app.goo.gl/3ed1NLUWMCdouesD6" target="_blank" rel="noopener noreferrer" class="ccoe-btn ccoe-btn-outline ccoe-btn-sm">
+									<svg class="ccoe-svg-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+									Open Exact Location in Google Maps &nearr;
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
-			</section>
+			</div>
 		</div>
 
 		<!-- ===================================================================
@@ -1169,7 +1263,7 @@
 					<h4 style="color:#F5B800;margin-bottom:12px;">Campus Contact</h4>
 					<p style="font-size:0.9rem;margin:0 0 8px;">No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
 					<p style="font-size:0.9rem;margin:0 0 12px;">Tel: 08032920100 | 08058431596</p>
-					<a href="#contact" onclick="showPage('contact');return false;" class="ccoe-btn ccoe-btn-gold ccoe-btn-sm">Contact Us &amp; Campus Map</a>
+					<button type="button" onclick="openContactModal()" class="ccoe-btn ccoe-btn-gold ccoe-btn-sm">Contact Us &amp; Campus Map</button>
 				</div>
 			</div>
 			<p style="text-align:center;font-size:0.86rem;margin:20px 0 0;color:#94A3B8;">
@@ -1268,7 +1362,44 @@
 			}
 		}
 
+		function openContactModal() {
+			const modal = document.getElementById('ccoe-contact-modal');
+			if (modal) {
+				modal.classList.add('open');
+				document.body.style.overflow = 'hidden';
+			}
+		}
+
+		function closeContactModal() {
+			const modal = document.getElementById('ccoe-contact-modal');
+			if (modal) {
+				modal.classList.remove('open');
+				document.body.style.overflow = '';
+			}
+		}
+
+		function handleContactModalSubmit(e) {
+			e.preventDefault();
+			const alertBox = document.getElementById('contact-modal-success');
+			if (alertBox) alertBox.style.display = 'block';
+			e.target.reset();
+			setTimeout(() => {
+				if (alertBox) alertBox.style.display = 'none';
+			}, 4000);
+			return false;
+		}
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				closeContactModal();
+			}
+		});
+
 		function showPage(pageId) {
+			if (pageId === 'contact') {
+				openContactModal();
+				return;
+			}
 			if (pageId === 'admissions') pageId = 'apply';
 			const scrollToVision = (pageId === 'vision');
 			if (scrollToVision) pageId = 'home';

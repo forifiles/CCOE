@@ -39,7 +39,7 @@ class CCOE_Data {
 			'provost_photo'        => $theme_img_base . 'campus-courtyard-statue.jpg',
 			'provost_welcome'      => 'Welcome to City College of Education, Mararaba, Nasarawa State — a citadel of teacher education, innovation, and entrepreneurial excellence. At CCoE, we are committed to nurturing a new generation of educators who do not merely transmit knowledge, but inspire transformation in classrooms, communities, and enterprises across Nigeria.',
 			'provost_statement'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In alignment with the New NCCE Minimum Standard (2026) and our strategic affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State, we have expanded our academic offerings to include cutting-edge programmes in Artificial Intelligence and Robotics Education, Data Science, Cybersecurity, and Entrepreneurial Studies alongside foundational Sciences, Arts, and Social Sciences. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-			'google_maps_embed'    => 'https://www.google.com/maps?q=Mararaba+Karu+Nasarawa+State+Nigeria&output=embed',
+			'google_maps_embed'    => 'https://www.google.com/maps?q=9.0064714,7.5822794&z=18&output=embed',
 			'facebook_url'         => 'https://facebook.com/',
 			'twitter_url'          => 'https://x.com/',
 			'instagram_url'        => 'https://instagram.com/',

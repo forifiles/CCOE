@@ -144,11 +144,11 @@ class CCOE_Seeder {
 		// Streamlined navbar items (excluding 'our-vision-and-mission', 'contact-us', and duplicate 'admissions')
 		$nav_slugs = array(
 			'home'                            => 'Home',
-			'about-us'                        => 'About Us',
 			'message-from-the-provost'        => 'Provost\'s Message',
 			'academic-programmes'             => 'Academic Programmes',
 			'courses'                         => 'Courses',
 			'news-and-events'                 => 'News & Events',
+			'about-us'                        => 'About Us',
 			'apply-for-provisional-admission' => 'Admissions & Apply',
 		);
 

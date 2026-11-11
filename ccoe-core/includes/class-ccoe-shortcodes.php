@@ -253,10 +253,23 @@ class CCOE_Shortcodes {
 					</div>
 					<div class="ccoe-cta-buttons">
 						<a href="<?php echo esc_url( $apply_url ); ?>" class="ccoe-btn ccoe-btn-gold"><?php esc_html_e( 'Complete Online Application Form', 'ccoe-core' ); ?></a>
-						<a href="<?php echo esc_url( $cont_url ); ?>" class="ccoe-btn ccoe-btn-outline-light"><?php esc_html_e( 'Contact Admissions Office', 'ccoe-core' ); ?></a>
+						<button type="button" onclick="document.getElementById('ccoe-wp-contact-modal').style.display='flex';" class="ccoe-btn ccoe-btn-outline-light"><?php esc_html_e( 'Contact Us & Campus Map', 'ccoe-core' ); ?></button>
 					</div>
 				</div>
 			</section>
+
+			<!-- CONTACT US MODAL DIALOG -->
+			<div id="ccoe-wp-contact-modal" style="display:none;position:fixed;inset:0;background:rgba(0,27,66,0.72);z-index:9999;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none';">
+				<div style="background:#fff;width:100%;max-width:1020px;max-height:90vh;border-radius:14px;overflow-y:auto;border-top:5px solid #F5B800;box-shadow:0 25px 50px -12px rgba(0,0,0,0.45);">
+					<div style="background:#002355;color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;">
+						<strong style="font-size:1.25rem;"><?php esc_html_e( 'Contact City College of Education, Mararaba', 'ccoe-core' ); ?></strong>
+						<button type="button" onclick="document.getElementById('ccoe-wp-contact-modal').style.display='none';" style="background:rgba(255,255,255,0.15);color:#fff;border:none;width:40px;height:40px;border-radius:8px;cursor:pointer;font-size:1.3rem;">&times;</button>
+					</div>
+					<div style="padding:24px;">
+						<?php echo self::render_contact_page(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					</div>
+				</div>
+			</div>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -991,6 +1004,12 @@ class CCOE_Shortcodes {
 									loading="lazy"
 									referrerpolicy="no-referrer-when-downgrade">
 								</iframe>
+							</div>
+							<div style="margin-top:12px;">
+								<a href="https://maps.app.goo.gl/3ed1NLUWMCdouesD6" target="_blank" rel="noopener noreferrer" class="ccoe-btn ccoe-btn-outline ccoe-btn-sm">
+									<?php echo self::svg_icon( 'map-pin', 16 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<?php esc_html_e( 'Open Exact Location in Google Maps', 'ccoe-core' ); ?> &nearr;
+								</a>
 							</div>
 						</div>
 					</div>
