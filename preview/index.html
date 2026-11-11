@@ -39,6 +39,11 @@
 			text-decoration: none;
 			font-weight: 600;
 		}
+		@media (max-width: 768px) {
+			.ccoe-topbar {
+				display: none !important;
+			}
+		}
 		.ccoe-site-header {
 			background: #002355;
 			color: #ffffff;
@@ -285,8 +290,31 @@
 			overflow-y: auto;
 		}
 		@media print {
-			.ccoe-topbar, .ccoe-site-header, .ccoe-site-footer, .ccoe-slip-actions, .ccoe-modal-overlay {
+			.ccoe-topbar,
+			.ccoe-site-header,
+			.ccoe-site-footer,
+			.ccoe-page-banner,
+			#apply-steps-section,
+			.ccoe-no-print,
+			#preview-admission-form-wrap,
+			.ccoe-slip-actions,
+			.ccoe-modal-overlay {
 				display: none !important;
+			}
+			body,
+			.ccoe-section,
+			.ccoe-bg-light,
+			.ccoe-container {
+				background: #ffffff !important;
+				padding-top: 0 !important;
+				padding-bottom: 0 !important;
+				margin-top: 0 !important;
+				margin-bottom: 0 !important;
+			}
+			.ccoe-success-slip {
+				box-shadow: none !important;
+				margin: 0 auto !important;
+				padding: 24px !important;
 			}
 		}
 	</style>
@@ -310,8 +338,6 @@
 					<svg class="ccoe-svg-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
 					<a href="mailto:admissions@citycollegeofeducation.edu.ng">admissions@citycollegeofeducation.edu.ng</a>
 				</span>
-				<span>&bull;</span>
-				<a href="/wp-admin" style="color:#F5B800;font-weight:700;">Staff / WP Admin Login &rarr;</a>
 			</div>
 		</div>
 	</div>
@@ -1092,7 +1118,7 @@
 		     UNIFIED ADMISSIONS & PROVISIONAL APPLICATION PAGE
 		     =================================================================== -->
 		<div id="page-apply" class="ccoe-page-view">
-			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.94), rgba(0, 122, 51, 0.84)), url('/education-zone/images/ccoe/campus-main-gate.jpg');">
+			<div id="apply-page-banner" class="ccoe-page-banner ccoe-no-print" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.94), rgba(0, 122, 51, 0.84)), url('/education-zone/images/ccoe/campus-main-gate.jpg');">
 				<div class="ccoe-container">
 					<span class="ccoe-eyebrow ccoe-eyebrow-gold">2026/2027 Admissions &amp; Application Portal</span>
 					<h1>Admissions &amp; Provisional Application</h1>
@@ -1101,7 +1127,7 @@
 			</div>
 
 			<!-- 4-Step Admission Process & Entry Requirements Overview -->
-			<section class="ccoe-section ccoe-bg-white" style="padding-bottom:36px;">
+			<section id="apply-steps-section" class="ccoe-section ccoe-bg-white ccoe-no-print" style="padding-bottom:36px;">
 				<div class="ccoe-container">
 					<div class="ccoe-section-header ccoe-text-center">
 						<span class="ccoe-eyebrow">How to Apply</span>
@@ -1458,6 +1484,8 @@
 				localStorage.setItem('ccoe_submitted_applications', JSON.stringify(existing));
 			} catch (err) {}
 			document.getElementById('preview-admission-form-wrap').style.display = 'none';
+			const stepsSec = document.getElementById('apply-steps-section');
+			if (stepsSec) stepsSec.style.display = 'none';
 			const box = document.getElementById('preview-admission-success');
 			box.style.display = 'block';
 			box.innerHTML = `
@@ -1485,7 +1513,7 @@
 					</table>
 					<div class="ccoe-slip-actions" style="margin-top:20px;display:flex;gap:12px;">
 						<button type="button" onclick="window.print()" class="ccoe-btn ccoe-btn-primary"><svg class="ccoe-svg-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Print Acknowledgement Slip</button>
-						<button type="button" onclick="document.getElementById('preview-admission-success').style.display='none';document.getElementById('preview-admission-form-wrap').style.display='block';" class="ccoe-btn ccoe-btn-outline">Submit Another Application</button>
+						<button type="button" onclick="document.getElementById('preview-admission-success').style.display='none';document.getElementById('preview-admission-form-wrap').style.display='block';if(document.getElementById('apply-steps-section'))document.getElementById('apply-steps-section').style.display='block';" class="ccoe-btn ccoe-btn-outline">Submit Another Application</button>
 					</div>
 				</div>
 			`;

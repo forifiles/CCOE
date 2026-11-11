@@ -1033,7 +1033,7 @@ class CCOE_Shortcodes {
 		ob_start();
 		?>
 		<div class="ccoe-wrapper ccoe-page-apply">
-			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.94), rgba(0, 122, 51, 0.84)), url('<?php echo self::img_url( 'campus-main-gate.jpg' ); ?>');">
+			<div class="ccoe-page-banner ccoe-no-print" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.94), rgba(0, 122, 51, 0.84)), url('<?php echo self::img_url( 'campus-main-gate.jpg' ); ?>');">
 				<div class="ccoe-container">
 					<span class="ccoe-eyebrow ccoe-eyebrow-gold"><?php echo esc_html( $s['academic_session'] . ' Provisional Admission Portal' ); ?></span>
 					<h1><?php esc_html_e( 'Admissions & Provisional Application', 'ccoe-core' ); ?></h1>
@@ -1041,7 +1041,8 @@ class CCOE_Shortcodes {
 				</div>
 			</div>
 
-			<section class="ccoe-section ccoe-bg-white" style="padding-bottom:32px;">
+			<?php if ( empty( $result ) || empty( $result['success'] ) ) : ?>
+			<section class="ccoe-section ccoe-bg-white ccoe-no-print" style="padding-bottom:32px;">
 				<div class="ccoe-container">
 					<div class="ccoe-section-header ccoe-text-center">
 						<span class="ccoe-eyebrow"><?php esc_html_e( 'How to Apply', 'ccoe-core' ); ?></span>
@@ -1071,6 +1072,7 @@ class CCOE_Shortcodes {
 					</div>
 				</div>
 			</section>
+			<?php endif; ?>
 
 			<section class="ccoe-section ccoe-bg-light">
 				<div class="ccoe-container">

@@ -991,6 +991,10 @@ body.page .entry-content {
 }
 
 @media (max-width: 860px) {
+	.ccoe-topbar,
+	.site-header .header-top {
+		display: none !important;
+	}
 	.ccoe-provost-highlight {
 		grid-template-columns: 1fr;
 	}
@@ -999,5 +1003,34 @@ body.page .entry-content {
 	}
 	.ccoe-form-card {
 		padding: 20px;
+	}
+}
+
+/* Print Styles for Acknowledgement Slip */
+@media print {
+	.ccoe-topbar,
+	.site-header,
+	.site-footer,
+	.ccoe-page-banner,
+	.ccoe-no-print,
+	.ccoe-steps-grid,
+	.ccoe-slip-actions,
+	.ccoe-modal-overlay {
+		display: none !important;
+	}
+	body,
+	.ccoe-section,
+	.ccoe-bg-light,
+	.ccoe-container {
+		background: #ffffff !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	.ccoe-success-slip {
+		box-shadow: none !important;
+		margin: 0 auto !important;
+		padding: 24px !important;
 	}
 }
