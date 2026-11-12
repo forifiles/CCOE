@@ -578,7 +578,47 @@
 			}
 		];
 
+		let cachedApplications = null;
+
+		function normalizeApp(app, idx) {
+			return {
+				id: app.id || ('app-idx-' + idx),
+				ref: app.ref || 'CCOE/2026/ADM/00000',
+				name: app.name || [app.first_name, app.middle_name, app.surname].filter(Boolean).join(' ') || 'Applicant',
+				first_name: app.first_name || (app.name ? app.name.split(' ')[0] : ''),
+				middle_name: app.middle_name || '',
+				surname: app.surname || (app.name ? app.name.split(' ').slice(1).join(' ') : ''),
+				dob: app.dob || 'Not specified',
+				gender: app.gender || 'Not specified',
+				nationality: app.nationality || 'Nigerian',
+				state_of_origin: app.state_of_origin || 'Not specified',
+				lga: app.lga || 'Not specified',
+				residential_address: app.residential_address || 'Provided on application form',
+				phone: app.phone || '',
+				email: app.email || '',
+				prog: app.prog || '',
+				course: app.course || '',
+				highest_qualification: app.highest_qualification || app.qual || '',
+				exam_type: app.exam_type || '',
+				exam_year_num: app.exam_year_num || '',
+				qual: app.qual || app.highest_qualification || '',
+				nok_name: app.nok_name || 'Provided on application form',
+				nok_phone: app.nok_phone || 'Provided on application form',
+				nok_relationship: app.nok_relationship || 'Relative',
+				passport_name: app.passport_name || 'passport-photograph.jpg',
+				passport_data: app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png',
+				credentials_name: app.credentials_name || '',
+				credentials_data: app.credentials_data || '',
+				submitted_at: app.submitted_at || '2026/2027 Session',
+				status: (app.status || 'PENDING').toUpperCase(),
+				admin_notes: app.admin_notes || ''
+			};
+		}
+
 		function getAllApplications() {
+			if (cachedApplications && cachedApplications.length) {
+				return cachedApplications;
+			}
 			try {
 				const initialized = localStorage.getItem('ccoe_applications_initialized');
 				const raw = localStorage.getItem('ccoe_submitted_applications');
@@ -593,46 +633,70 @@
 					localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
 					localStorage.setItem('ccoe_applications_initialized', '1');
 				}
-				return list.map((app, idx) => ({
-					id: app.id || ('app-idx-' + idx),
-					ref: app.ref || 'CCOE/2026/ADM/00000',
-					name: app.name || [app.first_name, app.middle_name, app.surname].filter(Boolean).join(' ') || 'Applicant',
-					first_name: app.first_name || (app.name ? app.name.split(' ')[0] : ''),
-					middle_name: app.middle_name || '',
-					surname: app.surname || (app.name ? app.name.split(' ').slice(1).join(' ') : ''),
-					dob: app.dob || 'Not specified',
-					gender: app.gender || 'Not specified',
-					nationality: app.nationality || 'Nigerian',
-					state_of_origin: app.state_of_origin || 'Not specified',
-					lga: app.lga || 'Not specified',
-					residential_address: app.residential_address || 'Provided on application form',
-					phone: app.phone || '',
-					email: app.email || '',
-					prog: app.prog || '',
-					course: app.course || '',
-					highest_qualification: app.highest_qualification || app.qual || '',
-					exam_type: app.exam_type || '',
-					exam_year_num: app.exam_year_num || '',
-					qual: app.qual || app.highest_qualification || '',
-					nok_name: app.nok_name || 'Provided on application form',
-					nok_phone: app.nok_phone || 'Provided on application form',
-					nok_relationship: app.nok_relationship || 'Relative',
-					passport_name: app.passport_name || 'passport-photograph.jpg',
-					passport_data: app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png',
-					credentials_name: app.credentials_name || '',
-					credentials_data: app.credentials_data || '',
-					submitted_at: app.submitted_at || '2026/2027 Session',
-					status: (app.status || 'PENDING').toUpperCase(),
-					admin_notes: app.admin_notes || ''
-				}));
+				cachedApplications = list.map(normalizeApp);
+				return cachedApplications;
 			} catch (err) {
-				return [...DEFAULT_APPLICATIONS];
+				return DEFAULT_APPLICATIONS.map(normalizeApp);
 			}
 		}
 
+		async function syncApplications(showToastOnNew = false) {
+			try {
+				const res = await fetch('/api/applications');
+				if (res.ok) {
+					const serverList = await res.json();
+					if (Array.isArray(serverList)) {
+						const prevCount = cachedApplications ? cachedApplications.length : 0;
+						const localRaw = localStorage.getItem('ccoe_submitted_applications');
+						const localList = localRaw ? JSON.parse(localRaw) : [];
+
+						// Merge by reference number
+						const map = new Map();
+						// Start with server list
+						serverList.forEach(item => map.set(item.ref, item));
+						// Merge any local applications that may not be on the server yet
+						localList.forEach(item => {
+							if (!map.has(item.ref)) {
+								map.set(item.ref, item);
+								// Sync missing item back to server
+								fetch('/api/applications', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify(item)
+								}).catch(() => {});
+							}
+						});
+
+						const merged = Array.from(map.values()).map(normalizeApp);
+						cachedApplications = merged;
+						localStorage.setItem('ccoe_submitted_applications', JSON.stringify(merged));
+						localStorage.setItem('ccoe_applications_initialized', '1');
+						renderApplicationsTable();
+
+						if (showToastOnNew && merged.length > prevCount && prevCount > 0) {
+							showAdminToast(`New application received! (${merged.length} total)`);
+						}
+						return;
+					}
+				}
+			} catch (e) {
+				// Local server offline, continue with localStorage
+			}
+			renderApplicationsTable();
+		}
+
 		function saveAllApplications(list) {
-			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
+			cachedApplications = list.map(normalizeApp);
+			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(cachedApplications));
 			localStorage.setItem('ccoe_applications_initialized', '1');
+			// Sync with backend API
+			try {
+				fetch('/api/applications/save-all', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(cachedApplications)
+				}).catch(e => console.warn('Save-all API sync:', e));
+			} catch (e) {}
 			renderApplicationsTable();
 		}
 
@@ -852,13 +916,27 @@
 
 		function resetDefaultApplications() {
 			localStorage.removeItem('ccoe_applications_initialized');
-			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(DEFAULT_APPLICATIONS));
-			localStorage.setItem('ccoe_applications_initialized', '1');
-			renderApplicationsTable();
+			saveAllApplications(DEFAULT_APPLICATIONS);
 			showAdminToast('Default demo applications restored');
 		}
 
 		renderApplicationsTable();
+		syncApplications();
+
+		// Live cross-tab sync when an application is submitted in frontend tab
+		window.addEventListener('storage', function(e) {
+			if (e.key === 'ccoe_submitted_applications' || e.key === 'ccoe_last_submission_time') {
+				syncApplications(true);
+			}
+		});
+
+		// Auto refresh when switching back to this window/tab
+		window.addEventListener('focus', function() {
+			syncApplications(true);
+		});
+
+		// Periodic background polling every 3 seconds to catch external/frontend submissions immediately
+		setInterval(() => syncApplications(true), 3000);
 
 		function exportApplicationsCsv() {
 			const all = getAllApplications();

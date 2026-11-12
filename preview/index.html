@@ -1484,42 +1484,64 @@
 			const credFile = document.getElementById('prev_credentials_file')?.files?.[0] || null;
 
 			Promise.all([readFileAsDataUrl(passportFile), readFileAsDataUrl(credFile)]).then(([passportDataUrl, credDataUrl]) => {
+				const newApp = {
+					id: 'app-' + Date.now(),
+					ref: ref,
+					name: fullName,
+					first_name: fd.get('first_name') || '',
+					middle_name: fd.get('middle_name') || '',
+					surname: fd.get('surname') || '',
+					dob: fd.get('dob') || '',
+					gender: fd.get('gender') || '',
+					nationality: fd.get('nationality') || 'Nigerian',
+					state_of_origin: fd.get('state_of_origin') || '',
+					lga: fd.get('lga') || '',
+					residential_address: fd.get('residential_address') || '',
+					phone: fd.get('phone') || '',
+					email: fd.get('email') || '',
+					prog: fd.get('programme_interest') || '',
+					course: fd.get('preferred_course') || '',
+					highest_qualification: fd.get('highest_qualification') || '',
+					exam_type: fd.get('exam_type') || '',
+					exam_year_num: fd.get('exam_year_num') || '',
+					qual: (fd.get('highest_qualification') || '') + ' (' + (fd.get('exam_type') || '') + ')',
+					nok_name: fd.get('nok_name') || '',
+					nok_phone: fd.get('nok_phone') || '',
+					nok_relationship: fd.get('nok_relationship') || '',
+					passport_name: passportFile ? passportFile.name : 'passport-photo.jpg',
+					passport_data: passportDataUrl || '/education-zone/images/ccoe/ccoe-logo.png',
+					credentials_name: credFile ? credFile.name : '',
+					credentials_data: credDataUrl || '',
+					submitted_at: new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+					status: 'PENDING',
+					admin_notes: ''
+				};
+
+				// 1. Sync with backend API
+				try {
+					fetch('/api/applications', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(newApp)
+					}).catch(e => console.warn('Backend API submission sync:', e));
+				} catch (e) {}
+
+				// 2. Sync with localStorage (with safe quota limits on data URLs)
 				try {
 					const existing = JSON.parse(localStorage.getItem('ccoe_submitted_applications') || '[]');
-					existing.unshift({
-						id: 'app-' + Date.now(),
-						ref: ref,
-						name: fullName,
-						first_name: fd.get('first_name') || '',
-						middle_name: fd.get('middle_name') || '',
-						surname: fd.get('surname') || '',
-						dob: fd.get('dob') || '',
-						gender: fd.get('gender') || '',
-						nationality: fd.get('nationality') || 'Nigerian',
-						state_of_origin: fd.get('state_of_origin') || '',
-						lga: fd.get('lga') || '',
-						residential_address: fd.get('residential_address') || '',
-						phone: fd.get('phone') || '',
-						email: fd.get('email') || '',
-						prog: fd.get('programme_interest') || '',
-						course: fd.get('preferred_course') || '',
-						highest_qualification: fd.get('highest_qualification') || '',
-						exam_type: fd.get('exam_type') || '',
-						exam_year_num: fd.get('exam_year_num') || '',
-						qual: (fd.get('highest_qualification') || '') + ' (' + (fd.get('exam_type') || '') + ')',
-						nok_name: fd.get('nok_name') || '',
-						nok_phone: fd.get('nok_phone') || '',
-						nok_relationship: fd.get('nok_relationship') || '',
-						passport_name: passportFile ? passportFile.name : 'passport-photo.jpg',
-						passport_data: passportDataUrl || '',
-						credentials_name: credFile ? credFile.name : '',
-						credentials_data: credDataUrl || '',
-						submitted_at: new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
-						status: 'PENDING',
-						admin_notes: ''
-					});
+					const localApp = { ...newApp };
+					if (localApp.passport_data && localApp.passport_data.length > 50000) {
+						localApp.passport_data = '/education-zone/images/ccoe/ccoe-logo.png';
+					}
+					if (localApp.credentials_data && localApp.credentials_data.length > 50000) {
+						localApp.credentials_data = '';
+					}
+					existing.unshift(localApp);
 					localStorage.setItem('ccoe_submitted_applications', JSON.stringify(existing));
-				} catch (err) {}
+					localStorage.setItem('ccoe_last_submission_time', Date.now().toString());
+				} catch (err) {
+					console.warn('localStorage save warning:', err);
+				}
 			});
 			document.getElementById('preview-admission-form-wrap').style.display = 'none';
 			const stepsSec = document.getElementById('apply-steps-section');
