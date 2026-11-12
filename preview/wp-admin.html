@@ -1299,36 +1299,34 @@
 		async function fetchServerProgrammes() {
 			try {
 				const res = await fetch('/api/programmes');
-				if (res.ok) {
-					const list = await res.json();
-					if (Array.isArray(list) && list.length > 0) {
-						cachedProgrammes = list;
-						localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
-						renderProgrammesTable();
-						return;
-					}
-				}
-			} catch (e) {}
-			renderProgrammesTable();
+				if (!res.ok) throw new Error(`Could not load programmes (${res.status})`);
+				const list = await res.json();
+				if (!Array.isArray(list)) throw new Error('The programmes response was invalid.');
+				cachedProgrammes = list;
+				localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
+				renderProgrammesTable();
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
 		}
 
-		function saveStoredProgrammes(list) {
-			cachedProgrammes = list;
-			localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
-			try {
-				fetch('/api/programmes/save-all', {
+		async function saveStoredProgrammes(list) {
+			const res = await fetch('/api/programmes/save-all', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(list)
-				}).catch(() => {});
-			} catch (e) {}
+				});
+			if (!res.ok) throw new Error(`Could not save programmes (${res.status})`);
+			cachedProgrammes = list;
+			localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
 			renderProgrammesTable();
 		}
 
-		function showProgrammeToast(msg) {
+		function showProgrammeToast(msg, isError = false) {
 			const toast = document.getElementById('prog-status-toast');
 			if (!toast) return;
-			toast.textContent = '✓ ' + msg;
+			toast.textContent = (isError ? 'Error: ' : '✓ ') + msg;
+			toast.style.color = isError ? '#B91C1C' : '#007A33';
 			toast.style.display = 'inline';
 			setTimeout(() => { toast.style.display = 'none'; }, 3200);
 		}
@@ -1406,7 +1404,7 @@
 			document.getElementById('wp-programme-modal').classList.remove('open');
 		}
 
-		function handleSaveProgramme(e) {
+		async function handleSaveProgramme(e) {
 			e.preventDefault();
 			const id = document.getElementById('prog_form_id').value;
 			const title = document.getElementById('prog_form_title').value.trim();
@@ -1416,38 +1414,52 @@
 			const description = document.getElementById('prog_form_description').value.trim();
 
 			const list = [...getStoredProgrammes()];
+			let message;
 			if (id) {
 				const idx = list.findIndex(p => p.id === id);
 				if (idx !== -1) {
 					list[idx] = { ...list[idx], title, level, duration, affiliation, description };
-					showProgrammeToast(`Updated "${title}"`);
+					message = `Updated "${title}"`;
 				}
 			} else {
 				const newId = 'prog-' + Date.now();
 				list.unshift({ id: newId, title, level, duration, affiliation, description });
-				showProgrammeToast(`Created new programme "${title}"`);
+				message = `Created new programme "${title}"`;
 			}
 
-			saveStoredProgrammes(list);
-			closeProgrammeModal();
+			try {
+				await saveStoredProgrammes(list);
+				closeProgrammeModal();
+				showProgrammeToast(message || 'Programme saved');
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
 			return false;
 		}
 
-		function deleteProgrammeById(id) {
+		async function deleteProgrammeById(id) {
 			const p = getStoredProgrammes().find(item => item.id === id);
 			const title = p ? p.title : id;
 			if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) {
 				return;
 			}
 			const list = getStoredProgrammes().filter(item => item.id !== id);
-			saveStoredProgrammes(list);
-			showProgrammeToast(`Deleted "${title}"`);
+			try {
+				await saveStoredProgrammes(list);
+				showProgrammeToast(`Deleted "${title}"`);
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
 		}
 
-		function resetDefaultProgrammes() {
+		async function resetDefaultProgrammes() {
 			if (!confirm('Restore the default 11 CCoE programmes?')) return;
-			saveStoredProgrammes([...DEFAULT_CCOE_PROGRAMMES]);
-			showProgrammeToast('Default programmes restored');
+			try {
+				await saveStoredProgrammes([...DEFAULT_CCOE_PROGRAMMES]);
+				showProgrammeToast('Default programmes restored');
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
 		}
 
 		renderProgrammesTable();
