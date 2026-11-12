@@ -207,6 +207,131 @@ try {
             }
 
             # =========================================================================
+            # BACKEND REST API: PROGRAMMES (Add, Edit, Delete, List)
+            # =========================================================================
+            if ($rawPath -eq "api/programmes" -or $rawPath -eq "api/programmes/") {
+                $progsFile = Join-Path $root "preview\data\programmes.json"
+                if (-not (Test-Path $progsFile)) {
+                    $dataDir = Join-Path $root "preview\data"
+                    if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+                    [System.IO.File]::WriteAllText($progsFile, "[]", [System.Text.Encoding]::UTF8)
+                }
+
+                if ($request.HttpMethod -eq "GET") {
+                    $jsonContent = [System.IO.File]::ReadAllText($progsFile, [System.Text.Encoding]::UTF8)
+                    $raw = ConvertFrom-Json -InputObject $jsonContent
+                    $flat = Flatten-List $raw
+                    $outJson = ConvertTo-Json -InputObject $flat -Depth 10
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($outJson)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    if ($request.HttpMethod -ne "HEAD") {
+                        $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    }
+                    continue
+                } elseif ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    $newProg = ConvertFrom-Json -InputObject $body
+                    if (-not $newProg.id) {
+                        $newProg | Add-Member -NotePropertyName "id" -NotePropertyValue ("prog-" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()) -Force
+                    }
+
+                    $existingJson = [System.IO.File]::ReadAllText($progsFile, [System.Text.Encoding]::UTF8)
+                    $existingRaw = ConvertFrom-Json -InputObject $existingJson
+                    $flat = Flatten-List $existingRaw
+
+                    $updated = [System.Collections.Generic.List[object]]::new()
+                    $updated.Add($newProg)
+                    foreach ($it in $flat) {
+                        if ($it.id -ne $newProg.id) {
+                            $updated.Add($it)
+                        }
+                    }
+
+                    $updatedJson = ConvertTo-Json -InputObject $updated -Depth 10
+                    [System.IO.File]::WriteAllText($progsFile, $updatedJson, [System.Text.Encoding]::UTF8)
+
+                    $respJson = '{"success":true,"message":"Programme saved successfully","id":"' + $newProg.id + '"}'
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 201
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            } elseif ($rawPath -eq "api/programmes/update") {
+                if ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    $updatedProg = ConvertFrom-Json -InputObject $body
+                    $progsFile = Join-Path $root "preview\data\programmes.json"
+                    if (Test-Path $progsFile) {
+                        $existingJson = [System.IO.File]::ReadAllText($progsFile, [System.Text.Encoding]::UTF8)
+                        $flat = Flatten-List (ConvertFrom-Json -InputObject $existingJson)
+                        foreach ($item in $flat) {
+                            if ($item.id -eq $updatedProg.id) {
+                                if ($updatedProg.title) { $item | Add-Member -NotePropertyName "title" -NotePropertyValue $updatedProg.title -Force }
+                                if ($updatedProg.level) { $item | Add-Member -NotePropertyName "level" -NotePropertyValue $updatedProg.level -Force }
+                                if ($updatedProg.affiliation) { $item | Add-Member -NotePropertyName "affiliation" -NotePropertyValue $updatedProg.affiliation -Force }
+                                if ($updatedProg.duration) { $item | Add-Member -NotePropertyName "duration" -NotePropertyValue $updatedProg.duration -Force }
+                                if ($updatedProg.description -ne $null) { $item | Add-Member -NotePropertyName "description" -NotePropertyValue $updatedProg.description -Force }
+                            }
+                        }
+                        $updatedJson = ConvertTo-Json -InputObject $flat -Depth 10
+                        [System.IO.File]::WriteAllText($progsFile, $updatedJson, [System.Text.Encoding]::UTF8)
+                    }
+                    $respJson = '{"success":true,"message":"Programme updated successfully"}'
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            } elseif ($rawPath -eq "api/programmes/delete") {
+                if ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    $delReq = ConvertFrom-Json -InputObject $body
+                    $progsFile = Join-Path $root "preview\data\programmes.json"
+                    if (Test-Path $progsFile) {
+                        $existingJson = [System.IO.File]::ReadAllText($progsFile, [System.Text.Encoding]::UTF8)
+                        $flat = Flatten-List (ConvertFrom-Json -InputObject $existingJson)
+                        $updated = [System.Collections.Generic.List[object]]::new()
+                        foreach ($item in $flat) {
+                            if ($item.id -ne $delReq.id) {
+                                $updated.Add($item)
+                            }
+                        }
+                        $updatedJson = ConvertTo-Json -InputObject $updated -Depth 10
+                        [System.IO.File]::WriteAllText($progsFile, $updatedJson, [System.Text.Encoding]::UTF8)
+                    }
+                    $respJson = '{"success":true,"message":"Programme deleted"}'
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            } elseif ($rawPath -eq "api/programmes/save-all") {
+                if ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    $progsFile = Join-Path $root "preview\data\programmes.json"
+                    $flat = Flatten-List (ConvertFrom-Json -InputObject $body)
+                    $updatedJson = ConvertTo-Json -InputObject $flat -Depth 10
+                    [System.IO.File]::WriteAllText($progsFile, $updatedJson, [System.Text.Encoding]::UTF8)
+
+                    $respJson = '{"success":true,"message":"All programmes saved"}'
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            }
+
+            # =========================================================================
             # STATIC FILES RESOLUTION
             # =========================================================================
             $localPath = $request.Url.LocalPath.TrimStart('/')

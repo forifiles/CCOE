@@ -321,22 +321,96 @@
 			</div>
 
 			<div id="tab-programmes" class="tab-panel">
-				<h1>Academic Programmes (Custom Post Type: <code>ccoe_programme</code>)</h1>
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+					<h1 style="margin:0;">Academic Programmes (Custom Post Type: <code>ccoe_programme</code>)</h1>
+					<div style="display:flex;gap:10px;">
+						<button type="button" class="wp-btn" style="background:#007A33;color:#fff;font-weight:700;" onclick="openProgrammeModal()">+ Add New Programme</button>
+						<button type="button" class="wp-btn" style="background:#475569;color:#fff;" onclick="resetDefaultProgrammes()">Restore Default Programmes</button>
+					</div>
+				</div>
+
+				<!-- PROGRAMMES SEARCH / FILTER -->
+				<div class="wp-card" style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 18px;">
+					<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+						<select id="prog-filter-level" onchange="renderProgrammesTable()" style="padding:7px 10px;border:1px solid #CBD5E1;border-radius:4px;font-size:0.86rem;">
+							<option value="ALL">All Programme Levels</option>
+							<option value="NCE">NCE</option>
+							<option value="Degree (AAUA)">Degree (AAUA)</option>
+							<option value="PGDE (AAUA)">PGDE (AAUA)</option>
+							<option value="PDE">PDE</option>
+							<option value="Skills Acquisition">Skills Acquisition</option>
+						</select>
+						<input type="search" id="prog-search-input" oninput="renderProgrammesTable()" placeholder="Search programmes, schools, affiliation..." style="padding:7px 12px;border:1px solid #CBD5E1;border-radius:4px;width:280px;font-size:0.86rem;" />
+					</div>
+					<span id="prog-status-toast" style="display:none;color:#007A33;font-weight:700;font-size:0.86rem;">&#10003; Changes saved!</span>
+				</div>
+
+				<!-- PROGRAMMES TABLE -->
 				<div class="wp-card">
-					<p>Administrators can add, edit, and remove NCE Schools, AAUA Affiliated Degree Departments, PGDE, PDE, and Skills Acquisition programmes without editing code.</p>
+					<h2 style="margin-top:0;color:#002355;font-size:1.1rem;">Academic Programmes &amp; Schools (<span id="wp-programmes-count">0</span>)</h2>
 					<table class="wp-table">
-						<thead><tr><th>Programme / School Title</th><th>Level</th><th>Affiliation</th><th>Duration</th></tr></thead>
-						<tbody>
-							<tr><td><strong>School of Arts and Languages Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Science Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Computing Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Business Management Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Social Sciences Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Foundation and Lifelong Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>Degree Programmes in Affiliation with AAUA</strong></td><td>Degree (B.Ed. / B.Sc. Ed.)</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>4 Years / 3 Years DE</td></tr>
-							<tr><td><strong>Postgraduate Diploma in Education (PGDE)</strong></td><td>PGDE</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>2 Semesters (40 Units)</td></tr>
-						</tbody>
+						<thead>
+							<tr>
+								<th>Programme / School Title</th>
+								<th>Level</th>
+								<th>Affiliation / Standard</th>
+								<th>Duration</th>
+								<th>Description</th>
+								<th style="width:160px;">Actions</th>
+							</tr>
+						</thead>
+						<tbody id="wp-programmes-tbody"></tbody>
 					</table>
+				</div>
+			</div>
+
+			<!-- ADD / EDIT PROGRAMME MODAL -->
+			<div id="wp-programme-modal" class="wp-detail-modal" onclick="if(event.target===this)closeProgrammeModal()">
+				<div class="wp-detail-dialog" style="max-width:650px;">
+					<div class="wp-detail-header">
+						<div>
+							<span style="color:#F5B800;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;display:block;">PROGRAMME EDITOR</span>
+							<h2 id="prog-modal-title">Add New Programme</h2>
+						</div>
+						<button type="button" onclick="closeProgrammeModal()" class="wp-btn wp-btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);">&times; Close</button>
+					</div>
+					<div class="wp-detail-body" style="padding:20px;">
+						<form id="wp-prog-form" onsubmit="return handleSaveProgramme(event)">
+							<input type="hidden" id="prog_form_id" value="" />
+							<div style="margin-bottom:14px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme / School Title *</label>
+								<input type="text" id="prog_form_title" required placeholder="e.g. School of Computing Education (NCE)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme Level *</label>
+									<select id="prog_form_level" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+										<option value="NCE">NCE</option>
+										<option value="Degree (AAUA)">Degree (AAUA)</option>
+										<option value="PGDE (AAUA)">PGDE (AAUA)</option>
+										<option value="PDE">PDE</option>
+										<option value="Skills Acquisition">Skills Acquisition</option>
+									</select>
+								</div>
+								<div>
+									<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Duration *</label>
+									<input type="text" id="prog_form_duration" required placeholder="e.g. 3 Years (6 Semesters)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="margin-bottom:14px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Affiliation / Accreditating Body *</label>
+								<input type="text" id="prog_form_affiliation" required placeholder="e.g. NCCE 2026 Minimum Standard or AAUA" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div style="margin-bottom:18px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme Description / Summary</label>
+								<textarea id="prog_form_description" rows="3" placeholder="Brief outline of disciplines, pedagogical goals, and entry requirements..." style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea>
+							</div>
+							<div style="display:flex;justify-content:flex-end;gap:10px;">
+								<button type="button" onclick="closeProgrammeModal()" class="wp-btn" style="background:#64748B;color:#fff;">Cancel</button>
+								<button type="submit" class="wp-btn wp-btn-success" style="padding:10px 20px;font-size:0.9rem;">Save Programme &rarr;</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 
@@ -1111,6 +1185,273 @@
 		}
 
 		renderAdminEventsTable();
+
+		// =========================================================================
+		// PROGRAMMES CRUD MANAGER (Synced via /api/programmes & localStorage)
+		// =========================================================================
+		const DEFAULT_CCOE_PROGRAMMES = [
+			{
+				id: 'prog-1',
+				title: 'School of Arts and Languages Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Prepares articulate educators in English, French, Hausa, Arabic, and creative theatre pedagogy.'
+			},
+			{
+				id: 'prog-2',
+				title: 'School of Science Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Equips STEM teachers with laboratory competence in Mathematics, Biology, Chemistry, and Physics Education.'
+			},
+			{
+				id: 'prog-3',
+				title: 'School of Computing Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'State-of-the-art curriculum covering Artificial Intelligence & Robotics, Computer Science, Data Science, and Cybersecurity.'
+			},
+			{
+				id: 'prog-4',
+				title: 'School of Business Management Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Develops educators in Accounting, Business Administration, Marketing, and Office Technology & Management.'
+			},
+			{
+				id: 'prog-5',
+				title: 'School of Social Sciences Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Comprehensive pedagogy in Economics, Political Science, Geography, and Social Studies Education.'
+			},
+			{
+				id: 'prog-6',
+				title: 'School of Foundation and Lifelong Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Early Childhood Care & Education (ECCE), Primary Education Studies (PES), and Adult & Non-Formal Education.'
+			},
+			{
+				id: 'prog-7',
+				title: 'School of Education and General Studies (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'General Nigerian Studies (GNS), Educational Technology, Psychology, and Philosophy of Education.'
+			},
+			{
+				id: 'prog-8',
+				title: 'Degree Programmes in Affiliation with AAUA',
+				level: 'Degree (AAUA)',
+				affiliation: 'Adekunle Ajasin University, Akungba-Akoko (AAUA)',
+				duration: '4 Years / 3 Years DE',
+				description: 'Undergraduate B.Ed. & B.Sc. (Ed.) degrees in Guidance & Counselling, Educational Management, Biology, Economics, and English Education.'
+			},
+			{
+				id: 'prog-9',
+				title: 'Postgraduate Diploma in Education (PGDE)',
+				level: 'PGDE (AAUA)',
+				affiliation: 'Adekunle Ajasin University, Akungba-Akoko (AAUA)',
+				duration: '2 Semesters (40 Units)',
+				description: 'Professional teacher qualification for university and polytechnic graduates comprising 20 compulsory pedagogical courses.'
+			},
+			{
+				id: 'prog-10',
+				title: 'Professional Diploma in Education (PDE)',
+				level: 'PDE',
+				affiliation: 'TRCN Aligned',
+				duration: '1 Academic Session',
+				description: 'Post-tertiary teaching diploma aligned with TRCN guidelines for practicing teachers and tertiary instructors.'
+			},
+			{
+				id: 'prog-11',
+				title: 'Centre for Skills Acquisition & Entrepreneurship',
+				level: 'Skills Acquisition',
+				affiliation: 'Directorate of Skills Acquisition, CCoE',
+				duration: '3 Months – 1 Year',
+				description: 'Vocational mastery in Tailoring & Fashion Design, Hair Dressing & Cosmetology, Shoe Making, Computer Training, and Screeding & Painting.'
+			}
+		];
+
+		let cachedProgrammes = null;
+
+		function getStoredProgrammes() {
+			if (cachedProgrammes && cachedProgrammes.length) return cachedProgrammes;
+			try {
+				const raw = localStorage.getItem('ccoe_programmes_store');
+				if (raw) {
+					cachedProgrammes = JSON.parse(raw);
+					return cachedProgrammes;
+				}
+			} catch (e) {}
+			cachedProgrammes = [...DEFAULT_CCOE_PROGRAMMES];
+			localStorage.setItem('ccoe_programmes_store', JSON.stringify(cachedProgrammes));
+			return cachedProgrammes;
+		}
+
+		async function fetchServerProgrammes() {
+			try {
+				const res = await fetch('/api/programmes');
+				if (res.ok) {
+					const list = await res.json();
+					if (Array.isArray(list) && list.length > 0) {
+						cachedProgrammes = list;
+						localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
+						renderProgrammesTable();
+						return;
+					}
+				}
+			} catch (e) {}
+			renderProgrammesTable();
+		}
+
+		function saveStoredProgrammes(list) {
+			cachedProgrammes = list;
+			localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
+			try {
+				fetch('/api/programmes/save-all', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(list)
+				}).catch(() => {});
+			} catch (e) {}
+			renderProgrammesTable();
+		}
+
+		function showProgrammeToast(msg) {
+			const toast = document.getElementById('prog-status-toast');
+			if (!toast) return;
+			toast.textContent = '✓ ' + msg;
+			toast.style.display = 'inline';
+			setTimeout(() => { toast.style.display = 'none'; }, 3200);
+		}
+
+		function renderProgrammesTable() {
+			const all = getStoredProgrammes();
+			const levelFilter = document.getElementById('prog-filter-level')?.value || 'ALL';
+			const query = (document.getElementById('prog-search-input')?.value || '').toLowerCase().trim();
+
+			document.getElementById('wp-programmes-count').textContent = all.length;
+
+			const filtered = all.filter(p => {
+				if (levelFilter !== 'ALL' && p.level !== levelFilter) return false;
+				if (query) {
+					const hay = [p.title, p.level, p.affiliation, p.duration, p.description].join(' ').toLowerCase();
+					if (!hay.includes(query)) return false;
+				}
+				return true;
+			});
+
+			const tbody = document.getElementById('wp-programmes-tbody');
+			if (!filtered.length) {
+				tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#64748B;padding:24px;">No academic programmes match your filter criteria.</td></tr>';
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(p => `
+				<tr>
+					<td><strong style="color:#002355;font-size:0.92rem;">${p.title}</strong></td>
+					<td><span class="badge ${p.level.includes('NCE') ? 'badge-admitted' : p.level.includes('Degree') ? 'badge-under_review' : 'badge-pending'}">${p.level}</span></td>
+					<td>${p.affiliation}</td>
+					<td><strong>${p.duration}</strong></td>
+					<td><small style="color:#475569;">${p.description || '—'}</small></td>
+					<td>
+						<div style="display:flex;gap:6px;">
+							<button type="button" class="wp-btn" style="padding:5px 10px;font-size:0.78rem;background:#00337C;color:#fff;" onclick="openProgrammeModal('${p.id}')">Edit</button>
+							<button type="button" class="wp-btn" style="padding:5px 10px;font-size:0.78rem;background:#DC2626;color:#fff;" onclick="deleteProgrammeById('${p.id}')">Delete</button>
+						</div>
+					</td>
+				</tr>
+			`).join('');
+		}
+
+		function openProgrammeModal(id) {
+			const modal = document.getElementById('wp-programme-modal');
+			const titleEl = document.getElementById('prog-modal-title');
+			const idInput = document.getElementById('prog_form_id');
+			const titleInput = document.getElementById('prog_form_title');
+			const levelInput = document.getElementById('prog_form_level');
+			const durInput = document.getElementById('prog_form_duration');
+			const affInput = document.getElementById('prog_form_affiliation');
+			const descInput = document.getElementById('prog_form_description');
+
+			if (id) {
+				const p = getStoredProgrammes().find(item => item.id === id);
+				if (!p) return;
+				titleEl.textContent = 'Edit Programme: ' + p.title;
+				idInput.value = p.id;
+				titleInput.value = p.title;
+				levelInput.value = p.level;
+				durInput.value = p.duration;
+				affInput.value = p.affiliation;
+				descInput.value = p.description || '';
+			} else {
+				titleEl.textContent = 'Add New Programme';
+				idInput.value = '';
+				document.getElementById('wp-prog-form').reset();
+				durInput.value = '3 Years (6 Semesters)';
+				affInput.value = 'NCCE 2026 Minimum Standard';
+			}
+			modal.classList.add('open');
+		}
+
+		function closeProgrammeModal() {
+			document.getElementById('wp-programme-modal').classList.remove('open');
+		}
+
+		function handleSaveProgramme(e) {
+			e.preventDefault();
+			const id = document.getElementById('prog_form_id').value;
+			const title = document.getElementById('prog_form_title').value.trim();
+			const level = document.getElementById('prog_form_level').value;
+			const duration = document.getElementById('prog_form_duration').value.trim();
+			const affiliation = document.getElementById('prog_form_affiliation').value.trim();
+			const description = document.getElementById('prog_form_description').value.trim();
+
+			const list = [...getStoredProgrammes()];
+			if (id) {
+				const idx = list.findIndex(p => p.id === id);
+				if (idx !== -1) {
+					list[idx] = { ...list[idx], title, level, duration, affiliation, description };
+					showProgrammeToast(`Updated "${title}"`);
+				}
+			} else {
+				const newId = 'prog-' + Date.now();
+				list.unshift({ id: newId, title, level, duration, affiliation, description });
+				showProgrammeToast(`Created new programme "${title}"`);
+			}
+
+			saveStoredProgrammes(list);
+			closeProgrammeModal();
+			return false;
+		}
+
+		function deleteProgrammeById(id) {
+			const p = getStoredProgrammes().find(item => item.id === id);
+			const title = p ? p.title : id;
+			if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) {
+				return;
+			}
+			const list = getStoredProgrammes().filter(item => item.id !== id);
+			saveStoredProgrammes(list);
+			showProgrammeToast(`Deleted "${title}"`);
+		}
+
+		function resetDefaultProgrammes() {
+			if (!confirm('Restore the default 11 CCoE programmes?')) return;
+			saveStoredProgrammes([...DEFAULT_CCOE_PROGRAMMES]);
+			showProgrammeToast('Default programmes restored');
+		}
+
+		renderProgrammesTable();
+		fetchServerProgrammes();
 	</script>
 </body>
 </html>

@@ -1,0 +1,90 @@
+﻿[
+    {
+        "id":  "prog-1",
+        "title":  "School of Arts and Languages Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "Prepares articulate educators in English, French, Hausa, Arabic, and creative theatre pedagogy."
+    },
+    {
+        "id":  "prog-2",
+        "title":  "School of Science Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "Equips STEM teachers with laboratory competence in Mathematics, Biology, Chemistry, and Physics Education."
+    },
+    {
+        "id":  "prog-3",
+        "title":  "School of Computing Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "State-of-the-art curriculum covering Artificial Intelligence \u0026 Robotics, Computer Science, Data Science, and Cybersecurity."
+    },
+    {
+        "id":  "prog-4",
+        "title":  "School of Business Management Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "Develops educators in Accounting, Business Administration, Marketing, and Office Technology \u0026 Management."
+    },
+    {
+        "id":  "prog-5",
+        "title":  "School of Social Sciences Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "Comprehensive pedagogy in Economics, Political Science, Geography, and Social Studies Education."
+    },
+    {
+        "id":  "prog-6",
+        "title":  "School of Foundation and Lifelong Education (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "Early Childhood Care \u0026 Education (ECCE), Primary Education Studies (PES), and Adult \u0026 Non-Formal Education."
+    },
+    {
+        "id":  "prog-7",
+        "title":  "School of Education and General Studies (NCE)",
+        "level":  "NCE",
+        "affiliation":  "NCCE 2026 Minimum Standard",
+        "duration":  "3 Years (6 Semesters)",
+        "description":  "General Nigerian Studies (GNS), Educational Technology, Psychology, and Philosophy of Education."
+    },
+    {
+        "id":  "prog-8",
+        "title":  "Degree Programmes in Affiliation with AAUA",
+        "level":  "Degree (AAUA)",
+        "affiliation":  "Adekunle Ajasin University, Akungba-Akoko (AAUA)",
+        "duration":  "4 Years / 3 Years DE",
+        "description":  "Undergraduate B.Ed. \u0026 B.Sc. (Ed.) degrees in Guidance \u0026 Counselling, Educational Management, Biology, Economics, and English Education."
+    },
+    {
+        "id":  "prog-9",
+        "title":  "Postgraduate Diploma in Education (PGDE)",
+        "level":  "PGDE (AAUA)",
+        "affiliation":  "Adekunle Ajasin University, Akungba-Akoko (AAUA)",
+        "duration":  "2 Semesters (40 Units)",
+        "description":  "Professional teacher qualification for university and polytechnic graduates comprising 20 compulsory pedagogical courses."
+    },
+    {
+        "id":  "prog-10",
+        "title":  "Professional Diploma in Education (PDE)",
+        "level":  "PDE",
+        "affiliation":  "TRCN Aligned",
+        "duration":  "1 Academic Session",
+        "description":  "Post-tertiary teaching diploma aligned with TRCN guidelines for practicing teachers and tertiary instructors."
+    },
+    {
+        "id":  "prog-11",
+        "title":  "Centre for Skills Acquisition \u0026 Entrepreneurship",
+        "level":  "Skills Acquisition",
+        "affiliation":  "Directorate of Skills Acquisition, CCoE",
+        "duration":  "3 Months – 1 Year",
+        "description":  "Vocational mastery in Tailoring \u0026 Fashion Design, Hair Dressing \u0026 Cosmetology, Shoe Making, Computer Training, and Screeding \u0026 Painting."
+    }
+]
