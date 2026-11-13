@@ -415,9 +415,90 @@
 			</div>
 
 			<div id="tab-courses" class="tab-panel">
-				<h1>Courses Catalog (Custom Post Type: <code>ccoe_course</code>)</h1>
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+					<div>
+						<h1 style="margin:0;">Courses Catalog (Custom Post Type: <code>ccoe_course</code>)</h1>
+						<p style="margin:6px 0 0;color:#475569;">Manage course details and whether each course is currently available.</p>
+					</div>
+					<button type="button" class="wp-btn wp-btn-success" onclick="openCourseModal()">+ Add New Course</button>
+				</div>
+				<div class="wp-card" style="padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+					<input type="search" id="course-search-input" oninput="renderCoursesTable()" placeholder="Search code, title, programme, or semester..." style="padding:7px 12px;border:1px solid #CBD5E1;border-radius:4px;width:min(100%,360px);font-size:0.86rem;" />
+					<span id="course-status-toast" role="status" aria-live="polite" style="display:none;font-weight:700;font-size:0.86rem;"></span>
+				</div>
 				<div class="wp-card">
-					<p>All 20 PGDE First &amp; Second Semester compulsory courses (<code>PDE 601</code>–<code>PDE 619</code> and <code>PDE 600</code>–<code>PDE 623</code>), NCE courses, and AAUA Degree courses are managed here.</p>
+					<h2 style="margin-top:0;color:#002355;font-size:1.1rem;">Courses (<span id="wp-courses-count">0</span>)</h2>
+					<div style="overflow-x:auto;">
+						<table class="wp-table">
+							<thead>
+								<tr>
+									<th>Code &amp; Course Title</th>
+									<th>Programme</th>
+									<th>Semester</th>
+									<th>Units</th>
+									<th>Course Type</th>
+									<th>Availability</th>
+									<th style="width:190px;">Actions</th>
+								</tr>
+							</thead>
+							<tbody id="wp-courses-tbody"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div id="wp-course-modal" class="wp-detail-modal" onclick="if(event.target===this)closeCourseModal()">
+				<div class="wp-detail-dialog" style="max-width:680px;">
+					<div class="wp-detail-header">
+						<div>
+							<span style="color:#F5B800;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;display:block;">COURSE EDITOR</span>
+							<h2 id="course-modal-title">Add New Course</h2>
+						</div>
+						<button type="button" onclick="closeCourseModal()" class="wp-btn wp-btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);">&times; Close</button>
+					</div>
+					<div style="padding:20px;">
+						<form id="wp-course-form" onsubmit="return handleSaveCourse(event)">
+							<input type="hidden" id="course_form_id" />
+							<div style="display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label for="course_form_code" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Code *</label>
+									<input type="text" id="course_form_code" required maxlength="32" placeholder="e.g. PDE 601" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_title" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Title *</label>
+									<input type="text" id="course_form_title" required maxlength="180" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label for="course_form_programme" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme *</label>
+									<input type="text" id="course_form_programme" required maxlength="100" placeholder="e.g. PGDE (AAUA)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_semester" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Semester / Duration *</label>
+									<input type="text" id="course_form_semester" required maxlength="80" placeholder="e.g. First Semester" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+								<div>
+									<label for="course_form_units" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Credit Units *</label>
+									<input type="number" id="course_form_units" required min="0" max="30" step="1" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_type" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Type *</label>
+									<select id="course_form_type" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+										<option>Compulsory</option>
+										<option>Elective</option>
+										<option>Practical Track</option>
+									</select>
+								</div>
+							</div>
+							<div style="display:flex;justify-content:flex-end;gap:10px;">
+								<button type="button" onclick="closeCourseModal()" class="wp-btn wp-btn-outline">Cancel</button>
+								<button type="submit" class="wp-btn wp-btn-success" style="padding:10px 20px;">Save Course &rarr;</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 
@@ -1024,6 +1105,170 @@
 			a.download = 'CCoE-Admission-Applications.csv';
 			a.click();
 		}
+
+		// =========================================================================
+		// COURSES CRUD MANAGER (Persisted through /api/courses)
+		// =========================================================================
+		let cachedCourses = null;
+
+		function escapeAdminHtml(value) {
+			return String(value ?? '').replace(/[&<>"']/g, char => ({
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;'
+			}[char]));
+		}
+
+		function getStoredCourses() {
+			return cachedCourses || [];
+		}
+
+		async function loadServerCourses() {
+			try {
+				const response = await fetch('/api/courses');
+				if (!response.ok) throw new Error(`Could not load courses (${response.status})`);
+				const courses = await response.json();
+				if (!Array.isArray(courses)) throw new Error('The courses response was invalid.');
+				cachedCourses = courses;
+				renderCoursesTable();
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		async function saveStoredCourses(courses) {
+			const response = await fetch('/api/courses', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(courses)
+			});
+			if (!response.ok) throw new Error(`Could not save courses (${response.status})`);
+			cachedCourses = courses;
+			renderCoursesTable();
+		}
+
+		function showCourseToast(message, isError = false) {
+			const toast = document.getElementById('course-status-toast');
+			toast.textContent = (isError ? 'Error: ' : '✓ ') + message;
+			toast.style.color = isError ? '#B91C1C' : '#007A33';
+			toast.style.display = 'inline';
+		}
+
+		function renderCoursesTable() {
+			const courses = getStoredCourses();
+			const query = (document.getElementById('course-search-input').value || '').trim().toLowerCase();
+			const filtered = courses.filter(course =>
+				[course.code, course.title, course.programme, course.semester, course.status, course.availability]
+					.join(' ').toLowerCase().includes(query)
+			);
+			document.getElementById('wp-courses-count').textContent = courses.length;
+			const tbody = document.getElementById('wp-courses-tbody');
+			if (!filtered.length) {
+				tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748B;padding:24px;">${courses.length ? 'No courses match your search.' : 'No courses found. Add a course to get started.'}</td></tr>`;
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(course => {
+				const available = course.availability === 'Available';
+				return `
+					<tr>
+						<td><strong style="color:#002355;">${escapeAdminHtml(course.code)}</strong><br><span>${escapeAdminHtml(course.title)}</span></td>
+						<td>${escapeAdminHtml(course.programme)}</td>
+						<td>${escapeAdminHtml(course.semester)}</td>
+						<td>${escapeAdminHtml(course.units)}</td>
+						<td>${escapeAdminHtml(course.status)}</td>
+						<td><span class="badge ${available ? 'badge-admitted' : 'badge-declined'}">${escapeAdminHtml(course.availability || 'Unavailable')}</span></td>
+						<td><div style="display:flex;gap:6px;flex-wrap:wrap;">
+							<button type="button" class="wp-btn" style="padding:5px 9px;font-size:0.78rem;" onclick="openCourseModal('${escapeAdminHtml(course.id)}')">Edit</button>
+							<button type="button" class="wp-btn ${available ? 'wp-btn-outline' : 'wp-btn-success'}" style="padding:5px 9px;font-size:0.78rem;" onclick="toggleCourseAvailability('${escapeAdminHtml(course.id)}')">${available ? 'Set unavailable' : 'Set available'}</button>
+							<button type="button" class="wp-btn wp-btn-danger" style="padding:5px 9px;font-size:0.78rem;" onclick="deleteCourseById('${escapeAdminHtml(course.id)}')">Delete</button>
+						</div></td>
+					</tr>
+				`;
+			}).join('');
+		}
+
+		function openCourseModal(id) {
+			const form = document.getElementById('wp-course-form');
+			const course = id ? getStoredCourses().find(item => item.id === id) : null;
+			if (id && !course) return;
+			form.reset();
+			document.getElementById('course_form_id').value = course?.id || '';
+			document.getElementById('course_form_code').value = course?.code || '';
+			document.getElementById('course_form_title').value = course?.title || '';
+			document.getElementById('course_form_programme').value = course?.programme || '';
+			document.getElementById('course_form_semester').value = course?.semester || '';
+			document.getElementById('course_form_units').value = course?.units ?? 2;
+			document.getElementById('course_form_type').value = course?.status || 'Compulsory';
+			document.getElementById('course-modal-title').textContent = course ? `Edit Course: ${course.code}` : 'Add New Course';
+			document.getElementById('wp-course-modal').classList.add('open');
+		}
+
+		function closeCourseModal() {
+			document.getElementById('wp-course-modal').classList.remove('open');
+		}
+
+		async function handleSaveCourse(event) {
+			event.preventDefault();
+			const id = document.getElementById('course_form_id').value || `course-${Date.now()}`;
+			const course = {
+				id,
+				code: document.getElementById('course_form_code').value.trim(),
+				title: document.getElementById('course_form_title').value.trim(),
+				programme: document.getElementById('course_form_programme').value.trim(),
+				semester: document.getElementById('course_form_semester').value.trim(),
+				units: Number(document.getElementById('course_form_units').value),
+				status: document.getElementById('course_form_type').value,
+				availability: getStoredCourses().find(item => item.id === id)?.availability || 'Available'
+			};
+			const courses = [...getStoredCourses()];
+			const existingIndex = courses.findIndex(item => item.id === id);
+			const duplicateCode = courses.some(item => item.id !== id && item.code.toLowerCase() === course.code.toLowerCase());
+			if (duplicateCode) {
+				showCourseToast(`Course code "${course.code}" is already in use.`, true);
+				return false;
+			}
+			if (existingIndex >= 0) courses[existingIndex] = course;
+			else courses.unshift(course);
+
+			try {
+				await saveStoredCourses(courses);
+				closeCourseModal();
+				showCourseToast(`${existingIndex >= 0 ? 'Updated' : 'Created'} ${course.code}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+			return false;
+		}
+
+		async function toggleCourseAvailability(id) {
+			const courses = getStoredCourses().map(course => course.id === id
+				? { ...course, availability: course.availability === 'Available' ? 'Unavailable' : 'Available' }
+				: course
+			);
+			try {
+				await saveStoredCourses(courses);
+				const course = courses.find(item => item.id === id);
+				showCourseToast(`${course.code} is now ${course.availability.toLowerCase()}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		async function deleteCourseById(id) {
+			const course = getStoredCourses().find(item => item.id === id);
+			if (!course || !confirm(`Permanently delete "${course.code} — ${course.title}"?`)) return;
+			try {
+				await saveStoredCourses(getStoredCourses().filter(item => item.id !== id));
+				showCourseToast(`Deleted ${course.code}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		loadServerCourses();
 
 		// =========================================================================
 		// EVENTS CRUD MANAGER (Synced via localStorage 'ccoe_events_store')

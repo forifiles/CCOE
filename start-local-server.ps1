@@ -332,6 +332,43 @@ try {
             }
 
             # =========================================================================
+            # BACKEND REST API: COURSE CATALOG PERSISTENCE
+            # =========================================================================
+            if ($rawPath -eq "api/courses" -or $rawPath -eq "api/courses/") {
+                $coursesFile = Join-Path $root "preview\data\courses.json"
+                if (-not (Test-Path $coursesFile)) {
+                    $dataDir = Join-Path $root "preview\data"
+                    if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+                    [System.IO.File]::WriteAllText($coursesFile, "[]", [System.Text.Encoding]::UTF8)
+                }
+
+                if ($request.HttpMethod -eq "GET") {
+                    $raw = ConvertFrom-Json -InputObject ([System.IO.File]::ReadAllText($coursesFile, [System.Text.Encoding]::UTF8))
+                    $flat = Flatten-List $raw
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $flat -Depth 10))
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                } elseif ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    if (-not $body.TrimStart().StartsWith("[")) {
+                        throw "Course updates must be a JSON array."
+                    }
+                    $flat = Flatten-List (ConvertFrom-Json -InputObject $body)
+                    $updatedJson = ConvertTo-Json -InputObject $flat -Depth 10
+                    [System.IO.File]::WriteAllText($coursesFile, $updatedJson, [System.Text.Encoding]::UTF8)
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"success":true,"message":"Courses saved"}')
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            }
+
+            # =========================================================================
             # STATIC FILES RESOLUTION
             # =========================================================================
             $localPath = $request.Url.LocalPath.TrimStart('/')
