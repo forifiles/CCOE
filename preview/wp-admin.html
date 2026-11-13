@@ -321,29 +321,184 @@
 			</div>
 
 			<div id="tab-programmes" class="tab-panel">
-				<h1>Academic Programmes (Custom Post Type: <code>ccoe_programme</code>)</h1>
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+					<h1 style="margin:0;">Academic Programmes (Custom Post Type: <code>ccoe_programme</code>)</h1>
+					<div style="display:flex;gap:10px;">
+						<button type="button" class="wp-btn" style="background:#007A33;color:#fff;font-weight:700;" onclick="openProgrammeModal()">+ Add New Programme</button>
+						<button type="button" class="wp-btn" style="background:#475569;color:#fff;" onclick="resetDefaultProgrammes()">Restore Default Programmes</button>
+					</div>
+				</div>
+
+				<!-- PROGRAMMES SEARCH / FILTER -->
+				<div class="wp-card" style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 18px;">
+					<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+						<select id="prog-filter-level" onchange="renderProgrammesTable()" style="padding:7px 10px;border:1px solid #CBD5E1;border-radius:4px;font-size:0.86rem;">
+							<option value="ALL">All Programme Levels</option>
+							<option value="NCE">NCE</option>
+							<option value="Degree (AAUA)">Degree (AAUA)</option>
+							<option value="PGDE (AAUA)">PGDE (AAUA)</option>
+							<option value="PDE">PDE</option>
+							<option value="Skills Acquisition">Skills Acquisition</option>
+						</select>
+						<input type="search" id="prog-search-input" oninput="renderProgrammesTable()" placeholder="Search programmes, schools, affiliation..." style="padding:7px 12px;border:1px solid #CBD5E1;border-radius:4px;width:280px;font-size:0.86rem;" />
+					</div>
+					<span id="prog-status-toast" style="display:none;color:#007A33;font-weight:700;font-size:0.86rem;">&#10003; Changes saved!</span>
+				</div>
+
+				<!-- PROGRAMMES TABLE -->
 				<div class="wp-card">
-					<p>Administrators can add, edit, and remove NCE Schools, AAUA Affiliated Degree Departments, PGDE, PDE, and Skills Acquisition programmes without editing code.</p>
+					<h2 style="margin-top:0;color:#002355;font-size:1.1rem;">Academic Programmes &amp; Schools (<span id="wp-programmes-count">0</span>)</h2>
 					<table class="wp-table">
-						<thead><tr><th>Programme / School Title</th><th>Level</th><th>Affiliation</th><th>Duration</th></tr></thead>
-						<tbody>
-							<tr><td><strong>School of Arts and Languages Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Science Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Computing Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Business Management Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Social Sciences Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>School of Foundation and Lifelong Education (NCE)</strong></td><td>NCE</td><td>NCCE 2026 Minimum Standard</td><td>3 Years (6 Semesters)</td></tr>
-							<tr><td><strong>Degree Programmes in Affiliation with AAUA</strong></td><td>Degree (B.Ed. / B.Sc. Ed.)</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>4 Years / 3 Years DE</td></tr>
-							<tr><td><strong>Postgraduate Diploma in Education (PGDE)</strong></td><td>PGDE</td><td>Adekunle Ajasin University, Akungba-Akoko</td><td>2 Semesters (40 Units)</td></tr>
-						</tbody>
+						<thead>
+							<tr>
+								<th>Programme / School Title</th>
+								<th>Level</th>
+								<th>Affiliation / Standard</th>
+								<th>Duration</th>
+								<th>Description</th>
+								<th style="width:160px;">Actions</th>
+							</tr>
+						</thead>
+						<tbody id="wp-programmes-tbody"></tbody>
 					</table>
 				</div>
 			</div>
 
+			<!-- ADD / EDIT PROGRAMME MODAL -->
+			<div id="wp-programme-modal" class="wp-detail-modal" onclick="if(event.target===this)closeProgrammeModal()">
+				<div class="wp-detail-dialog" style="max-width:650px;">
+					<div class="wp-detail-header">
+						<div>
+							<span style="color:#F5B800;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;display:block;">PROGRAMME EDITOR</span>
+							<h2 id="prog-modal-title">Add New Programme</h2>
+						</div>
+						<button type="button" onclick="closeProgrammeModal()" class="wp-btn wp-btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);">&times; Close</button>
+					</div>
+					<div class="wp-detail-body" style="padding:20px;">
+						<form id="wp-prog-form" onsubmit="return handleSaveProgramme(event)">
+							<input type="hidden" id="prog_form_id" value="" />
+							<div style="margin-bottom:14px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme / School Title *</label>
+								<input type="text" id="prog_form_title" required placeholder="e.g. School of Computing Education (NCE)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme Level *</label>
+									<select id="prog_form_level" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+										<option value="NCE">NCE</option>
+										<option value="Degree (AAUA)">Degree (AAUA)</option>
+										<option value="PGDE (AAUA)">PGDE (AAUA)</option>
+										<option value="PDE">PDE</option>
+										<option value="Skills Acquisition">Skills Acquisition</option>
+									</select>
+								</div>
+								<div>
+									<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Duration *</label>
+									<input type="text" id="prog_form_duration" required placeholder="e.g. 3 Years (6 Semesters)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="margin-bottom:14px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Affiliation / Accreditating Body *</label>
+								<input type="text" id="prog_form_affiliation" required placeholder="e.g. NCCE 2026 Minimum Standard or AAUA" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+							</div>
+							<div style="margin-bottom:18px;">
+								<label style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme Description / Summary</label>
+								<textarea id="prog_form_description" rows="3" placeholder="Brief outline of disciplines, pedagogical goals, and entry requirements..." style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea>
+							</div>
+							<div style="display:flex;justify-content:flex-end;gap:10px;">
+								<button type="button" onclick="closeProgrammeModal()" class="wp-btn" style="background:#64748B;color:#fff;">Cancel</button>
+								<button type="submit" class="wp-btn wp-btn-success" style="padding:10px 20px;font-size:0.9rem;">Save Programme &rarr;</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
 			<div id="tab-courses" class="tab-panel">
-				<h1>Courses Catalog (Custom Post Type: <code>ccoe_course</code>)</h1>
+				<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+					<div>
+						<h1 style="margin:0;">Courses Catalog (Custom Post Type: <code>ccoe_course</code>)</h1>
+						<p style="margin:6px 0 0;color:#475569;">Manage course details and whether each course is currently available.</p>
+					</div>
+					<button type="button" class="wp-btn wp-btn-success" onclick="openCourseModal()">+ Add New Course</button>
+				</div>
+				<div class="wp-card" style="padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+					<input type="search" id="course-search-input" oninput="renderCoursesTable()" placeholder="Search code, title, programme, or semester..." style="padding:7px 12px;border:1px solid #CBD5E1;border-radius:4px;width:min(100%,360px);font-size:0.86rem;" />
+					<span id="course-status-toast" role="status" aria-live="polite" style="display:none;font-weight:700;font-size:0.86rem;"></span>
+				</div>
 				<div class="wp-card">
-					<p>All 20 PGDE First &amp; Second Semester compulsory courses (<code>PDE 601</code>–<code>PDE 619</code> and <code>PDE 600</code>–<code>PDE 623</code>), NCE courses, and AAUA Degree courses are managed here.</p>
+					<h2 style="margin-top:0;color:#002355;font-size:1.1rem;">Courses (<span id="wp-courses-count">0</span>)</h2>
+					<div style="overflow-x:auto;">
+						<table class="wp-table">
+							<thead>
+								<tr>
+									<th>Code &amp; Course Title</th>
+									<th>Programme</th>
+									<th>Semester</th>
+									<th>Units</th>
+									<th>Course Type</th>
+									<th>Availability</th>
+									<th style="width:190px;">Actions</th>
+								</tr>
+							</thead>
+							<tbody id="wp-courses-tbody"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div id="wp-course-modal" class="wp-detail-modal" onclick="if(event.target===this)closeCourseModal()">
+				<div class="wp-detail-dialog" style="max-width:680px;">
+					<div class="wp-detail-header">
+						<div>
+							<span style="color:#F5B800;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;display:block;">COURSE EDITOR</span>
+							<h2 id="course-modal-title">Add New Course</h2>
+						</div>
+						<button type="button" onclick="closeCourseModal()" class="wp-btn wp-btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);">&times; Close</button>
+					</div>
+					<div style="padding:20px;">
+						<form id="wp-course-form" onsubmit="return handleSaveCourse(event)">
+							<input type="hidden" id="course_form_id" />
+							<div style="display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label for="course_form_code" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Code *</label>
+									<input type="text" id="course_form_code" required maxlength="32" placeholder="e.g. PDE 601" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_title" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Title *</label>
+									<input type="text" id="course_form_title" required maxlength="180" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+								<div>
+									<label for="course_form_programme" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Programme *</label>
+									<input type="text" id="course_form_programme" required maxlength="100" placeholder="e.g. PGDE (AAUA)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_semester" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Semester / Duration *</label>
+									<input type="text" id="course_form_semester" required maxlength="80" placeholder="e.g. First Semester" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+								<div>
+									<label for="course_form_units" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Credit Units *</label>
+									<input type="number" id="course_form_units" required min="0" max="30" step="1" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" />
+								</div>
+								<div>
+									<label for="course_form_type" style="display:block;font-size:0.82rem;font-weight:700;margin-bottom:5px;">Course Type *</label>
+									<select id="course_form_type" required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;">
+										<option>Compulsory</option>
+										<option>Elective</option>
+										<option>Practical Track</option>
+									</select>
+								</div>
+							</div>
+							<div style="display:flex;justify-content:flex-end;gap:10px;">
+								<button type="button" onclick="closeCourseModal()" class="wp-btn wp-btn-outline">Cancel</button>
+								<button type="submit" class="wp-btn wp-btn-success" style="padding:10px 20px;">Save Course &rarr;</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 
@@ -357,6 +512,7 @@
 				<div class="wp-card" style="border-top:4px solid #00337C;">
 					<h2 style="margin-top:0;color:#002355;font-size:1.15rem;">+ Publish New Campus Event</h2>
 					<form id="wp-create-event-form" onsubmit="return handleCreateEvent(event)">
+						<input type="hidden" id="ev_id" />
 						<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:14px;">
 							<div>
 								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Title *</label>
@@ -415,7 +571,8 @@
 						</div>
 
 						<div style="display:flex;align-items:center;gap:14px;">
-							<button type="submit" class="wp-btn" style="background:#007A33;padding:10px 20px;font-weight:700;font-size:0.92rem;">Publish Event to Website &rarr;</button>
+							<button type="submit" id="ev-submit-button" class="wp-btn" style="background:#007A33;padding:10px 20px;font-weight:700;font-size:0.92rem;">Publish Event to Website &rarr;</button>
+							<button type="button" id="ev-cancel-edit" class="wp-btn wp-btn-outline" style="display:none;" onclick="cancelEventEdit()">Cancel Edit</button>
 							<span id="ev-feedback" style="color:#007A33;font-weight:600;font-size:0.88rem;display:none;">&#10003; Event published to live website!</span>
 						</div>
 					</form>
@@ -443,11 +600,29 @@
 			<div id="tab-settings" class="tab-panel">
 				<h1>Institutional Administration Settings (<code>CCOE_Settings</code>)</h1>
 				<div class="wp-card">
-					<p><strong>Institution Name:</strong> City College of Education, Mararaba, Nasarawa State</p>
-					<p><strong>Motto:</strong> Education for Self Employment</p>
-					<p><strong>Address:</strong> No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
-					<p><strong>Vision:</strong> To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
-					<p><strong>Mission:</strong> To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
+					<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+						<div>
+							<h2 style="margin:0;color:#002355;">College Information</h2>
+							<p style="margin:5px 0 0;color:#475569;">Edit institutional details, statements, history, and philosophy.</p>
+						</div>
+						<div style="display:flex;gap:8px;align-items:center;">
+							<button type="button" id="settings-edit-button" class="wp-btn" onclick="setSettingsEditMode(true)">Edit</button>
+							<button type="submit" id="settings-save-button" form="wp-settings-form" class="wp-btn wp-btn-success" style="display:none;">Save Changes</button>
+							<button type="button" id="settings-cancel-button" class="wp-btn wp-btn-outline" style="display:none;" onclick="cancelSettingsEdit()">Cancel</button>
+						</div>
+					</div>
+					<form id="wp-settings-form" onsubmit="return saveCollegeSettings(event)">
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+							<div><label for="setting-institution_name" style="display:block;font-weight:700;margin-bottom:5px;">Institution Name</label><input id="setting-institution_name" data-setting="institution_name" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div><label for="setting-motto" style="display:block;font-weight:700;margin-bottom:5px;">Motto</label><input id="setting-motto" data-setting="motto" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div style="grid-column:1/-1;"><label for="setting-address" style="display:block;font-weight:700;margin-bottom:5px;">Address</label><input id="setting-address" data-setting="address" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div style="grid-column:1/-1;"><label for="setting-vision" style="display:block;font-weight:700;margin-bottom:5px;">Vision Statement</label><textarea id="setting-vision" data-setting="vision" rows="3" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-mission" style="display:block;font-weight:700;margin-bottom:5px;">Mission Statement</label><textarea id="setting-mission" data-setting="mission" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-history" style="display:block;font-weight:700;margin-bottom:5px;">College History</label><textarea id="setting-history" data-setting="history" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-philosophy" style="display:block;font-weight:700;margin-bottom:5px;">Institutional Philosophy</label><textarea id="setting-philosophy" data-setting="philosophy" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+						</div>
+						<p id="settings-feedback" role="status" aria-live="polite" style="display:none;font-weight:700;margin-bottom:0;"></p>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -475,6 +650,86 @@
 		if (sessionStorage.getItem('ccoe_wp_admin_logged_in') === '1') {
 			document.getElementById('wp-login-screen').classList.add('hidden');
 		}
+
+		const DEFAULT_COLLEGE_SETTINGS = {
+			institution_name: 'City College of Education, Mararaba, Nasarawa State',
+			motto: 'Education for Self Employment',
+			address: 'No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State',
+			vision: 'To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.',
+			mission: 'To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.',
+			history: 'City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State, serving the Federal Capital Territory corridor and the entire federation. Established to address the growing demand for qualified, entrepreneurial, and technologically adept teachers in Nigeria, the College offers National Commission for Colleges of Education (NCCE) accredited NCE programmes as well as Undergraduate Degree and Postgraduate Diploma programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State.',
+			philosophy: 'Anchored on our motto — "Education for Self Employment" — our philosophy emphasizes that teacher education must integrate deep academic mastery with practical vocational and digital entrepreneurship.'
+		};
+		let savedCollegeSettings = { ...DEFAULT_COLLEGE_SETTINGS };
+
+		function setCollegeSettings(settings) {
+			savedCollegeSettings = { ...DEFAULT_COLLEGE_SETTINGS, ...settings };
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				field.value = savedCollegeSettings[field.dataset.setting] || '';
+			});
+		}
+
+		function setSettingsEditMode(enabled) {
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				field.disabled = !enabled;
+			});
+			document.getElementById('settings-edit-button').style.display = enabled ? 'none' : 'inline-block';
+			document.getElementById('settings-save-button').style.display = enabled ? 'inline-block' : 'none';
+			document.getElementById('settings-cancel-button').style.display = enabled ? 'inline-block' : 'none';
+		}
+
+		function showSettingsFeedback(message, isError = false) {
+			const feedback = document.getElementById('settings-feedback');
+			feedback.textContent = message;
+			feedback.style.color = isError ? '#B91C1C' : '#007A33';
+			feedback.style.display = 'block';
+		}
+
+		async function loadCollegeSettings() {
+			try {
+				const response = await fetch('/api/settings');
+				if (!response.ok) throw new Error(`Could not load college settings (${response.status})`);
+				const settings = await response.json();
+				if (!settings || Array.isArray(settings) || typeof settings !== 'object') {
+					throw new Error('The college settings response was invalid.');
+				}
+				setCollegeSettings(settings);
+				localStorage.setItem('ccoe_college_settings', JSON.stringify(savedCollegeSettings));
+			} catch (error) {
+				setCollegeSettings(DEFAULT_COLLEGE_SETTINGS);
+				showSettingsFeedback(error.message, true);
+			}
+		}
+
+		function cancelSettingsEdit() {
+			setCollegeSettings(savedCollegeSettings);
+			setSettingsEditMode(false);
+		}
+
+		async function saveCollegeSettings(event) {
+			event.preventDefault();
+			const settings = {};
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				settings[field.dataset.setting] = field.value.trim();
+			});
+			try {
+				const response = await fetch('/api/settings', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(settings)
+				});
+				if (!response.ok) throw new Error(`Could not save college settings (${response.status})`);
+				setCollegeSettings(settings);
+				localStorage.setItem('ccoe_college_settings', JSON.stringify(savedCollegeSettings));
+				setSettingsEditMode(false);
+				showSettingsFeedback('College settings saved successfully.');
+			} catch (error) {
+				showSettingsFeedback(error.message, true);
+			}
+			return false;
+		}
+
+		loadCollegeSettings();
 
 		// =========================================================================
 		// ADMISSIONS APPLICATIONS FULL CRUD & DETAIL INSPECTION
@@ -578,7 +833,47 @@
 			}
 		];
 
+		let cachedApplications = null;
+
+		function normalizeApp(app, idx) {
+			return {
+				id: app.id || ('app-idx-' + idx),
+				ref: app.ref || 'CCOE/2026/ADM/00000',
+				name: app.name || [app.first_name, app.middle_name, app.surname].filter(Boolean).join(' ') || 'Applicant',
+				first_name: app.first_name || (app.name ? app.name.split(' ')[0] : ''),
+				middle_name: app.middle_name || '',
+				surname: app.surname || (app.name ? app.name.split(' ').slice(1).join(' ') : ''),
+				dob: app.dob || 'Not specified',
+				gender: app.gender || 'Not specified',
+				nationality: app.nationality || 'Nigerian',
+				state_of_origin: app.state_of_origin || 'Not specified',
+				lga: app.lga || 'Not specified',
+				residential_address: app.residential_address || 'Provided on application form',
+				phone: app.phone || '',
+				email: app.email || '',
+				prog: app.prog || '',
+				course: app.course || '',
+				highest_qualification: app.highest_qualification || app.qual || '',
+				exam_type: app.exam_type || '',
+				exam_year_num: app.exam_year_num || '',
+				qual: app.qual || app.highest_qualification || '',
+				nok_name: app.nok_name || 'Provided on application form',
+				nok_phone: app.nok_phone || 'Provided on application form',
+				nok_relationship: app.nok_relationship || 'Relative',
+				passport_name: app.passport_name || 'passport-photograph.jpg',
+				passport_data: app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png',
+				credentials_name: app.credentials_name || '',
+				credentials_data: app.credentials_data || '',
+				submitted_at: app.submitted_at || '2026/2027 Session',
+				status: (app.status || 'PENDING').toUpperCase(),
+				admin_notes: app.admin_notes || ''
+			};
+		}
+
 		function getAllApplications() {
+			if (cachedApplications && cachedApplications.length) {
+				return cachedApplications;
+			}
 			try {
 				const initialized = localStorage.getItem('ccoe_applications_initialized');
 				const raw = localStorage.getItem('ccoe_submitted_applications');
@@ -593,46 +888,70 @@
 					localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
 					localStorage.setItem('ccoe_applications_initialized', '1');
 				}
-				return list.map((app, idx) => ({
-					id: app.id || ('app-idx-' + idx),
-					ref: app.ref || 'CCOE/2026/ADM/00000',
-					name: app.name || [app.first_name, app.middle_name, app.surname].filter(Boolean).join(' ') || 'Applicant',
-					first_name: app.first_name || (app.name ? app.name.split(' ')[0] : ''),
-					middle_name: app.middle_name || '',
-					surname: app.surname || (app.name ? app.name.split(' ').slice(1).join(' ') : ''),
-					dob: app.dob || 'Not specified',
-					gender: app.gender || 'Not specified',
-					nationality: app.nationality || 'Nigerian',
-					state_of_origin: app.state_of_origin || 'Not specified',
-					lga: app.lga || 'Not specified',
-					residential_address: app.residential_address || 'Provided on application form',
-					phone: app.phone || '',
-					email: app.email || '',
-					prog: app.prog || '',
-					course: app.course || '',
-					highest_qualification: app.highest_qualification || app.qual || '',
-					exam_type: app.exam_type || '',
-					exam_year_num: app.exam_year_num || '',
-					qual: app.qual || app.highest_qualification || '',
-					nok_name: app.nok_name || 'Provided on application form',
-					nok_phone: app.nok_phone || 'Provided on application form',
-					nok_relationship: app.nok_relationship || 'Relative',
-					passport_name: app.passport_name || 'passport-photograph.jpg',
-					passport_data: app.passport_data || '/education-zone/images/ccoe/ccoe-logo.png',
-					credentials_name: app.credentials_name || '',
-					credentials_data: app.credentials_data || '',
-					submitted_at: app.submitted_at || '2026/2027 Session',
-					status: (app.status || 'PENDING').toUpperCase(),
-					admin_notes: app.admin_notes || ''
-				}));
+				cachedApplications = list.map(normalizeApp);
+				return cachedApplications;
 			} catch (err) {
-				return [...DEFAULT_APPLICATIONS];
+				return DEFAULT_APPLICATIONS.map(normalizeApp);
 			}
 		}
 
+		async function syncApplications(showToastOnNew = false) {
+			try {
+				const res = await fetch('/api/applications');
+				if (res.ok) {
+					const serverList = await res.json();
+					if (Array.isArray(serverList)) {
+						const prevCount = cachedApplications ? cachedApplications.length : 0;
+						const localRaw = localStorage.getItem('ccoe_submitted_applications');
+						const localList = localRaw ? JSON.parse(localRaw) : [];
+
+						// Merge by reference number
+						const map = new Map();
+						// Start with server list
+						serverList.forEach(item => map.set(item.ref, item));
+						// Merge any local applications that may not be on the server yet
+						localList.forEach(item => {
+							if (!map.has(item.ref)) {
+								map.set(item.ref, item);
+								// Sync missing item back to server
+								fetch('/api/applications', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify(item)
+								}).catch(() => {});
+							}
+						});
+
+						const merged = Array.from(map.values()).map(normalizeApp);
+						cachedApplications = merged;
+						localStorage.setItem('ccoe_submitted_applications', JSON.stringify(merged));
+						localStorage.setItem('ccoe_applications_initialized', '1');
+						renderApplicationsTable();
+
+						if (showToastOnNew && merged.length > prevCount && prevCount > 0) {
+							showAdminToast(`New application received! (${merged.length} total)`);
+						}
+						return;
+					}
+				}
+			} catch (e) {
+				// Local server offline, continue with localStorage
+			}
+			renderApplicationsTable();
+		}
+
 		function saveAllApplications(list) {
-			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(list));
+			cachedApplications = list.map(normalizeApp);
+			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(cachedApplications));
 			localStorage.setItem('ccoe_applications_initialized', '1');
+			// Sync with backend API
+			try {
+				fetch('/api/applications/save-all', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(cachedApplications)
+				}).catch(e => console.warn('Save-all API sync:', e));
+			} catch (e) {}
 			renderApplicationsTable();
 		}
 
@@ -852,13 +1171,27 @@
 
 		function resetDefaultApplications() {
 			localStorage.removeItem('ccoe_applications_initialized');
-			localStorage.setItem('ccoe_submitted_applications', JSON.stringify(DEFAULT_APPLICATIONS));
-			localStorage.setItem('ccoe_applications_initialized', '1');
-			renderApplicationsTable();
+			saveAllApplications(DEFAULT_APPLICATIONS);
 			showAdminToast('Default demo applications restored');
 		}
 
 		renderApplicationsTable();
+		syncApplications();
+
+		// Live cross-tab sync when an application is submitted in frontend tab
+		window.addEventListener('storage', function(e) {
+			if (e.key === 'ccoe_submitted_applications' || e.key === 'ccoe_last_submission_time') {
+				syncApplications(true);
+			}
+		});
+
+		// Auto refresh when switching back to this window/tab
+		window.addEventListener('focus', function() {
+			syncApplications(true);
+		});
+
+		// Periodic background polling every 3 seconds to catch external/frontend submissions immediately
+		setInterval(() => syncApplications(true), 3000);
 
 		function exportApplicationsCsv() {
 			const all = getAllApplications();
@@ -872,6 +1205,170 @@
 			a.download = 'CCoE-Admission-Applications.csv';
 			a.click();
 		}
+
+		// =========================================================================
+		// COURSES CRUD MANAGER (Persisted through /api/courses)
+		// =========================================================================
+		let cachedCourses = null;
+
+		function escapeAdminHtml(value) {
+			return String(value ?? '').replace(/[&<>"']/g, char => ({
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;'
+			}[char]));
+		}
+
+		function getStoredCourses() {
+			return cachedCourses || [];
+		}
+
+		async function loadServerCourses() {
+			try {
+				const response = await fetch('/api/courses');
+				if (!response.ok) throw new Error(`Could not load courses (${response.status})`);
+				const courses = await response.json();
+				if (!Array.isArray(courses)) throw new Error('The courses response was invalid.');
+				cachedCourses = courses;
+				renderCoursesTable();
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		async function saveStoredCourses(courses) {
+			const response = await fetch('/api/courses', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(courses)
+			});
+			if (!response.ok) throw new Error(`Could not save courses (${response.status})`);
+			cachedCourses = courses;
+			renderCoursesTable();
+		}
+
+		function showCourseToast(message, isError = false) {
+			const toast = document.getElementById('course-status-toast');
+			toast.textContent = (isError ? 'Error: ' : '✓ ') + message;
+			toast.style.color = isError ? '#B91C1C' : '#007A33';
+			toast.style.display = 'inline';
+		}
+
+		function renderCoursesTable() {
+			const courses = getStoredCourses();
+			const query = (document.getElementById('course-search-input').value || '').trim().toLowerCase();
+			const filtered = courses.filter(course =>
+				[course.code, course.title, course.programme, course.semester, course.status, course.availability]
+					.join(' ').toLowerCase().includes(query)
+			);
+			document.getElementById('wp-courses-count').textContent = courses.length;
+			const tbody = document.getElementById('wp-courses-tbody');
+			if (!filtered.length) {
+				tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748B;padding:24px;">${courses.length ? 'No courses match your search.' : 'No courses found. Add a course to get started.'}</td></tr>`;
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(course => {
+				const available = course.availability === 'Available';
+				return `
+					<tr>
+						<td><strong style="color:#002355;">${escapeAdminHtml(course.code)}</strong><br><span>${escapeAdminHtml(course.title)}</span></td>
+						<td>${escapeAdminHtml(course.programme)}</td>
+						<td>${escapeAdminHtml(course.semester)}</td>
+						<td>${escapeAdminHtml(course.units)}</td>
+						<td>${escapeAdminHtml(course.status)}</td>
+						<td><span class="badge ${available ? 'badge-admitted' : 'badge-declined'}">${escapeAdminHtml(course.availability || 'Unavailable')}</span></td>
+						<td><div style="display:flex;gap:6px;flex-wrap:wrap;">
+							<button type="button" class="wp-btn" style="padding:5px 9px;font-size:0.78rem;" onclick="openCourseModal('${escapeAdminHtml(course.id)}')">Edit</button>
+							<button type="button" class="wp-btn ${available ? 'wp-btn-outline' : 'wp-btn-success'}" style="padding:5px 9px;font-size:0.78rem;" onclick="toggleCourseAvailability('${escapeAdminHtml(course.id)}')">${available ? 'Set unavailable' : 'Set available'}</button>
+							<button type="button" class="wp-btn wp-btn-danger" style="padding:5px 9px;font-size:0.78rem;" onclick="deleteCourseById('${escapeAdminHtml(course.id)}')">Delete</button>
+						</div></td>
+					</tr>
+				`;
+			}).join('');
+		}
+
+		function openCourseModal(id) {
+			const form = document.getElementById('wp-course-form');
+			const course = id ? getStoredCourses().find(item => item.id === id) : null;
+			if (id && !course) return;
+			form.reset();
+			document.getElementById('course_form_id').value = course?.id || '';
+			document.getElementById('course_form_code').value = course?.code || '';
+			document.getElementById('course_form_title').value = course?.title || '';
+			document.getElementById('course_form_programme').value = course?.programme || '';
+			document.getElementById('course_form_semester').value = course?.semester || '';
+			document.getElementById('course_form_units').value = course?.units ?? 2;
+			document.getElementById('course_form_type').value = course?.status || 'Compulsory';
+			document.getElementById('course-modal-title').textContent = course ? `Edit Course: ${course.code}` : 'Add New Course';
+			document.getElementById('wp-course-modal').classList.add('open');
+		}
+
+		function closeCourseModal() {
+			document.getElementById('wp-course-modal').classList.remove('open');
+		}
+
+		async function handleSaveCourse(event) {
+			event.preventDefault();
+			const id = document.getElementById('course_form_id').value || `course-${Date.now()}`;
+			const course = {
+				id,
+				code: document.getElementById('course_form_code').value.trim(),
+				title: document.getElementById('course_form_title').value.trim(),
+				programme: document.getElementById('course_form_programme').value.trim(),
+				semester: document.getElementById('course_form_semester').value.trim(),
+				units: Number(document.getElementById('course_form_units').value),
+				status: document.getElementById('course_form_type').value,
+				availability: getStoredCourses().find(item => item.id === id)?.availability || 'Available'
+			};
+			const courses = [...getStoredCourses()];
+			const existingIndex = courses.findIndex(item => item.id === id);
+			const duplicateCode = courses.some(item => item.id !== id && item.code.toLowerCase() === course.code.toLowerCase());
+			if (duplicateCode) {
+				showCourseToast(`Course code "${course.code}" is already in use.`, true);
+				return false;
+			}
+			if (existingIndex >= 0) courses[existingIndex] = course;
+			else courses.unshift(course);
+
+			try {
+				await saveStoredCourses(courses);
+				closeCourseModal();
+				showCourseToast(`${existingIndex >= 0 ? 'Updated' : 'Created'} ${course.code}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+			return false;
+		}
+
+		async function toggleCourseAvailability(id) {
+			const courses = getStoredCourses().map(course => course.id === id
+				? { ...course, availability: course.availability === 'Available' ? 'Unavailable' : 'Available' }
+				: course
+			);
+			try {
+				await saveStoredCourses(courses);
+				const course = courses.find(item => item.id === id);
+				showCourseToast(`${course.code} is now ${course.availability.toLowerCase()}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		async function deleteCourseById(id) {
+			const course = getStoredCourses().find(item => item.id === id);
+			if (!course || !confirm(`Permanently delete "${course.code} — ${course.title}"?`)) return;
+			try {
+				await saveStoredCourses(getStoredCourses().filter(item => item.id !== id));
+				showCourseToast(`Deleted ${course.code}.`);
+			} catch (error) {
+				showCourseToast(error.message, true);
+			}
+		}
+
+		loadServerCourses();
 
 		// =========================================================================
 		// EVENTS CRUD MANAGER (Synced via localStorage 'ccoe_events_store')
@@ -934,9 +1431,35 @@
 			return [...DEFAULT_CCOE_EVENTS];
 		}
 
-		function saveStoredEvents(events) {
+		async function saveStoredEvents(events) {
+			const response = await fetch('/api/events', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(events)
+			});
+			if (!response.ok) throw new Error(`Could not save events (${response.status})`);
 			localStorage.setItem('ccoe_events_store', JSON.stringify(events));
 			renderAdminEventsTable();
+		}
+
+		async function loadServerEvents() {
+			try {
+				const response = await fetch('/api/events');
+				if (!response.ok) throw new Error(`Could not load events (${response.status})`);
+				const events = await response.json();
+				if (!Array.isArray(events)) throw new Error('The events response was invalid.');
+				if (!events.length && getStoredEvents().length) {
+					await saveStoredEvents(getStoredEvents());
+					return;
+				}
+				localStorage.setItem('ccoe_events_store', JSON.stringify(events));
+				renderAdminEventsTable();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
 		function formatPrettyDate(dateStr) {
@@ -962,25 +1485,62 @@
 			}
 			tbody.innerHTML = events.map(ev => `
 				<tr>
-					<td><img src="${ev.image}" alt="" style="width:60px;height:44px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1;" /></td>
+					<td><img src="${escapeAdminHtml(ev.image)}" alt="" style="width:60px;height:44px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1;" /></td>
 					<td>
-						<strong style="color:#002355;display:block;margin-bottom:3px;">${ev.title}</strong>
-						<small style="color:#475569;">${ev.description}</small>
+						<strong style="color:#002355;display:block;margin-bottom:3px;">${escapeAdminHtml(ev.title)}</strong>
+						<small style="color:#475569;">${escapeAdminHtml(ev.description)}</small>
 					</td>
-					<td><span class="badge">${ev.category}</span></td>
-					<td><strong>${ev.date}</strong><br><small>${ev.time}</small></td>
-					<td>${ev.venue}</td>
+					<td><span class="badge">${escapeAdminHtml(ev.category)}</span></td>
+					<td><strong>${escapeAdminHtml(ev.date)}</strong><br><small>${escapeAdminHtml(ev.time)}</small></td>
+					<td>${escapeAdminHtml(ev.venue)}</td>
 					<td>
-						<button type="button" onclick="deleteEventById('${ev.id}')" style="background:#DC2626;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-							Delete Event
-						</button>
+						<div style="display:flex;gap:6px;flex-wrap:wrap;">
+							<button type="button" class="wp-btn" onclick="editEventById('${escapeAdminHtml(ev.id)}')">Edit</button>
+							<button type="button" class="wp-btn wp-btn-danger" onclick="deleteEventById('${escapeAdminHtml(ev.id)}')">Delete</button>
+						</div>
 					</td>
 				</tr>
 			`).join('');
 		}
 
+		function dateInputValue(dateValue) {
+			const date = new Date(dateValue);
+			if (Number.isNaN(date.getTime())) return '';
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			return `${year}-${month}-${day}`;
+		}
+
+		function editEventById(id) {
+			const eventItem = getStoredEvents().find(item => item.id === id);
+			if (!eventItem) return;
+			document.getElementById('ev_id').value = eventItem.id;
+			document.getElementById('ev_title').value = eventItem.title;
+			document.getElementById('ev_category').value = eventItem.category;
+			document.getElementById('ev_date').value = dateInputValue(eventItem.date);
+			document.getElementById('ev_time').value = eventItem.time;
+			document.getElementById('ev_venue').value = eventItem.venue;
+			document.getElementById('ev_image_preset').value = eventItem.image;
+			document.getElementById('ev_description').value = eventItem.description;
+			document.getElementById('ev-submit-button').textContent = 'Save Event Changes';
+			document.getElementById('ev-cancel-edit').style.display = 'inline-block';
+			document.querySelector('#tab-events .wp-card h2').textContent = 'Edit Campus Event';
+			document.getElementById('ev_title').focus();
+		}
+
+		function cancelEventEdit() {
+			document.getElementById('wp-create-event-form').reset();
+			document.getElementById('ev_id').value = '';
+			document.getElementById('ev_time').value = '10:00 AM – 02:00 PM';
+			document.getElementById('ev-submit-button').textContent = 'Publish Event to Website →';
+			document.getElementById('ev-cancel-edit').style.display = 'none';
+			document.querySelector('#tab-events .wp-card h2').textContent = '+ Publish New Campus Event';
+		}
+
 		function handleCreateEvent(e) {
 			e.preventDefault();
+			const id = document.getElementById('ev_id').value;
 			const title = document.getElementById('ev_title').value.trim();
 			const category = document.getElementById('ev_category').value;
 			const dateInput = document.getElementById('ev_date').value;
@@ -990,10 +1550,10 @@
 			const fileInput = document.getElementById('ev_image_upload');
 			const description = document.getElementById('ev_description').value.trim();
 
-			const finalizeSave = (imgSrc) => {
+			const finalizeSave = async (imgSrc) => {
 				const events = getStoredEvents();
-				events.unshift({
-					id: 'ev-' + Date.now(),
+				const updatedEvent = {
+					id: id || 'ev-' + Date.now(),
 					title: title,
 					category: category,
 					badgeClass: getBadgeClassForCategory(category),
@@ -1002,13 +1562,24 @@
 					venue: venue,
 					image: imgSrc,
 					description: description
-				});
-				saveStoredEvents(events);
-				document.getElementById('wp-create-event-form').reset();
-				document.getElementById('ev_time').value = '10:00 AM – 02:00 PM';
-				const fb = document.getElementById('ev-feedback');
-				fb.style.display = 'inline';
-				setTimeout(() => { fb.style.display = 'none'; }, 3500);
+				};
+				const updatedEvents = id
+					? events.map(item => item.id === id ? updatedEvent : item)
+					: [updatedEvent, ...events];
+				try {
+					await saveStoredEvents(updatedEvents);
+					cancelEventEdit();
+					const fb = document.getElementById('ev-feedback');
+					fb.textContent = id ? '✓ Event changes saved.' : '✓ Event published to live website!';
+					fb.style.color = '#007A33';
+					fb.style.display = 'inline';
+					setTimeout(() => { fb.style.display = 'none'; }, 3500);
+				} catch (error) {
+					const fb = document.getElementById('ev-feedback');
+					fb.textContent = `Error: ${error.message}`;
+					fb.style.color = '#B91C1C';
+					fb.style.display = 'inline';
+				}
 			};
 
 			if (fileInput.files && fileInput.files[0]) {
@@ -1018,21 +1589,320 @@
 				};
 				reader.readAsDataURL(fileInput.files[0]);
 			} else {
-				finalizeSave(presetImg);
+				const existingEvent = id ? getStoredEvents().find(item => item.id === id) : null;
+				finalizeSave(existingEvent ? existingEvent.image : presetImg);
 			}
 			return false;
 		}
 
-		function deleteEventById(id) {
+		async function deleteEventById(id) {
+			if (!confirm('Permanently delete this event?')) return;
 			const events = getStoredEvents().filter(ev => ev.id !== id);
-			saveStoredEvents(events);
+			try {
+				await saveStoredEvents(events);
+				if (document.getElementById('ev_id').value === id) cancelEventEdit();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
-		function resetDefaultEvents() {
-			saveStoredEvents([...DEFAULT_CCOE_EVENTS]);
+		async function resetDefaultEvents() {
+			if (!confirm('Restore the default CCoE events?')) return;
+			try {
+				await saveStoredEvents([...DEFAULT_CCOE_EVENTS]);
+				cancelEventEdit();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
 		renderAdminEventsTable();
+		loadServerEvents();
+
+		// =========================================================================
+		// PROGRAMMES CRUD MANAGER (Synced via /api/programmes & localStorage)
+		// =========================================================================
+		const DEFAULT_CCOE_PROGRAMMES = [
+			{
+				id: 'prog-1',
+				title: 'School of Arts and Languages Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Prepares articulate educators in English, French, Hausa, Arabic, and creative theatre pedagogy.'
+			},
+			{
+				id: 'prog-2',
+				title: 'School of Science Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Equips STEM teachers with laboratory competence in Mathematics, Biology, Chemistry, and Physics Education.'
+			},
+			{
+				id: 'prog-3',
+				title: 'School of Computing Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'State-of-the-art curriculum covering Artificial Intelligence & Robotics, Computer Science, Data Science, and Cybersecurity.'
+			},
+			{
+				id: 'prog-4',
+				title: 'School of Business Management Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Develops educators in Accounting, Business Administration, Marketing, and Office Technology & Management.'
+			},
+			{
+				id: 'prog-5',
+				title: 'School of Social Sciences Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Comprehensive pedagogy in Economics, Political Science, Geography, and Social Studies Education.'
+			},
+			{
+				id: 'prog-6',
+				title: 'School of Foundation and Lifelong Education (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'Early Childhood Care & Education (ECCE), Primary Education Studies (PES), and Adult & Non-Formal Education.'
+			},
+			{
+				id: 'prog-7',
+				title: 'School of Education and General Studies (NCE)',
+				level: 'NCE',
+				affiliation: 'NCCE 2026 Minimum Standard',
+				duration: '3 Years (6 Semesters)',
+				description: 'General Nigerian Studies (GNS), Educational Technology, Psychology, and Philosophy of Education.'
+			},
+			{
+				id: 'prog-8',
+				title: 'Degree Programmes in Affiliation with AAUA',
+				level: 'Degree (AAUA)',
+				affiliation: 'Adekunle Ajasin University, Akungba-Akoko (AAUA)',
+				duration: '4 Years / 3 Years DE',
+				description: 'Undergraduate B.Ed. & B.Sc. (Ed.) degrees in Guidance & Counselling, Educational Management, Biology, Economics, and English Education.'
+			},
+			{
+				id: 'prog-9',
+				title: 'Postgraduate Diploma in Education (PGDE)',
+				level: 'PGDE (AAUA)',
+				affiliation: 'Adekunle Ajasin University, Akungba-Akoko (AAUA)',
+				duration: '2 Semesters (40 Units)',
+				description: 'Professional teacher qualification for university and polytechnic graduates comprising 20 compulsory pedagogical courses.'
+			},
+			{
+				id: 'prog-10',
+				title: 'Professional Diploma in Education (PDE)',
+				level: 'PDE',
+				affiliation: 'TRCN Aligned',
+				duration: '1 Academic Session',
+				description: 'Post-tertiary teaching diploma aligned with TRCN guidelines for practicing teachers and tertiary instructors.'
+			},
+			{
+				id: 'prog-11',
+				title: 'Centre for Skills Acquisition & Entrepreneurship',
+				level: 'Skills Acquisition',
+				affiliation: 'Directorate of Skills Acquisition, CCoE',
+				duration: '3 Months – 1 Year',
+				description: 'Vocational mastery in Tailoring & Fashion Design, Hair Dressing & Cosmetology, Shoe Making, Computer Training, and Screeding & Painting.'
+			}
+		];
+
+		let cachedProgrammes = null;
+
+		function getStoredProgrammes() {
+			if (cachedProgrammes && cachedProgrammes.length) return cachedProgrammes;
+			try {
+				const raw = localStorage.getItem('ccoe_programmes_store');
+				if (raw) {
+					cachedProgrammes = JSON.parse(raw);
+					return cachedProgrammes;
+				}
+			} catch (e) {}
+			cachedProgrammes = [...DEFAULT_CCOE_PROGRAMMES];
+			localStorage.setItem('ccoe_programmes_store', JSON.stringify(cachedProgrammes));
+			return cachedProgrammes;
+		}
+
+		async function fetchServerProgrammes() {
+			try {
+				const res = await fetch('/api/programmes');
+				if (!res.ok) throw new Error(`Could not load programmes (${res.status})`);
+				const list = await res.json();
+				if (!Array.isArray(list)) throw new Error('The programmes response was invalid.');
+				cachedProgrammes = list;
+				localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
+				renderProgrammesTable();
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
+		}
+
+		async function saveStoredProgrammes(list) {
+			const res = await fetch('/api/programmes/save-all', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(list)
+				});
+			if (!res.ok) throw new Error(`Could not save programmes (${res.status})`);
+			cachedProgrammes = list;
+			localStorage.setItem('ccoe_programmes_store', JSON.stringify(list));
+			renderProgrammesTable();
+		}
+
+		function showProgrammeToast(msg, isError = false) {
+			const toast = document.getElementById('prog-status-toast');
+			if (!toast) return;
+			toast.textContent = (isError ? 'Error: ' : '✓ ') + msg;
+			toast.style.color = isError ? '#B91C1C' : '#007A33';
+			toast.style.display = 'inline';
+			setTimeout(() => { toast.style.display = 'none'; }, 3200);
+		}
+
+		function renderProgrammesTable() {
+			const all = getStoredProgrammes();
+			const levelFilter = document.getElementById('prog-filter-level')?.value || 'ALL';
+			const query = (document.getElementById('prog-search-input')?.value || '').toLowerCase().trim();
+
+			document.getElementById('wp-programmes-count').textContent = all.length;
+
+			const filtered = all.filter(p => {
+				if (levelFilter !== 'ALL' && p.level !== levelFilter) return false;
+				if (query) {
+					const hay = [p.title, p.level, p.affiliation, p.duration, p.description].join(' ').toLowerCase();
+					if (!hay.includes(query)) return false;
+				}
+				return true;
+			});
+
+			const tbody = document.getElementById('wp-programmes-tbody');
+			if (!filtered.length) {
+				tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#64748B;padding:24px;">No academic programmes match your filter criteria.</td></tr>';
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(p => `
+				<tr>
+					<td><strong style="color:#002355;font-size:0.92rem;">${p.title}</strong></td>
+					<td><span class="badge ${p.level.includes('NCE') ? 'badge-admitted' : p.level.includes('Degree') ? 'badge-under_review' : 'badge-pending'}">${p.level}</span></td>
+					<td>${p.affiliation}</td>
+					<td><strong>${p.duration}</strong></td>
+					<td><small style="color:#475569;">${p.description || '—'}</small></td>
+					<td>
+						<div style="display:flex;gap:6px;">
+							<button type="button" class="wp-btn" style="padding:5px 10px;font-size:0.78rem;background:#00337C;color:#fff;" onclick="openProgrammeModal('${p.id}')">Edit</button>
+							<button type="button" class="wp-btn" style="padding:5px 10px;font-size:0.78rem;background:#DC2626;color:#fff;" onclick="deleteProgrammeById('${p.id}')">Delete</button>
+						</div>
+					</td>
+				</tr>
+			`).join('');
+		}
+
+		function openProgrammeModal(id) {
+			const modal = document.getElementById('wp-programme-modal');
+			const titleEl = document.getElementById('prog-modal-title');
+			const idInput = document.getElementById('prog_form_id');
+			const titleInput = document.getElementById('prog_form_title');
+			const levelInput = document.getElementById('prog_form_level');
+			const durInput = document.getElementById('prog_form_duration');
+			const affInput = document.getElementById('prog_form_affiliation');
+			const descInput = document.getElementById('prog_form_description');
+
+			if (id) {
+				const p = getStoredProgrammes().find(item => item.id === id);
+				if (!p) return;
+				titleEl.textContent = 'Edit Programme: ' + p.title;
+				idInput.value = p.id;
+				titleInput.value = p.title;
+				levelInput.value = p.level;
+				durInput.value = p.duration;
+				affInput.value = p.affiliation;
+				descInput.value = p.description || '';
+			} else {
+				titleEl.textContent = 'Add New Programme';
+				idInput.value = '';
+				document.getElementById('wp-prog-form').reset();
+				durInput.value = '3 Years (6 Semesters)';
+				affInput.value = 'NCCE 2026 Minimum Standard';
+			}
+			modal.classList.add('open');
+		}
+
+		function closeProgrammeModal() {
+			document.getElementById('wp-programme-modal').classList.remove('open');
+		}
+
+		async function handleSaveProgramme(e) {
+			e.preventDefault();
+			const id = document.getElementById('prog_form_id').value;
+			const title = document.getElementById('prog_form_title').value.trim();
+			const level = document.getElementById('prog_form_level').value;
+			const duration = document.getElementById('prog_form_duration').value.trim();
+			const affiliation = document.getElementById('prog_form_affiliation').value.trim();
+			const description = document.getElementById('prog_form_description').value.trim();
+
+			const list = [...getStoredProgrammes()];
+			let message;
+			if (id) {
+				const idx = list.findIndex(p => p.id === id);
+				if (idx !== -1) {
+					list[idx] = { ...list[idx], title, level, duration, affiliation, description };
+					message = `Updated "${title}"`;
+				}
+			} else {
+				const newId = 'prog-' + Date.now();
+				list.unshift({ id: newId, title, level, duration, affiliation, description });
+				message = `Created new programme "${title}"`;
+			}
+
+			try {
+				await saveStoredProgrammes(list);
+				closeProgrammeModal();
+				showProgrammeToast(message || 'Programme saved');
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
+			return false;
+		}
+
+		async function deleteProgrammeById(id) {
+			const p = getStoredProgrammes().find(item => item.id === id);
+			const title = p ? p.title : id;
+			if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) {
+				return;
+			}
+			const list = getStoredProgrammes().filter(item => item.id !== id);
+			try {
+				await saveStoredProgrammes(list);
+				showProgrammeToast(`Deleted "${title}"`);
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
+		}
+
+		async function resetDefaultProgrammes() {
+			if (!confirm('Restore the default 11 CCoE programmes?')) return;
+			try {
+				await saveStoredProgrammes([...DEFAULT_CCOE_PROGRAMMES]);
+				showProgrammeToast('Default programmes restored');
+			} catch (error) {
+				showProgrammeToast(error.message, true);
+			}
+		}
+
+		renderProgrammesTable();
+		fetchServerProgrammes();
 	</script>
 </body>
 </html>
