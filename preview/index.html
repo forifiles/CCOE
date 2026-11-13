@@ -326,7 +326,7 @@
 		<div class="ccoe-container ccoe-topbar-inner">
 			<div style="display:flex;align-items:center;gap:6px;">
 				<svg class="ccoe-svg-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-				<span>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</span>
+				<span id="frontend-topbar-address">No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</span>
 			</div>
 			<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
 				<span style="display:inline-flex;align-items:center;gap:5px;">
@@ -348,8 +348,8 @@
 			<a href="#home" class="ccoe-brand" onclick="showPage('home'); return false;">
 				<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="City College of Education Official Crest" />
 				<div>
-					<p class="ccoe-brand-title">City College of Education, Mararaba</p>
-					<p class="ccoe-brand-motto">"Education for Self Employment" &bull; Nasarawa State</p>
+					<p class="ccoe-brand-title" id="frontend-institution-name">City College of Education, Mararaba</p>
+					<p class="ccoe-brand-motto" id="frontend-brand-motto">"Education for Self Employment" &bull; Nasarawa State</p>
 				</div>
 			</a>
 			<div>
@@ -514,7 +514,7 @@
 							<img src="/education-zone/images/ccoe/ccoe-logo.png" alt="CCoE Crest" />
 							<div>
 								<strong>Official Motto</strong>
-								<span>"Education for Self Employment"</span>
+								<span id="frontend-motto">"Education for Self Employment"</span>
 							</div>
 						</div>
 					</div>
@@ -532,17 +532,17 @@
 						<div class="ccoe-vm-card ccoe-vm-vision">
 							<div class="ccoe-vm-icon"><span class="ccoe-icon-box"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span></div>
 							<h3>Our Vision</h3>
-							<p>To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
+							<p id="frontend-home-vision">To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
 						</div>
 						<div class="ccoe-vm-card ccoe-vm-mission">
 							<div class="ccoe-vm-icon"><span class="ccoe-icon-box ccoe-icon-box-gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span></div>
 							<h3>Our Mission</h3>
-							<p>To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
+							<p id="frontend-home-mission">To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
 						</div>
 						<div class="ccoe-vm-card ccoe-vm-philosophy">
 							<div class="ccoe-vm-icon"><span class="ccoe-icon-box ccoe-icon-box-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span></div>
 							<h3>Our Philosophy</h3>
-							<p>Guided by our motto — "Education for Self Employment" — we train educators who are intellectually grounded, technologically fluent, and entrepreneurially self-reliant.</p>
+							<p id="frontend-home-philosophy">Guided by our motto — "Education for Self Employment" — we train educators who are intellectually grounded, technologically fluent, and entrepreneurially self-reliant.</p>
 						</div>
 					</div>
 					<div class="ccoe-split-grid" style="margin-top:32px;">
@@ -704,7 +704,7 @@
 						<span class="ccoe-eyebrow ccoe-eyebrow-gold">Have Questions or Ready to Enrol?</span>
 						<h2>Get in Touch with City College of Education, Mararaba</h2>
 						<p>
-							<strong>Campus Address:</strong> No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State<br>
+							<strong>Campus Address:</strong> <span id="frontend-cta-address">No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</span><br>
 							<strong>Telephone:</strong> 08032920100 | 08058431596 &bull; <strong>Email:</strong> admissions@citycollegeofeducation.edu.ng
 						</p>
 					</div>
@@ -728,8 +728,8 @@
 			<div class="ccoe-page-banner" style="background-image: linear-gradient(120deg, rgba(0, 35, 85, 0.92), rgba(0, 51, 124, 0.82)), url('/education-zone/images/ccoe/campus-boulevard.jpg');">
 				<div class="ccoe-container">
 					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Who We Are</span>
-					<h1>About City College of Education, Mararaba</h1>
-					<p>No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
+					<h1 id="frontend-about-title">About City College of Education, Mararaba</h1>
+					<p id="frontend-about-address">No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
 				</div>
 			</div>
 			<section class="ccoe-section ccoe-bg-white">
@@ -738,15 +738,15 @@
 						<span class="ccoe-eyebrow">Institutional Background</span>
 						<h2>Excellence in Teacher Education &amp; Self-Reliance</h2>
 						<p class="ccoe-lead-text">
-							City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State, serving the Federal Capital Territory corridor and the entire federation.
+							<span id="frontend-about-background">City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State, serving the Federal Capital Territory corridor and the entire federation.</span>
 						</p>
 						<h3>History</h3>
 						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Established to address the growing demand for qualified, entrepreneurial, and technologically adept teachers in Nigeria, the College offers National Commission for Colleges of Education (NCCE) accredited NCE programmes as well as Undergraduate Degree and Postgraduate Diploma programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State.
+							<span id="frontend-about-history">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Established to address the growing demand for qualified, entrepreneurial, and technologically adept teachers in Nigeria, the College offers National Commission for Colleges of Education (NCCE) accredited NCE programmes as well as Undergraduate Degree and Postgraduate Diploma programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State.</span>
 						</p>
 						<h3>Institutional Philosophy</h3>
 						<p>
-							Anchored on our motto — <strong>"Education for Self Employment"</strong> — our philosophy emphasizes that teacher education must integrate deep academic mastery with practical vocational and digital entrepreneurship. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							<span id="frontend-about-philosophy">Anchored on our motto — <strong>"Education for Self Employment"</strong> — our philosophy emphasizes that teacher education must integrate deep academic mastery with practical vocational and digital entrepreneurship. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
 						</p>
 					</div>
 					<div>
@@ -765,7 +765,7 @@
 				<div class="ccoe-container">
 					<span class="ccoe-eyebrow ccoe-eyebrow-gold">Institutional Charter</span>
 					<h1>Our Vision and Mission</h1>
-					<p>"Education for Self Employment"</p>
+					<p id="frontend-vision-motto">"Education for Self Employment"</p>
 				</div>
 			</div>
 			<section class="ccoe-section ccoe-bg-white">
@@ -775,14 +775,14 @@
 							<span class="ccoe-eyebrow">Official Vision Statement</span>
 							<h2>Our Vision</h2>
 							<p class="ccoe-lead-text">
-								To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.
+								<span id="frontend-vision-statement">To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</span>
 							</p>
 						</div>
 						<div class="ccoe-vm-card ccoe-vm-mission">
 							<span class="ccoe-eyebrow">Official Mission Statement</span>
 							<h2>Our Mission</h2>
 							<p class="ccoe-lead-text">
-								To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.
+								<span id="frontend-mission-statement">To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</span>
 							</p>
 						</div>
 					</div>
@@ -914,6 +914,15 @@
 					<div class="ccoe-course-filter-bar">
 						<label for="preview-course-search" style="display:block;font-weight:700;color:#002355;margin-bottom:8px;">Filter Courses by Code, Title, or Department</label>
 						<input type="search" id="preview-course-search" class="ccoe-input" placeholder="Type e.g. PDE 601, Artificial Intelligence, Accounting, Guidance..." oninput="filterPreviewCourses(this.value)" />
+					</div>
+					<div style="margin:24px 0;">
+						<h2>Current Course Catalog</h2>
+						<div style="overflow-x:auto;">
+							<table class="ccoe-table preview-searchable-table">
+								<thead><tr><th>Code</th><th>Course</th><th>Programme</th><th>Semester / Duration</th><th>Units</th><th>Availability</th></tr></thead>
+								<tbody id="preview-course-catalog"></tbody>
+							</table>
+						</div>
 					</div>
 
 					<div id="courses-block-pgde">
@@ -1596,6 +1605,25 @@
 			});
 		}
 
+		function renderLiveCourseCatalog(courses) {
+			const tbody = document.getElementById('preview-course-catalog');
+			if (!tbody) return;
+			if (!courses.length) {
+				tbody.innerHTML = '<tr><td colspan="6">No courses are currently listed.</td></tr>';
+				return;
+			}
+			tbody.innerHTML = courses.map(course => `
+				<tr>
+					<td><code>${escapeFrontendHtml(course.code)}</code></td>
+					<td><strong>${escapeFrontendHtml(course.title)}</strong></td>
+					<td>${escapeFrontendHtml(course.programme)}</td>
+					<td>${escapeFrontendHtml(course.semester)}</td>
+					<td>${escapeFrontendHtml(course.units)}</td>
+					<td><span class="ccoe-badge ${course.availability === 'Available' ? 'ccoe-badge-green' : ''}">${escapeFrontendHtml(course.availability || 'Unavailable')}</span></td>
+				</tr>
+			`).join('');
+		}
+
 		// Sync Events from WP Admin (localStorage 'ccoe_events_store')
 		const DEFAULT_FRONTEND_EVENTS = [
 			{
@@ -1644,21 +1672,31 @@
 			}
 		];
 
+		function escapeFrontendHtml(value) {
+			return String(value ?? '').replace(/[&<>"']/g, char => ({
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;'
+			}[char]));
+		}
+
 		function renderEventCardHtml(ev) {
 			return `
 				<article class="ccoe-card">
 					<div class="ccoe-event-img-wrap">
-						<img src="${ev.image}" alt="${ev.title}" />
+						<img src="${escapeFrontendHtml(ev.image)}" alt="${escapeFrontendHtml(ev.title)}" />
 					</div>
 					<div class="ccoe-card-body">
-						<span class="ccoe-badge ${ev.badgeClass || ''}">${ev.category}</span>
+						<span class="ccoe-badge ${escapeFrontendHtml(ev.badgeClass || '')}">${escapeFrontendHtml(ev.category)}</span>
 						<div class="ccoe-event-meta">
-							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ${ev.date}</span>
-							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${ev.time}</span>
-							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${ev.venue}</span>
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ${escapeFrontendHtml(ev.date)}</span>
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${escapeFrontendHtml(ev.time)}</span>
+							<span><svg class="ccoe-svg-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${escapeFrontendHtml(ev.venue)}</span>
 						</div>
-						<h3>${ev.title}</h3>
-						<p>${ev.description}</p>
+						<h3>${escapeFrontendHtml(ev.title)}</h3>
+						<p>${escapeFrontendHtml(ev.description)}</p>
 					</div>
 				</article>
 			`;
@@ -1690,10 +1728,80 @@
 			}
 		}
 
+		function applyFrontendSettings(settings) {
+			const institutionName = settings.institution_name || 'City College of Education, Mararaba';
+			const motto = settings.motto || '';
+			const address = settings.address || '';
+			const textById = {
+				'frontend-institution-name': institutionName,
+				'frontend-brand-motto': `"${motto}" • Nasarawa State`,
+				'frontend-motto': `"${motto}"`,
+				'frontend-vision-motto': `"${motto}"`,
+				'frontend-home-vision': settings.vision,
+				'frontend-vision-statement': settings.vision,
+				'frontend-home-mission': settings.mission,
+				'frontend-mission-statement': settings.mission,
+				'frontend-home-philosophy': settings.philosophy,
+				'frontend-about-history': settings.history,
+				'frontend-about-philosophy': settings.philosophy,
+				'frontend-about-title': `About ${institutionName}`,
+				'frontend-contact-title': `Get in Touch with ${institutionName}`,
+				'frontend-topbar-address': address,
+				'frontend-cta-address': address,
+				'frontend-about-address': address,
+				'frontend-contact-address': address
+			};
+			Object.entries(textById).forEach(([id, value]) => {
+				const element = document.getElementById(id);
+				if (element && value) element.textContent = value;
+			});
+		}
+
 		renderFrontendEvents();
+		fetch('/api/settings')
+			.then(response => {
+				if (!response.ok) throw new Error(`Could not load college settings (${response.status})`);
+				return response.json();
+			})
+			.then(settings => {
+				if (!settings || Array.isArray(settings) || typeof settings !== 'object') {
+					throw new Error('The college settings response was invalid.');
+				}
+				localStorage.setItem('ccoe_college_settings', JSON.stringify(settings));
+				applyFrontendSettings(settings);
+			})
+			.catch(error => {
+				const settings = localStorage.getItem('ccoe_college_settings');
+				if (settings) applyFrontendSettings(JSON.parse(settings));
+				else console.warn('College settings sync:', error);
+			});
+		fetch('/api/courses')
+			.then(response => {
+				if (!response.ok) throw new Error(`Could not load live courses (${response.status})`);
+				return response.json();
+			})
+			.then(courses => {
+				if (!Array.isArray(courses)) throw new Error('The live courses response was invalid.');
+				renderLiveCourseCatalog(courses);
+			})
+			.catch(error => console.warn('Live courses sync:', error));
+		fetch('/api/events')
+			.then(response => {
+				if (!response.ok) throw new Error(`Could not load live events (${response.status})`);
+				return response.json();
+			})
+			.then(events => {
+				if (!Array.isArray(events) || !events.length) return;
+				localStorage.setItem('ccoe_events_store', JSON.stringify(events));
+				renderFrontendEvents();
+			})
+			.catch(error => console.warn('Live events sync:', error));
 		window.addEventListener('storage', (e) => {
 			if (e.key === 'ccoe_events_store') {
 				renderFrontendEvents();
+			}
+			if (e.key === 'ccoe_college_settings' && e.newValue) {
+				applyFrontendSettings(JSON.parse(e.newValue));
 			}
 		});
 	</script>

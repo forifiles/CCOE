@@ -80,3 +80,9 @@ This workspace contains the complete, production-ready WordPress website package
    - Securely view or download their **Passport Photograph** and **Academic Credentials**.
    - Update their **Decision Status** (*Pending Review, Under Review, Offered Provisional Admission, Declined*) and record internal **Admissions Office Notes**.
 4. Click **Export All to CSV** at the top of the page to download all applications into Microsoft Excel.
+
+### F. Managing Content in the Standalone Preview Admin
+1. Start the preview with `.\start-local-server.ps1` and open **WP-Admin** from the server banner.
+2. Use **Programmes** to add, edit, or delete programme records; use **Courses** to manage course details and switch availability between *Available* and *Unavailable*.
+3. Use **Events** to edit or delete published events, and **College Settings → Edit** to update institutional information and save or cancel changes.
+4. Preview content is persisted in `preview/data/` and is shared with the public preview pages.

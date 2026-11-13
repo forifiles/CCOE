@@ -512,6 +512,7 @@
 				<div class="wp-card" style="border-top:4px solid #00337C;">
 					<h2 style="margin-top:0;color:#002355;font-size:1.15rem;">+ Publish New Campus Event</h2>
 					<form id="wp-create-event-form" onsubmit="return handleCreateEvent(event)">
+						<input type="hidden" id="ev_id" />
 						<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:14px;">
 							<div>
 								<label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:5px;">Event Title *</label>
@@ -570,7 +571,8 @@
 						</div>
 
 						<div style="display:flex;align-items:center;gap:14px;">
-							<button type="submit" class="wp-btn" style="background:#007A33;padding:10px 20px;font-weight:700;font-size:0.92rem;">Publish Event to Website &rarr;</button>
+							<button type="submit" id="ev-submit-button" class="wp-btn" style="background:#007A33;padding:10px 20px;font-weight:700;font-size:0.92rem;">Publish Event to Website &rarr;</button>
+							<button type="button" id="ev-cancel-edit" class="wp-btn wp-btn-outline" style="display:none;" onclick="cancelEventEdit()">Cancel Edit</button>
 							<span id="ev-feedback" style="color:#007A33;font-weight:600;font-size:0.88rem;display:none;">&#10003; Event published to live website!</span>
 						</div>
 					</form>
@@ -598,11 +600,29 @@
 			<div id="tab-settings" class="tab-panel">
 				<h1>Institutional Administration Settings (<code>CCOE_Settings</code>)</h1>
 				<div class="wp-card">
-					<p><strong>Institution Name:</strong> City College of Education, Mararaba, Nasarawa State</p>
-					<p><strong>Motto:</strong> Education for Self Employment</p>
-					<p><strong>Address:</strong> No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State</p>
-					<p><strong>Vision:</strong> To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.</p>
-					<p><strong>Mission:</strong> To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.</p>
+					<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+						<div>
+							<h2 style="margin:0;color:#002355;">College Information</h2>
+							<p style="margin:5px 0 0;color:#475569;">Edit institutional details, statements, history, and philosophy.</p>
+						</div>
+						<div style="display:flex;gap:8px;align-items:center;">
+							<button type="button" id="settings-edit-button" class="wp-btn" onclick="setSettingsEditMode(true)">Edit</button>
+							<button type="submit" id="settings-save-button" form="wp-settings-form" class="wp-btn wp-btn-success" style="display:none;">Save Changes</button>
+							<button type="button" id="settings-cancel-button" class="wp-btn wp-btn-outline" style="display:none;" onclick="cancelSettingsEdit()">Cancel</button>
+						</div>
+					</div>
+					<form id="wp-settings-form" onsubmit="return saveCollegeSettings(event)">
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+							<div><label for="setting-institution_name" style="display:block;font-weight:700;margin-bottom:5px;">Institution Name</label><input id="setting-institution_name" data-setting="institution_name" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div><label for="setting-motto" style="display:block;font-weight:700;margin-bottom:5px;">Motto</label><input id="setting-motto" data-setting="motto" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div style="grid-column:1/-1;"><label for="setting-address" style="display:block;font-weight:700;margin-bottom:5px;">Address</label><input id="setting-address" data-setting="address" type="text" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;" /></div>
+							<div style="grid-column:1/-1;"><label for="setting-vision" style="display:block;font-weight:700;margin-bottom:5px;">Vision Statement</label><textarea id="setting-vision" data-setting="vision" rows="3" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-mission" style="display:block;font-weight:700;margin-bottom:5px;">Mission Statement</label><textarea id="setting-mission" data-setting="mission" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-history" style="display:block;font-weight:700;margin-bottom:5px;">College History</label><textarea id="setting-history" data-setting="history" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+							<div style="grid-column:1/-1;"><label for="setting-philosophy" style="display:block;font-weight:700;margin-bottom:5px;">Institutional Philosophy</label><textarea id="setting-philosophy" data-setting="philosophy" rows="4" disabled required style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;"></textarea></div>
+						</div>
+						<p id="settings-feedback" role="status" aria-live="polite" style="display:none;font-weight:700;margin-bottom:0;"></p>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -630,6 +650,86 @@
 		if (sessionStorage.getItem('ccoe_wp_admin_logged_in') === '1') {
 			document.getElementById('wp-login-screen').classList.add('hidden');
 		}
+
+		const DEFAULT_COLLEGE_SETTINGS = {
+			institution_name: 'City College of Education, Mararaba, Nasarawa State',
+			motto: 'Education for Self Employment',
+			address: 'No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State',
+			vision: 'To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.',
+			mission: 'To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.',
+			history: 'City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State, serving the Federal Capital Territory corridor and the entire federation. Established to address the growing demand for qualified, entrepreneurial, and technologically adept teachers in Nigeria, the College offers National Commission for Colleges of Education (NCCE) accredited NCE programmes as well as Undergraduate Degree and Postgraduate Diploma programmes in affiliation with Adekunle Ajasin University, Akungba-Akoko (AAUA), Ondo State.',
+			philosophy: 'Anchored on our motto — "Education for Self Employment" — our philosophy emphasizes that teacher education must integrate deep academic mastery with practical vocational and digital entrepreneurship.'
+		};
+		let savedCollegeSettings = { ...DEFAULT_COLLEGE_SETTINGS };
+
+		function setCollegeSettings(settings) {
+			savedCollegeSettings = { ...DEFAULT_COLLEGE_SETTINGS, ...settings };
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				field.value = savedCollegeSettings[field.dataset.setting] || '';
+			});
+		}
+
+		function setSettingsEditMode(enabled) {
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				field.disabled = !enabled;
+			});
+			document.getElementById('settings-edit-button').style.display = enabled ? 'none' : 'inline-block';
+			document.getElementById('settings-save-button').style.display = enabled ? 'inline-block' : 'none';
+			document.getElementById('settings-cancel-button').style.display = enabled ? 'inline-block' : 'none';
+		}
+
+		function showSettingsFeedback(message, isError = false) {
+			const feedback = document.getElementById('settings-feedback');
+			feedback.textContent = message;
+			feedback.style.color = isError ? '#B91C1C' : '#007A33';
+			feedback.style.display = 'block';
+		}
+
+		async function loadCollegeSettings() {
+			try {
+				const response = await fetch('/api/settings');
+				if (!response.ok) throw new Error(`Could not load college settings (${response.status})`);
+				const settings = await response.json();
+				if (!settings || Array.isArray(settings) || typeof settings !== 'object') {
+					throw new Error('The college settings response was invalid.');
+				}
+				setCollegeSettings(settings);
+				localStorage.setItem('ccoe_college_settings', JSON.stringify(savedCollegeSettings));
+			} catch (error) {
+				setCollegeSettings(DEFAULT_COLLEGE_SETTINGS);
+				showSettingsFeedback(error.message, true);
+			}
+		}
+
+		function cancelSettingsEdit() {
+			setCollegeSettings(savedCollegeSettings);
+			setSettingsEditMode(false);
+		}
+
+		async function saveCollegeSettings(event) {
+			event.preventDefault();
+			const settings = {};
+			document.querySelectorAll('#wp-settings-form [data-setting]').forEach(field => {
+				settings[field.dataset.setting] = field.value.trim();
+			});
+			try {
+				const response = await fetch('/api/settings', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(settings)
+				});
+				if (!response.ok) throw new Error(`Could not save college settings (${response.status})`);
+				setCollegeSettings(settings);
+				localStorage.setItem('ccoe_college_settings', JSON.stringify(savedCollegeSettings));
+				setSettingsEditMode(false);
+				showSettingsFeedback('College settings saved successfully.');
+			} catch (error) {
+				showSettingsFeedback(error.message, true);
+			}
+			return false;
+		}
+
+		loadCollegeSettings();
 
 		// =========================================================================
 		// ADMISSIONS APPLICATIONS FULL CRUD & DETAIL INSPECTION
@@ -1331,9 +1431,35 @@
 			return [...DEFAULT_CCOE_EVENTS];
 		}
 
-		function saveStoredEvents(events) {
+		async function saveStoredEvents(events) {
+			const response = await fetch('/api/events', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(events)
+			});
+			if (!response.ok) throw new Error(`Could not save events (${response.status})`);
 			localStorage.setItem('ccoe_events_store', JSON.stringify(events));
 			renderAdminEventsTable();
+		}
+
+		async function loadServerEvents() {
+			try {
+				const response = await fetch('/api/events');
+				if (!response.ok) throw new Error(`Could not load events (${response.status})`);
+				const events = await response.json();
+				if (!Array.isArray(events)) throw new Error('The events response was invalid.');
+				if (!events.length && getStoredEvents().length) {
+					await saveStoredEvents(getStoredEvents());
+					return;
+				}
+				localStorage.setItem('ccoe_events_store', JSON.stringify(events));
+				renderAdminEventsTable();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
 		function formatPrettyDate(dateStr) {
@@ -1359,25 +1485,62 @@
 			}
 			tbody.innerHTML = events.map(ev => `
 				<tr>
-					<td><img src="${ev.image}" alt="" style="width:60px;height:44px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1;" /></td>
+					<td><img src="${escapeAdminHtml(ev.image)}" alt="" style="width:60px;height:44px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1;" /></td>
 					<td>
-						<strong style="color:#002355;display:block;margin-bottom:3px;">${ev.title}</strong>
-						<small style="color:#475569;">${ev.description}</small>
+						<strong style="color:#002355;display:block;margin-bottom:3px;">${escapeAdminHtml(ev.title)}</strong>
+						<small style="color:#475569;">${escapeAdminHtml(ev.description)}</small>
 					</td>
-					<td><span class="badge">${ev.category}</span></td>
-					<td><strong>${ev.date}</strong><br><small>${ev.time}</small></td>
-					<td>${ev.venue}</td>
+					<td><span class="badge">${escapeAdminHtml(ev.category)}</span></td>
+					<td><strong>${escapeAdminHtml(ev.date)}</strong><br><small>${escapeAdminHtml(ev.time)}</small></td>
+					<td>${escapeAdminHtml(ev.venue)}</td>
 					<td>
-						<button type="button" onclick="deleteEventById('${ev.id}')" style="background:#DC2626;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-							Delete Event
-						</button>
+						<div style="display:flex;gap:6px;flex-wrap:wrap;">
+							<button type="button" class="wp-btn" onclick="editEventById('${escapeAdminHtml(ev.id)}')">Edit</button>
+							<button type="button" class="wp-btn wp-btn-danger" onclick="deleteEventById('${escapeAdminHtml(ev.id)}')">Delete</button>
+						</div>
 					</td>
 				</tr>
 			`).join('');
 		}
 
+		function dateInputValue(dateValue) {
+			const date = new Date(dateValue);
+			if (Number.isNaN(date.getTime())) return '';
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			return `${year}-${month}-${day}`;
+		}
+
+		function editEventById(id) {
+			const eventItem = getStoredEvents().find(item => item.id === id);
+			if (!eventItem) return;
+			document.getElementById('ev_id').value = eventItem.id;
+			document.getElementById('ev_title').value = eventItem.title;
+			document.getElementById('ev_category').value = eventItem.category;
+			document.getElementById('ev_date').value = dateInputValue(eventItem.date);
+			document.getElementById('ev_time').value = eventItem.time;
+			document.getElementById('ev_venue').value = eventItem.venue;
+			document.getElementById('ev_image_preset').value = eventItem.image;
+			document.getElementById('ev_description').value = eventItem.description;
+			document.getElementById('ev-submit-button').textContent = 'Save Event Changes';
+			document.getElementById('ev-cancel-edit').style.display = 'inline-block';
+			document.querySelector('#tab-events .wp-card h2').textContent = 'Edit Campus Event';
+			document.getElementById('ev_title').focus();
+		}
+
+		function cancelEventEdit() {
+			document.getElementById('wp-create-event-form').reset();
+			document.getElementById('ev_id').value = '';
+			document.getElementById('ev_time').value = '10:00 AM – 02:00 PM';
+			document.getElementById('ev-submit-button').textContent = 'Publish Event to Website →';
+			document.getElementById('ev-cancel-edit').style.display = 'none';
+			document.querySelector('#tab-events .wp-card h2').textContent = '+ Publish New Campus Event';
+		}
+
 		function handleCreateEvent(e) {
 			e.preventDefault();
+			const id = document.getElementById('ev_id').value;
 			const title = document.getElementById('ev_title').value.trim();
 			const category = document.getElementById('ev_category').value;
 			const dateInput = document.getElementById('ev_date').value;
@@ -1387,10 +1550,10 @@
 			const fileInput = document.getElementById('ev_image_upload');
 			const description = document.getElementById('ev_description').value.trim();
 
-			const finalizeSave = (imgSrc) => {
+			const finalizeSave = async (imgSrc) => {
 				const events = getStoredEvents();
-				events.unshift({
-					id: 'ev-' + Date.now(),
+				const updatedEvent = {
+					id: id || 'ev-' + Date.now(),
 					title: title,
 					category: category,
 					badgeClass: getBadgeClassForCategory(category),
@@ -1399,13 +1562,24 @@
 					venue: venue,
 					image: imgSrc,
 					description: description
-				});
-				saveStoredEvents(events);
-				document.getElementById('wp-create-event-form').reset();
-				document.getElementById('ev_time').value = '10:00 AM – 02:00 PM';
-				const fb = document.getElementById('ev-feedback');
-				fb.style.display = 'inline';
-				setTimeout(() => { fb.style.display = 'none'; }, 3500);
+				};
+				const updatedEvents = id
+					? events.map(item => item.id === id ? updatedEvent : item)
+					: [updatedEvent, ...events];
+				try {
+					await saveStoredEvents(updatedEvents);
+					cancelEventEdit();
+					const fb = document.getElementById('ev-feedback');
+					fb.textContent = id ? '✓ Event changes saved.' : '✓ Event published to live website!';
+					fb.style.color = '#007A33';
+					fb.style.display = 'inline';
+					setTimeout(() => { fb.style.display = 'none'; }, 3500);
+				} catch (error) {
+					const fb = document.getElementById('ev-feedback');
+					fb.textContent = `Error: ${error.message}`;
+					fb.style.color = '#B91C1C';
+					fb.style.display = 'inline';
+				}
 			};
 
 			if (fileInput.files && fileInput.files[0]) {
@@ -1415,21 +1589,41 @@
 				};
 				reader.readAsDataURL(fileInput.files[0]);
 			} else {
-				finalizeSave(presetImg);
+				const existingEvent = id ? getStoredEvents().find(item => item.id === id) : null;
+				finalizeSave(existingEvent ? existingEvent.image : presetImg);
 			}
 			return false;
 		}
 
-		function deleteEventById(id) {
+		async function deleteEventById(id) {
+			if (!confirm('Permanently delete this event?')) return;
 			const events = getStoredEvents().filter(ev => ev.id !== id);
-			saveStoredEvents(events);
+			try {
+				await saveStoredEvents(events);
+				if (document.getElementById('ev_id').value === id) cancelEventEdit();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
-		function resetDefaultEvents() {
-			saveStoredEvents([...DEFAULT_CCOE_EVENTS]);
+		async function resetDefaultEvents() {
+			if (!confirm('Restore the default CCoE events?')) return;
+			try {
+				await saveStoredEvents([...DEFAULT_CCOE_EVENTS]);
+				cancelEventEdit();
+			} catch (error) {
+				const feedback = document.getElementById('ev-feedback');
+				feedback.textContent = `Error: ${error.message}`;
+				feedback.style.color = '#B91C1C';
+				feedback.style.display = 'inline';
+			}
 		}
 
 		renderAdminEventsTable();
+		loadServerEvents();
 
 		// =========================================================================
 		// PROGRAMMES CRUD MANAGER (Synced via /api/programmes & localStorage)

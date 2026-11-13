@@ -344,7 +344,7 @@ try {
 
                 if ($request.HttpMethod -eq "GET") {
                     $raw = ConvertFrom-Json -InputObject ([System.IO.File]::ReadAllText($coursesFile, [System.Text.Encoding]::UTF8))
-                    $flat = Flatten-List $raw
+                    $flat = @(Flatten-List $raw)
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $flat -Depth 10))
                     $response.ContentType = "application/json; charset=utf-8"
                     $response.ContentLength64 = $bytes.Length
@@ -356,10 +356,88 @@ try {
                     if (-not $body.TrimStart().StartsWith("[")) {
                         throw "Course updates must be a JSON array."
                     }
-                    $flat = Flatten-List (ConvertFrom-Json -InputObject $body)
+                    $flat = @(Flatten-List (ConvertFrom-Json -InputObject $body))
                     $updatedJson = ConvertTo-Json -InputObject $flat -Depth 10
                     [System.IO.File]::WriteAllText($coursesFile, $updatedJson, [System.Text.Encoding]::UTF8)
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"success":true,"message":"Courses saved"}')
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            }
+
+            # =========================================================================
+            # BACKEND REST API: EVENTS PERSISTENCE
+            # =========================================================================
+            if ($rawPath -eq "api/events" -or $rawPath -eq "api/events/") {
+                $eventsFile = Join-Path $root "preview\data\events.json"
+                if (-not (Test-Path $eventsFile)) {
+                    $dataDir = Join-Path $root "preview\data"
+                    if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+                    [System.IO.File]::WriteAllText($eventsFile, "[]", [System.Text.Encoding]::UTF8)
+                }
+
+                if ($request.HttpMethod -eq "GET") {
+                    $raw = ConvertFrom-Json -InputObject ([System.IO.File]::ReadAllText($eventsFile, [System.Text.Encoding]::UTF8))
+                    $flat = @(Flatten-List $raw)
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $flat -Depth 10))
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                } elseif ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    if (-not $body.TrimStart().StartsWith("[")) {
+                        throw "Event updates must be a JSON array."
+                    }
+                    $flat = @(Flatten-List (ConvertFrom-Json -InputObject $body))
+                    $updatedJson = ConvertTo-Json -InputObject $flat -Depth 10
+                    [System.IO.File]::WriteAllText($eventsFile, $updatedJson, [System.Text.Encoding]::UTF8)
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"success":true,"message":"Events saved"}')
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            }
+
+            # =========================================================================
+            # BACKEND REST API: INSTITUTIONAL SETTINGS PERSISTENCE
+            # =========================================================================
+            if ($rawPath -eq "api/settings" -or $rawPath -eq "api/settings/") {
+                $settingsFile = Join-Path $root "preview\data\settings.json"
+                if (-not (Test-Path $settingsFile)) {
+                    $dataDir = Join-Path $root "preview\data"
+                    if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+                    $defaultSettings = '{"institution_name":"City College of Education, Mararaba, Nasarawa State","motto":"Education for Self Employment","address":"No. 1 City College Road, Off Old Karu Road, Sani Abacha Road Estate, Mararaba-Karu, Nasarawa State","vision":"To be a distinctive quality based educational institution, making the difference in the Nation history through positive impact of its services and its graduate output.","mission":"To establish and maintain a most suitable academic environment synergizing world class human capital best technology for creating and impacting knowledge to develop and produce superior entrepreneurial teachers for the Nigeria society.","history":"City College of Education, Mararaba (CCoE) is a reputable tertiary teacher-education institution located in Mararaba-Karu, Nasarawa State.","philosophy":"Anchored on our motto — Education for Self Employment — our philosophy emphasizes academic mastery, practical vocational skills, and digital entrepreneurship."}'
+                    [System.IO.File]::WriteAllText($settingsFile, $defaultSettings, [System.Text.Encoding]::UTF8)
+                }
+
+                if ($request.HttpMethod -eq "GET") {
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes([System.IO.File]::ReadAllText($settingsFile, [System.Text.Encoding]::UTF8))
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.ContentLength64 = $bytes.Length
+                    $response.StatusCode = 200
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                } elseif ($request.HttpMethod -eq "POST") {
+                    $body = Get-HttpRequestBody $request
+                    if (-not $body.TrimStart().StartsWith("{")) {
+                        throw "Institutional settings must be a JSON object."
+                    }
+                    $settings = ConvertFrom-Json -InputObject $body
+                    $requiredKeys = @("institution_name", "motto", "address", "vision", "mission", "history", "philosophy")
+                    foreach ($key in $requiredKeys) {
+                        if (-not $settings.PSObject.Properties[$key]) {
+                            throw "Institutional settings are missing the '$key' field."
+                        }
+                    }
+                    [System.IO.File]::WriteAllText($settingsFile, (ConvertTo-Json -InputObject $settings -Depth 5), [System.Text.Encoding]::UTF8)
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"success":true,"message":"Settings saved"}')
                     $response.ContentType = "application/json; charset=utf-8"
                     $response.ContentLength64 = $bytes.Length
                     $response.StatusCode = 200
